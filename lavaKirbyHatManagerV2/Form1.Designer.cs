@@ -45,6 +45,7 @@ namespace lKHM
 			this.consoleTextBox.Multiline = true;
 			this.consoleTextBox.Name = "consoleTextBox";
 			this.consoleTextBox.ReadOnly = true;
+			this.consoleTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.consoleTextBox.Size = new System.Drawing.Size(776, 410);
 			this.consoleTextBox.TabIndex = 1;
 			this.consoleTextBox.TabStop = false;

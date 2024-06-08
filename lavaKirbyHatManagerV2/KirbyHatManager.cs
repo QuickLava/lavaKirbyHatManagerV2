@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace lKHM
 {
-	static class Constants
+	public static class Constants
 	{
 		enum LAVA_CHARA_SLOT_IDS
 		{
@@ -114,66 +115,145 @@ namespace lKHM
 			//WALUIGI = 0x28,
 		}
 
-		public static Dictionary<int, string> fighterIDsToNames = new Dictionary<int, string>();
+		public static Dictionary<uint, string> fighterIDsToNames = new Dictionary<uint, string>();
 
 		static Constants()
 		{
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.CAPTAIN_FALCON] = "CAPTAIN";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.DEDEDE] = "DEDEDE";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.DIDDY_KONG] = "DIDDY";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.DONKEY_KONG] = "DONKEY";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.FALCO] = "FALCO";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.FOX] = "FOX";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.GANONDORF] = "GANON";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.MR_GAME_AND_WATCH] = "GAMEWATCH";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.GIGA_BOWSER] = "GKOOPA";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.IKE] = "IKE";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.KIRBY] = "KIRBY";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.BOWSER] = "KOOPA";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.LINK] = "LINK";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.LUCARIO] = "LUCARIO";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.LUCAS] = "LUCAS";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.LUIGI] = "LUIGI";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.MARIO] = "MARIO";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.MARTH] = "MARTH";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.META_KNIGHT] = "METAKNIGHT";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.NANA] = "NANA";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.NESS] = "NESS";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.PEACH] = "PEACH";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.PIKACHU] = "PIKACHU";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.OLIMAR] = "PIKMIN";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.PIT] = "PIT";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.IVYSAUR] = "POKEFUSHIGISOU";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.CHARIZARD] = "POKELIZARDON";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.POKEMON_TRAINER] = "POKETRAINER";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.SQUIRTLE] = "POKEZENIGAME";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.POPO] = "POPO";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.JIGGLYPUFF] = "PURIN";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.ROB] = "ROBOT";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.SAMUS] = "SAMUS";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.SHEIK] = "SHEIK";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.SNAKE] = "SNAKE";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.SONIC] = "SONIC";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.SOPO] = "SOPO";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.ZERO_SUIT_SAMUS] = "SZEROSUIT";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.TOON_LINK] = "TOONLINK";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.WARIO] = "WARIO";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.WARIOMAN] = "WARIOMAN";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.WOLF] = "WOLF";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.YOSHI] = "YOSHI";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.ZELDA] = "ZELDA";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.MEWTWO] = "MEWTWO";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.ROY] = "ROY";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.KNUCKLES] = "KNUCKLES";
-			fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.RIDLEY] = "RIDLEY";
-			//fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.DARK_SAMUS] = "DARK_SAMUS";
-			//fighterIDsToNames[(int)LAVA_CHARA_FIGHTER_IDS.WALUIGI] = "WALUIGI";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.CAPTAIN_FALCON] = "CAPTAIN";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.DEDEDE] = "DEDEDE";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.DIDDY_KONG] = "DIDDY";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.DONKEY_KONG] = "DONKEY";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.FALCO] = "FALCO";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.FOX] = "FOX";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.GANONDORF] = "GANON";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.MR_GAME_AND_WATCH] = "GAMEWATCH";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.GIGA_BOWSER] = "GKOOPA";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.IKE] = "IKE";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.KIRBY] = "KIRBY";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.BOWSER] = "KOOPA";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.LINK] = "LINK";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.LUCARIO] = "LUCARIO";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.LUCAS] = "LUCAS";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.LUIGI] = "LUIGI";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.MARIO] = "MARIO";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.MARTH] = "MARTH";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.META_KNIGHT] = "METAKNIGHT";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.NANA] = "NANA";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.NESS] = "NESS";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.PEACH] = "PEACH";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.PIKACHU] = "PIKACHU";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.OLIMAR] = "PIKMIN";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.PIT] = "PIT";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.IVYSAUR] = "POKEFUSHIGISOU";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.CHARIZARD] = "POKELIZARDON";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.POKEMON_TRAINER] = "POKETRAINER";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.SQUIRTLE] = "POKEZENIGAME";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.POPO] = "POPO";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.JIGGLYPUFF] = "PURIN";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.ROB] = "ROBOT";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.SAMUS] = "SAMUS";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.SHEIK] = "SHEIK";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.SNAKE] = "SNAKE";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.SONIC] = "SONIC";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.SOPO] = "SOPO";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.ZERO_SUIT_SAMUS] = "SZEROSUIT";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.TOON_LINK] = "TOONLINK";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.WARIO] = "WARIO";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.WARIOMAN] = "WARIOMAN";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.WOLF] = "WOLF";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.YOSHI] = "YOSHI";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.ZELDA] = "ZELDA";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.MEWTWO] = "MEWTWO";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.ROY] = "ROY";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.KNUCKLES] = "KNUCKLES";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.RIDLEY] = "RIDLEY";
+			//fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.DARK_SAMUS] = "DARK_SAMUS";
+			//fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.WALUIGI] = "WALUIGI";
 		}
 	}
 
 	class KirbyHatManager
 	{
-		
+		const uint maxCharCount = 0x100;
+		const uint table1EntrySize = 0x4;
+		const uint table1Length = maxCharCount * table1EntrySize;
+		const uint table2EntrySize = 0x4;
+		const uint table2Length = maxCharCount * table2EntrySize;
+		const uint table3EntrySize = 0x10;
+		const uint table3Length = maxCharCount * table3EntrySize;
+		const uint table4EntrySize = 0x10;
+		const uint table4Length = maxCharCount * table4EntrySize;
+		BrawlLib.SSBB.ResourceNodes.RELNode kirbyModule = new BrawlLib.SSBB.ResourceNodes.RELNode();
 
+		uint getTable1EntryOffset(uint charIDIn)
+		{
+			uint result = uint.MaxValue;
+
+			if (charIDIn < maxCharCount)
+			{
+				result = charIDIn * table1EntrySize;
+			}
+
+			return result;
+		}
+		uint getTable2EntryOffset(uint charIDIn)
+		{
+			uint result = uint.MaxValue;
+
+			if (charIDIn < maxCharCount)
+			{
+				result = (charIDIn * table2EntrySize) + table1Length;
+			}
+
+			return result;
+		}
+		uint getTable3EntryOffset(uint charIDIn)
+		{
+			uint result = uint.MaxValue;
+
+			if (charIDIn < maxCharCount)
+			{
+				result = (charIDIn * table3EntrySize) + table2Length + table1Length;
+			}
+
+			return result;
+		}
+		uint getTable4EntryOffset(uint charIDIn)
+		{
+			uint result = uint.MaxValue;
+
+			if (charIDIn < maxCharCount)
+			{
+				result = (charIDIn * table4EntrySize) + table3Length + table2Length + table1Length;
+			}
+
+			return result;
+		}
+
+		public bool loadKirbyREL(string filepathIn)
+		{
+			bool result = false;
+
+			if (File.Exists(filepathIn))
+			{
+				kirbyModule.Replace(filepathIn);
+				kirbyModule._origPath = filepathIn;
+
+				Console.WriteLine("Kirby Module Loaded:");
+				Console.WriteLine("Name: " + kirbyModule.Name + "\n");
+				Console.WriteLine("Size: " + kirbyModule.UncompressedSize.ToString("X3") + " bytes\n");
+				Console.WriteLine("Sections:");
+				foreach (var x in kirbyModule.Sections)
+				{
+					Console.WriteLine("  - " + x.Name);
+				}
+			}
+			else
+			{
+				Console.WriteLine("Module Not Found.");
+			}
+
+			return result;
+		}
 	}
 }
