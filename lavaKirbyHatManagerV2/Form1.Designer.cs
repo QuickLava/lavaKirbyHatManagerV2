@@ -47,6 +47,7 @@ namespace lavaKirbyHatManagerV2
 			this.consoleTextBox.ReadOnly = true;
 			this.consoleTextBox.Size = new System.Drawing.Size(776, 410);
 			this.consoleTextBox.TabIndex = 1;
+			this.consoleTextBox.TabStop = false;
 			// 
 			// consoleLabel
 			// 
@@ -72,9 +73,8 @@ namespace lavaKirbyHatManagerV2
 		}
 
 		#endregion
-
-		private System.Windows.Forms.TextBox consoleTextBox;
 		private System.Windows.Forms.Label consoleLabel;
+		public System.Windows.Forms.TextBox consoleTextBox;
 	}
 }
 
