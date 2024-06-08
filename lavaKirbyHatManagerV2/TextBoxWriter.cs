@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 
-namespace lavaKirbyHatManagerV2
+namespace lKHM
 {
     public class ControlWriter : System.IO.TextWriter
     {

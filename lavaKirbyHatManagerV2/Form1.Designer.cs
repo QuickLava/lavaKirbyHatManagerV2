@@ -1,5 +1,5 @@
 ﻿
-namespace lavaKirbyHatManagerV2
+namespace lKHM
 {
 	partial class Form1
 	{
