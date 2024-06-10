@@ -115,7 +115,7 @@ namespace lKHM
 			//WALUIGI = 0x28,
 		}
 
-		public static Dictionary<uint, string> fighterIDsToNames = new Dictionary<uint, string>();
+		public static SortedDictionary<uint, string> fighterIDsToNames = new SortedDictionary<uint, string>();
 
 		static Constants()
 		{
@@ -172,18 +172,69 @@ namespace lKHM
 		}
 	}
 
+	public class HatInfoPack
+	{
+		public class quadWord
+		{
+			public uint w1 = 0x00;
+			public uint w2 = 0x00;
+			public uint w3 = 0x00;
+			public uint w4 = 0x00;
+
+			public bool anyNonzero()
+			{
+				bool result = false;
+
+				result |= w1 != 0x00;
+				result |= w2 != 0x00;
+				result |= w3 != 0x00;
+				result |= w4 != 0x00;
+
+				return result;
+			}
+		}
+
+		// AbilityTopStatusKind
+		public uint table1Entry = uint.MaxValue;
+		// AbilityProcesses
+		public uint table2Entry = 0x00000000;
+		// AbilityInfos
+		public quadWord table3Entries = new quadWord();
+		// AbilityConvertParams
+		public quadWord table4Entries = new quadWord();
+
+		public bool hatInfoPresent()
+		{
+			bool result = false;
+
+			result |= table1Entry != uint.MaxValue;
+			result |= table2Entry != 0x00000000;
+			result |= table4Entries.anyNonzero();
+
+			return result;
+		}
+	}
+
 	class KirbyHatManager
 	{
 		const uint maxCharCount = 0x100;
 		const uint table1EntrySize = 0x4;
-		const uint table1Length = maxCharCount * table1EntrySize;
 		const uint table2EntrySize = 0x4;
-		const uint table2Length = maxCharCount * table2EntrySize;
 		const uint table3EntrySize = 0x10;
-		const uint table3Length = maxCharCount * table3EntrySize;
 		const uint table4EntrySize = 0x10;
+		const uint table1StartOffset = 0x0;
+		const uint table1Length = maxCharCount * table1EntrySize;
+		const uint table2StartOffset = table1StartOffset + table1Length;
+		const uint table2Length = maxCharCount * table2EntrySize;
+		const uint table3StartOffset = table2StartOffset + table2Length;
+		const uint table3Length = maxCharCount * table3EntrySize;
+		const uint table4StartOffset = table3StartOffset + table3Length;
 		const uint table4Length = maxCharCount * table4EntrySize;
+		const uint tablesEndOffset = table4StartOffset + table4Length;
+
 		BrawlLib.SSBB.ResourceNodes.RELNode kirbyModule = new BrawlLib.SSBB.ResourceNodes.RELNode();
+
+		Dictionary<uint, HatInfoPack> fighterIDToInfoPacks = new Dictionary<uint, HatInfoPack>();
 
 		uint getTable1EntryOffset(uint charIDIn)
 		{
@@ -191,7 +242,7 @@ namespace lKHM
 
 			if (charIDIn < maxCharCount)
 			{
-				result = charIDIn * table1EntrySize;
+				result = (charIDIn * table1EntrySize) + table1StartOffset;
 			}
 
 			return result;
@@ -202,7 +253,7 @@ namespace lKHM
 
 			if (charIDIn < maxCharCount)
 			{
-				result = (charIDIn * table2EntrySize) + table1Length;
+				result = (charIDIn * table2EntrySize) + table2StartOffset;
 			}
 
 			return result;
@@ -213,7 +264,7 @@ namespace lKHM
 
 			if (charIDIn < maxCharCount)
 			{
-				result = (charIDIn * table3EntrySize) + table2Length + table1Length;
+				result = (charIDIn * table3EntrySize) + table3StartOffset;
 			}
 
 			return result;
@@ -224,7 +275,52 @@ namespace lKHM
 
 			if (charIDIn < maxCharCount)
 			{
-				result = (charIDIn * table4EntrySize) + table3Length + table2Length + table1Length;
+				result = (charIDIn * table4EntrySize) + table4StartOffset;
+			}
+
+			return result;
+		}
+
+		uint getWordFromByteArr(byte[] arrIn, uint offset)
+		{
+			uint result = uint.MaxValue;
+
+			if (offset + 4 <= arrIn.Length)
+			{
+				byte[] conversionBuffer = new byte[4];
+				conversionBuffer = arrIn.Skip((int)offset).Take(4).ToArray();
+				if (BitConverter.IsLittleEndian)
+				{
+					conversionBuffer = conversionBuffer.Reverse().ToArray();
+				}
+				result = BitConverter.ToUInt32(conversionBuffer, 0);
+			}
+
+			return result;
+		}
+		bool populateHatInfoFromSectionHex(uint fighterID, HatInfoPack destinationPack, byte[] sectionBodyIn)
+		{
+			bool result = false;
+
+			if (fighterID < maxCharCount)
+			{
+				destinationPack.table1Entry = getWordFromByteArr(sectionBodyIn, getTable1EntryOffset(fighterID));
+
+				destinationPack.table2Entry = getWordFromByteArr(sectionBodyIn, getTable2EntryOffset(fighterID));
+
+				uint table3EntriesStart = getTable3EntryOffset(fighterID);
+				destinationPack.table3Entries.w1 = getWordFromByteArr(sectionBodyIn, table3EntriesStart);
+				destinationPack.table3Entries.w2 = getWordFromByteArr(sectionBodyIn, table3EntriesStart + 0x4);
+				destinationPack.table3Entries.w3 = getWordFromByteArr(sectionBodyIn, table3EntriesStart + 0x8);
+				destinationPack.table3Entries.w4 = getWordFromByteArr(sectionBodyIn, table3EntriesStart + 0xC);
+
+				uint table4EntriesStart = getTable4EntryOffset(fighterID);
+				destinationPack.table4Entries.w1 = getWordFromByteArr(sectionBodyIn, table4EntriesStart);
+				destinationPack.table4Entries.w2 = getWordFromByteArr(sectionBodyIn, table4EntriesStart + 0x4);
+				destinationPack.table4Entries.w3 = getWordFromByteArr(sectionBodyIn, table4EntriesStart + 0x8);
+				destinationPack.table4Entries.w4 = getWordFromByteArr(sectionBodyIn, table4EntriesStart + 0xC);
+
+				result = true;
 			}
 
 			return result;
@@ -243,9 +339,43 @@ namespace lKHM
 				Console.WriteLine("Name: " + kirbyModule.Name + "\n");
 				Console.WriteLine("Size: " + kirbyModule.UncompressedSize.ToString("X3") + " bytes\n");
 				Console.WriteLine("Sections:");
+
+				BrawlLib.SSBB.ResourceNodes.ModuleSectionNode section7Node = null;
+
 				foreach (var x in kirbyModule.Sections)
 				{
 					Console.WriteLine("  - " + x.Name);
+					if (x.Name == "Section [7]")
+					{
+						section7Node = x;
+					}
+				}
+
+				if (section7Node != null)
+				{
+					section7Node.Export("./temp.dat");
+					byte[] section7Hex = File.ReadAllBytes("./temp.dat");
+					if (section7Hex.Length > 0)
+					{
+						for (uint i = 0x00; i < maxCharCount; i++)
+						{
+							HatInfoPack newInfoPack = new HatInfoPack();
+							if (populateHatInfoFromSectionHex(i, newInfoPack, section7Hex) && newInfoPack.hatInfoPresent())
+							{
+								fighterIDToInfoPacks[i] = newInfoPack;
+								Console.Write("[FID 0x" + i.ToString("X2") + " - ");
+								if (Constants.fighterIDsToNames.ContainsKey(i))
+								{
+									Console.Write(Constants.fighterIDsToNames[i]);
+								}
+								else
+								{
+									Console.Write("UNNAMED FIGHTER");
+								}
+								Console.WriteLine("] TopStatusKind: 0x" + newInfoPack.table1Entry.ToString("X3"));
+							} 
+						}
+					}
 				}
 			}
 			else
