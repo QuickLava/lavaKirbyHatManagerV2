@@ -179,6 +179,7 @@ namespace lKHM
 			this.Controls.Add(this.labelInputFile);
 			this.Controls.Add(this.buttonBrowse);
 			this.Controls.Add(this.textBoxInputFile);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.Name = "Form1";
 			this.Text = "lavaKirbyHatManager";
 			this.Load += new System.EventHandler(this.Form1_Load);
