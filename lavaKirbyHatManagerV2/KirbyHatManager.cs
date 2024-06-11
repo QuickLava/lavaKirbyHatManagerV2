@@ -9,7 +9,7 @@ namespace lKHM
 {
 	public static class Constants
 	{
-		enum LAVA_CHARA_SLOT_IDS
+		public enum LAVA_CHARA_SLOT_IDS
 		{
 			BOWSER = 12,
 			CAPTAIN_FALCON = 10,
@@ -61,7 +61,7 @@ namespace lKHM
 			//DARK_SAMUS = 0x40,
 			//WALUIGI = 0x39,
 		};
-		enum LAVA_CHARA_FIGHTER_IDS
+		public enum LAVA_CHARA_FIGHTER_IDS
 		{
 			BOWSER = 0x0B,
 			CAPTAIN_FALCON = 0x09,
@@ -217,6 +217,8 @@ namespace lKHM
 
 	class KirbyHatManager
 	{
+		const uint kirbyModuleID = 0x60;
+
 		const uint maxCharCount = 0x100;
 		const uint table1EntrySize = 0x4;
 		const uint table2EntrySize = 0x4;
@@ -232,7 +234,11 @@ namespace lKHM
 		const uint table4Length = maxCharCount * table4EntrySize;
 		const uint tablesEndOffset = table4StartOffset + table4Length;
 
+		const string tableSectionName = "Section [7]";
+
 		BrawlLib.SSBB.ResourceNodes.RELNode kirbyModule = new BrawlLib.SSBB.ResourceNodes.RELNode();
+		byte[] tableSectionBody = null;
+		bool tableSectionBodyIsDirty = false;
 
 		Dictionary<uint, HatInfoPack> fighterIDToInfoPacks = new Dictionary<uint, HatInfoPack>();
 
@@ -335,52 +341,103 @@ namespace lKHM
 				kirbyModule.Replace(filepathIn);
 				kirbyModule._origPath = filepathIn;
 
-				Console.WriteLine("Kirby Module Loaded:");
-				Console.WriteLine("Name: " + kirbyModule.Name + "\n");
-				Console.WriteLine("Size: " + kirbyModule.UncompressedSize.ToString("X3") + " bytes\n");
-				Console.WriteLine("Sections:");
-
-				BrawlLib.SSBB.ResourceNodes.ModuleSectionNode section7Node = null;
-
-				foreach (var x in kirbyModule.Sections)
+				if (kirbyModule.ModuleID == kirbyModuleID)
 				{
-					Console.WriteLine("  - " + x.Name);
-					if (x.Name == "Section [7]")
+					Console.WriteLine("Kirby Module Loaded:");
+					Console.WriteLine("Name: " + kirbyModule.Name + "\n");
+					Console.WriteLine("Size: " + kirbyModule.UncompressedSize.ToString("X3") + " bytes\n");
+
+					var tableSectionNode = kirbyModule.FindChild(tableSectionName) as BrawlLib.SSBB.ResourceNodes.ModuleSectionNode;
+					if (tableSectionNode != null && tableSectionNode.UncompressedSize >= tablesEndOffset)
 					{
-						section7Node = x;
+						tableSectionNode.Export("./temp.dat");
+						tableSectionBody = File.ReadAllBytes("./temp.dat");
+						result = true;
+						Console.WriteLine("Successfully loaded Hat Table!");
+					}
+					else
+					{
+						Console.WriteLine("Failed to load Hat Table!");
 					}
 				}
-
-				if (section7Node != null)
+				else
 				{
-					section7Node.Export("./temp.dat");
-					byte[] section7Hex = File.ReadAllBytes("./temp.dat");
-					if (section7Hex.Length > 0)
-					{
-						for (uint i = 0x00; i < maxCharCount; i++)
-						{
-							HatInfoPack newInfoPack = new HatInfoPack();
-							if (populateHatInfoFromSectionHex(i, newInfoPack, section7Hex) && newInfoPack.hatInfoPresent())
-							{
-								fighterIDToInfoPacks[i] = newInfoPack;
-								Console.Write("[FID 0x" + i.ToString("X2") + " - ");
-								if (Constants.fighterIDsToNames.ContainsKey(i))
-								{
-									Console.Write(Constants.fighterIDsToNames[i]);
-								}
-								else
-								{
-									Console.Write("UNNAMED FIGHTER");
-								}
-								Console.WriteLine("] TopStatusKind: 0x" + newInfoPack.table1Entry.ToString("X3"));
-							} 
-						}
-					}
+					Console.WriteLine("Loaded Module file is not Kirby Module!");
+					Console.WriteLine("Kirby Module must have ModuleID " + kirbyModuleID.ToString() +", loaded Module has ID " + kirbyModule.ModuleID.ToString() + "!");
 				}
 			}
 			else
 			{
-				Console.WriteLine("Module Not Found.");
+				Console.WriteLine("Failed to load Module file!");
+			}
+
+			return result;
+		}
+		public void summarizeHatTable()
+		{
+			foreach (var currPair in fighterIDToInfoPacks)
+			{
+				Console.Write("[FID 0x" + currPair.Key.ToString("X2") + " - ");
+				if (Constants.fighterIDsToNames.ContainsKey(currPair.Key))
+				{
+					Console.Write(Constants.fighterIDsToNames[currPair.Key]);
+				}
+				else
+				{
+					Console.Write("UNNAMED_FIGHTER");
+				}
+				Console.WriteLine("] TopStatusKind: 0x" + currPair.Value.table1Entry.ToString("X3"));
+			}
+		}
+		public bool parseHatsSectionBody()
+		{
+			bool result = false;
+
+			if (tableSectionBody.Length > 0)
+			{
+				for (uint i = 0x00; i < maxCharCount; i++)
+				{
+					HatInfoPack newInfoPack = new HatInfoPack();
+					if (populateHatInfoFromSectionHex(i, newInfoPack, tableSectionBody) && newInfoPack.hatInfoPresent())
+					{
+						fighterIDToInfoPacks[i] = newInfoPack;
+					}
+				}
+			}
+
+			return result;
+		}
+		public bool copyHatInfoToEmptySlot(uint sourceFighterID, uint destinationFighterID)
+		{
+			bool result = false;
+
+			if (!fighterIDToInfoPacks.ContainsKey(destinationFighterID))
+			{
+				result = copyHatInfoToSlot(sourceFighterID, destinationFighterID);
+			}
+
+			return result;
+		}
+		public bool copyHatInfoToSlot(uint sourceFighterID, uint destinationFighterID)
+		{
+			bool result = false;
+
+			if ((sourceFighterID != destinationFighterID) && fighterIDToInfoPacks.ContainsKey(sourceFighterID))
+			{
+				fighterIDToInfoPacks[destinationFighterID] = fighterIDToInfoPacks[sourceFighterID];
+				tableSectionBodyIsDirty = true;
+			}
+
+			return result;
+		}
+		public bool eraseHatInfo(uint targetFighterID)
+		{
+			bool result = false;
+
+			if (fighterIDToInfoPacks.ContainsKey(targetFighterID))
+			{
+				fighterIDToInfoPacks.Remove(targetFighterID);
+				tableSectionBodyIsDirty = true;
 			}
 
 			return result;

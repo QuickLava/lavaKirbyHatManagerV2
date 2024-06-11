@@ -18,9 +18,18 @@ namespace lKHM
 		public Form1()
 		{
 			InitializeComponent();
-			Console.SetOut(new ControlWriter(consoleTextBox));
+			LoadRELAndTable();
+		}
 
-			hatManager.loadKirbyREL(kirbyRelPath);
+		private void LoadRELAndTable()
+		{
+			if (hatManager.loadKirbyREL(kirbyRelPath))
+			{
+				hatManager.parseHatsSectionBody();
+				hatManager.summarizeHatTable();
+				hatManager.copyHatInfoToEmptySlot((uint)Constants.LAVA_CHARA_FIGHTER_IDS.CAPTAIN_FALCON, 0x69);
+				hatManager.summarizeHatTable();
+			}
 		}
 	}
 }
