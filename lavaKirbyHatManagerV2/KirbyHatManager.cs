@@ -218,7 +218,7 @@ namespace lKHM
 		const string tableSectionName = "Section [7]";
 
 		HatInfoPack defaultInfoPack = new HatInfoPack();
-		Dictionary<uint, HatInfoPack> fighterIDToInfoPacks = new Dictionary<uint, HatInfoPack>();
+		public Dictionary<uint, HatInfoPack> fighterIDToInfoPacks = new Dictionary<uint, HatInfoPack>();
 
 		uint getTable1EntryOffset(uint charIDIn)
 		{
@@ -303,6 +303,31 @@ namespace lKHM
 			return result;
 		}
 
+		public bool registerName(uint targetFighterID, string nameIn, bool allowOverwrite = false)
+		{
+			bool result = false;
+
+			if (!String.IsNullOrEmpty(nameIn) && (allowOverwrite || !Values.fighterIDsToNames.ContainsKey(targetFighterID)))
+			{
+				Values.fighterIDsToNames[targetFighterID] = nameIn;
+				result = true;
+			}
+
+			return result;
+		}
+		public bool unregisterName(uint targetFighterID)
+		{
+			bool result = false;
+
+			if (Values.fighterIDsToNames.ContainsKey(targetFighterID))
+			{
+				Values.fighterIDsToNames.Remove(targetFighterID);
+				result = true;
+			}
+
+			return result;
+		}
+
 		bool populateHatInfoFromSectionHex(uint fighterID, HatInfoPack destinationPack, byte[] sectionBodyIn)
 		{
 			bool result = false;
@@ -346,6 +371,8 @@ namespace lKHM
 
 			if (tableSectionBody.Length >= tablesEndOffset)
 			{
+				fighterIDToInfoPacks.Clear();
+
 				for (uint i = 0x00; i < maxCharCount; i++)
 				{
 					HatInfoPack newInfoPack = new HatInfoPack();
@@ -428,7 +455,6 @@ namespace lKHM
 			return result;
 		}
 
-
 		public void summarizeHatTable()
 		{
 			foreach (var currPair in fighterIDToInfoPacks)
@@ -459,6 +485,7 @@ namespace lKHM
 				Console.WriteLine("");
 			}
 		}
+		
 		public bool copyHatInfoToEmptySlot(uint sourceFighterID, uint destinationFighterID, string destSlotName = null)
 		{
 			bool result = false;
@@ -477,10 +504,21 @@ namespace lKHM
 			if ((sourceFighterID != destinationFighterID) && (destinationFighterID < maxCharCount) && fighterIDToInfoPacks.ContainsKey(sourceFighterID))
 			{
 				fighterIDToInfoPacks[destinationFighterID] = fighterIDToInfoPacks[sourceFighterID];
-				if (!String.IsNullOrEmpty(destSlotName))
-				{
-					Values.fighterIDsToNames[destinationFighterID] = destSlotName;
-				}
+				registerName(destinationFighterID, destSlotName);
+				result = true;
+			}
+
+			return result;
+		}
+		public bool createNewHatInfo(uint targetFighterID, string targetSlotName = null)
+		{
+			bool result = false;
+
+			if (targetFighterID < maxCharCount && !fighterIDToInfoPacks.ContainsKey(targetFighterID))
+			{
+				fighterIDToInfoPacks[targetFighterID] = defaultInfoPack;
+				registerName(targetFighterID, targetSlotName);
+				result = true;
 			}
 
 			return result;
@@ -492,6 +530,8 @@ namespace lKHM
 			if (fighterIDToInfoPacks.ContainsKey(targetFighterID))
 			{
 				fighterIDToInfoPacks.Remove(targetFighterID);
+				unregisterName(targetFighterID);
+				result = true;
 			}
 
 			return result;
