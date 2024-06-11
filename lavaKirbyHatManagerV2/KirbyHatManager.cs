@@ -340,6 +340,41 @@ namespace lKHM
 			return result;
 		}
 
+		public bool loadHatEntriesFromSectionHex(byte[] tableSectionBody)
+		{
+			bool result = false;
+
+			if (tableSectionBody.Length >= tablesEndOffset)
+			{
+				for (uint i = 0x00; i < maxCharCount; i++)
+				{
+					HatInfoPack newInfoPack = new HatInfoPack();
+					if (populateHatInfoFromSectionHex(i, newInfoPack, tableSectionBody) && !infoPackHasDefaultData(newInfoPack))
+					{
+						fighterIDToInfoPacks[i] = newInfoPack;
+					}
+				}
+				result = fighterIDToInfoPacks.Count > 0;
+			}
+
+			return result;
+		}
+		public bool loadHatEntriesFromSectionHex(string filepathIn)
+		{
+			bool result = false;
+
+			if (File.Exists(filepathIn))
+			{
+				byte[] tableSectionBody = File.ReadAllBytes(filepathIn);
+				result = loadHatEntriesFromSectionHex(tableSectionBody);
+			}
+			else
+			{
+				Console.WriteLine("Failed to load Table Section Hex file!");
+			}
+
+			return result;
+		}
 		public bool loadHatEntriesFromREL(BrawlLib.SSBB.ResourceNodes.RELNode kirbyModule)
 		{
 			bool result = false;
@@ -355,8 +390,7 @@ namespace lKHM
 				{
 					string tempFilename = Path.GetTempFileName();
 					tableSectionNode.Export(tempFilename);
-					byte[] tableSectionBody = File.ReadAllBytes(tempFilename);
-					result = parseHatsSectionBody(tableSectionBody);
+					result = loadHatEntriesFromSectionHex(tempFilename);
 					if (result)
 					{
 						Console.WriteLine("Successfully loaded and parsed Hat Table!");
@@ -384,7 +418,6 @@ namespace lKHM
 			{
 				BrawlLib.SSBB.ResourceNodes.RELNode kirbyModule = new BrawlLib.SSBB.ResourceNodes.RELNode();
 				kirbyModule.Replace(filepathIn);
-				kirbyModule._origPath = filepathIn;
 				result = loadHatEntriesFromREL(kirbyModule);
 			}
 			else
@@ -394,6 +427,8 @@ namespace lKHM
 
 			return result;
 		}
+
+
 		public void summarizeHatTable()
 		{
 			foreach (var currPair in fighterIDToInfoPacks)
@@ -423,25 +458,6 @@ namespace lKHM
 				}
 				Console.WriteLine("");
 			}
-		}
-		public bool parseHatsSectionBody(byte[] tableSectionBody)
-		{
-			bool result = false;
-
-			if (tableSectionBody.Length > 0)
-			{
-				for (uint i = 0x00; i < maxCharCount; i++)
-				{
-					HatInfoPack newInfoPack = new HatInfoPack();
-					if (populateHatInfoFromSectionHex(i, newInfoPack, tableSectionBody) && !infoPackHasDefaultData(newInfoPack))
-					{
-						fighterIDToInfoPacks[i] = newInfoPack;
-					}
-				}
-				result = fighterIDToInfoPacks.Count > 0;
-			}
-
-			return result;
 		}
 		public bool copyHatInfoToEmptySlot(uint sourceFighterID, uint destinationFighterID, string destSlotName = null)
 		{
