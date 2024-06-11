@@ -510,6 +510,20 @@ namespace lKHM
 
 			return result;
 		}
+		public bool moveHatToNewFID(uint sourceFighterID, uint destinationFighterID, bool allowOverwrite = false)
+		{
+			bool result = false;
+
+			if (fighterIDToInfoPacks.ContainsKey(sourceFighterID) && (allowOverwrite || !fighterIDToInfoPacks.ContainsKey(destinationFighterID)))
+			{
+				if (copyHatInfoToSlot(sourceFighterID, destinationFighterID, Values.fighterIDsToNames[sourceFighterID]))
+				{
+					result = eraseHatInfo(sourceFighterID);
+				}
+			}
+
+			return result;
+		}
 		public bool createNewHatInfo(uint targetFighterID, string targetSlotName = null)
 		{
 			bool result = false;
