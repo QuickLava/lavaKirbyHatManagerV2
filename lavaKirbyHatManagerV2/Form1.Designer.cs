@@ -68,6 +68,7 @@ namespace lKHM
 			this.Controls.Add(this.consoleTextBox);
 			this.Name = "Form1";
 			this.Text = "lavaKirbyHatManager";
+			this.Load += new System.EventHandler(this.Form1_Load);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

@@ -217,10 +217,6 @@ namespace lKHM
 
 		const string tableSectionName = "Section [7]";
 
-		BrawlLib.SSBB.ResourceNodes.RELNode kirbyModule = new BrawlLib.SSBB.ResourceNodes.RELNode();
-		byte[] tableSectionBody = null;
-		bool tableSectionBodyIsDirty = false;
-
 		HatInfoPack defaultInfoPack = new HatInfoPack();
 		Dictionary<uint, HatInfoPack> fighterIDToInfoPacks = new Dictionary<uint, HatInfoPack>();
 
@@ -286,6 +282,27 @@ namespace lKHM
 
 			return result;
 		}
+		bool writeWordToByteArr(byte[] arrIn, uint valueIn, uint offset)
+		{
+			bool result = false;
+
+			if (offset + 4 <= arrIn.Length)
+			{
+				byte[] conversionBuffer = new byte[4];
+				conversionBuffer = BitConverter.GetBytes(valueIn);
+				if (BitConverter.IsLittleEndian)
+				{
+					conversionBuffer = conversionBuffer.Reverse().ToArray();
+				}
+				arrIn[offset] = conversionBuffer[0];
+				arrIn[offset + 1] = conversionBuffer[1];
+				arrIn[offset + 2] = conversionBuffer[2];
+				arrIn[offset + 3] = conversionBuffer[3];
+			}
+
+			return result;
+		}
+
 		bool populateHatInfoFromSectionHex(uint fighterID, HatInfoPack destinationPack, byte[] sectionBodyIn)
 		{
 			bool result = false;
@@ -323,39 +340,52 @@ namespace lKHM
 			return result;
 		}
 
-		public bool loadKirbyREL(string filepathIn)
+		public bool loadHatEntriesFromREL(BrawlLib.SSBB.ResourceNodes.RELNode kirbyModule)
+		{
+			bool result = false;
+
+			if (kirbyModule.ModuleID == kirbyModuleID)
+			{
+				Console.WriteLine("Kirby Module Loaded:");
+				Console.WriteLine("Name: " + kirbyModule.Name + "\n");
+				Console.WriteLine("Size: " + kirbyModule.UncompressedSize.ToString("X3") + " bytes\n");
+
+				var tableSectionNode = kirbyModule.FindChild(tableSectionName) as BrawlLib.SSBB.ResourceNodes.ModuleSectionNode;
+				if (tableSectionNode != null && tableSectionNode.UncompressedSize >= tablesEndOffset)
+				{
+					string tempFilename = Path.GetTempFileName();
+					tableSectionNode.Export(tempFilename);
+					byte[] tableSectionBody = File.ReadAllBytes(tempFilename);
+					result = parseHatsSectionBody(tableSectionBody);
+					if (result)
+					{
+						Console.WriteLine("Successfully loaded and parsed Hat Table!");
+					}
+					File.Delete(tempFilename);
+				}
+				else
+				{
+					Console.WriteLine("Failed to load Hat Table!");
+				}
+			}
+			else
+			{
+				Console.WriteLine("Loaded Module file is not Kirby Module!");
+				Console.WriteLine("Kirby Module must have ModuleID " + kirbyModuleID.ToString() + ", loaded Module has ID " + kirbyModule.ModuleID.ToString() + "!");
+			}
+
+			return result;
+		}
+		public bool loadHatEntriesFromREL(string filepathIn)
 		{
 			bool result = false;
 
 			if (File.Exists(filepathIn))
 			{
+				BrawlLib.SSBB.ResourceNodes.RELNode kirbyModule = new BrawlLib.SSBB.ResourceNodes.RELNode();
 				kirbyModule.Replace(filepathIn);
 				kirbyModule._origPath = filepathIn;
-
-				if (kirbyModule.ModuleID == kirbyModuleID)
-				{
-					Console.WriteLine("Kirby Module Loaded:");
-					Console.WriteLine("Name: " + kirbyModule.Name + "\n");
-					Console.WriteLine("Size: " + kirbyModule.UncompressedSize.ToString("X3") + " bytes\n");
-
-					var tableSectionNode = kirbyModule.FindChild(tableSectionName) as BrawlLib.SSBB.ResourceNodes.ModuleSectionNode;
-					if (tableSectionNode != null && tableSectionNode.UncompressedSize >= tablesEndOffset)
-					{
-						tableSectionNode.Export("./temp.dat");
-						tableSectionBody = File.ReadAllBytes("./temp.dat");
-						result = true;
-						Console.WriteLine("Successfully loaded Hat Table!");
-					}
-					else
-					{
-						Console.WriteLine("Failed to load Hat Table!");
-					}
-				}
-				else
-				{
-					Console.WriteLine("Loaded Module file is not Kirby Module!");
-					Console.WriteLine("Kirby Module must have ModuleID " + kirbyModuleID.ToString() +", loaded Module has ID " + kirbyModule.ModuleID.ToString() + "!");
-				}
+				result = loadHatEntriesFromREL(kirbyModule);
 			}
 			else
 			{
@@ -394,7 +424,7 @@ namespace lKHM
 				Console.WriteLine("");
 			}
 		}
-		public bool parseHatsSectionBody()
+		public bool parseHatsSectionBody(byte[] tableSectionBody)
 		{
 			bool result = false;
 
@@ -408,6 +438,7 @@ namespace lKHM
 						fighterIDToInfoPacks[i] = newInfoPack;
 					}
 				}
+				result = fighterIDToInfoPacks.Count > 0;
 			}
 
 			return result;
@@ -427,10 +458,9 @@ namespace lKHM
 		{
 			bool result = false;
 
-			if ((sourceFighterID != destinationFighterID) && fighterIDToInfoPacks.ContainsKey(sourceFighterID))
+			if ((sourceFighterID != destinationFighterID) && (destinationFighterID < maxCharCount) && fighterIDToInfoPacks.ContainsKey(sourceFighterID))
 			{
 				fighterIDToInfoPacks[destinationFighterID] = fighterIDToInfoPacks[sourceFighterID];
-				tableSectionBodyIsDirty = true;
 				if (!String.IsNullOrEmpty(destSlotName))
 				{
 					Values.fighterIDsToNames[destinationFighterID] = destSlotName;
@@ -446,8 +476,44 @@ namespace lKHM
 			if (fighterIDToInfoPacks.ContainsKey(targetFighterID))
 			{
 				fighterIDToInfoPacks.Remove(targetFighterID);
-				tableSectionBodyIsDirty = true;
 			}
+
+			return result;
+		}
+		public bool buildAndExportTables(string filepathIn)
+		{
+			bool result = false;
+
+			byte[] tableBody = new byte[tablesEndOffset];
+
+			for (uint i = 0; i < maxCharCount; i++)
+			{
+				HatInfoPack sourcePack = null;
+
+				if (fighterIDToInfoPacks.ContainsKey(i))
+				{
+					sourcePack = fighterIDToInfoPacks[i];
+				}
+				else
+				{
+					sourcePack = defaultInfoPack;
+				}
+
+				writeWordToByteArr(tableBody, sourcePack.table1Entry, getTable1EntryOffset(i));
+				writeWordToByteArr(tableBody, sourcePack.table2Entry, getTable2EntryOffset(i));
+				uint table3EntryOffset = getTable3EntryOffset(i);
+				for (uint u = 0; u < 4; u++)
+				{
+					writeWordToByteArr(tableBody, sourcePack.table3Entries[u], table3EntryOffset + (u * 4));
+				}
+				uint table4EntryOffset = getTable4EntryOffset(i);
+				for (uint u = 0; u < 4; u++)
+				{
+					writeWordToByteArr(tableBody, sourcePack.table4Entries[u], table4EntryOffset + (u * 4));
+				}
+			}
+
+			File.WriteAllBytes(filepathIn, tableBody);
 
 			return result;
 		}
