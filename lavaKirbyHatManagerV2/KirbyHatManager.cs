@@ -7,7 +7,7 @@ using System.IO;
 
 namespace lKHM
 {
-	public static class Constants
+	public static class Values
 	{
 		public enum LAVA_CHARA_SLOT_IDS
 		{
@@ -107,17 +107,23 @@ namespace lKHM
 			YOSHI = 0x04,
 			ZELDA = 0x0D,
 			ZERO_SUIT_SAMUS = 0x18,
-			MEWTWO = 0x26,
-			ROY = 0x27,
-			KNUCKLES = 0x2D,
-			RIDLEY = 0x2A,
-			//DARK_SAMUS = 0x40,
-			//WALUIGI = 0x28,
+			RED_ALLOY = 0x32,
+			BLUE_ALLOY = 0x33,
+			YELLOW_ALLOY = 0x34,
+			GREEN_ALLOY = 0x35,
+			PM_MEWTWO = 0x26,
+			PM_ROY = 0x27,
+			PP_KNUCKLES = 0x2D,
+			EX_RIDLEY = 0x2A,
+			EX_WALUIGI = 0x28,
+			EX_DARK_SAMUS = 0x40,
+			EX_SCEPTILE = 0x62,
+			EX_KRYSTAL = 0x41,
 		}
 
 		public static SortedDictionary<uint, string> fighterIDsToNames = new SortedDictionary<uint, string>();
 
-		static Constants()
+		static Values()
 		{
 			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.CAPTAIN_FALCON] = "CAPTAIN";
 			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.DEDEDE] = "DEDEDE";
@@ -163,56 +169,31 @@ namespace lKHM
 			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.WOLF] = "WOLF";
 			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.YOSHI] = "YOSHI";
 			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.ZELDA] = "ZELDA";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.MEWTWO] = "MEWTWO";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.ROY] = "ROY";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.KNUCKLES] = "KNUCKLES";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.RIDLEY] = "RIDLEY";
-			//fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.DARK_SAMUS] = "DARK_SAMUS";
-			//fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.WALUIGI] = "WALUIGI";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.RED_ALLOY] = "RED_ALLOY";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.BLUE_ALLOY] = "BLUE_ALLOY";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.YELLOW_ALLOY] = "YELLOW_ALLOY";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.GREEN_ALLOY] = "GREEN_ALLOY";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.PM_MEWTWO] = "PM_MEWTWO";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.PM_ROY] = "PM_ROY";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.PP_KNUCKLES] = "P+_KNUCKLES";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.EX_RIDLEY] = "EX_RIDLEY";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.EX_WALUIGI] = "EX_WALUIGI";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.EX_DARK_SAMUS] = "EX_DARK_SAMUS";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.EX_SCEPTILE] = "EX_SCEPTILE";
+			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.EX_KRYSTAL] = "EX_KRYSTAL";
 		}
 	}
 
 	public class HatInfoPack
 	{
-		public class quadWord
-		{
-			public uint w1 = 0x00;
-			public uint w2 = 0x00;
-			public uint w3 = 0x00;
-			public uint w4 = 0x00;
-
-			public bool anyNonzero()
-			{
-				bool result = false;
-
-				result |= w1 != 0x00;
-				result |= w2 != 0x00;
-				result |= w3 != 0x00;
-				result |= w4 != 0x00;
-
-				return result;
-			}
-		}
-
 		// AbilityTopStatusKind
-		public uint table1Entry = uint.MaxValue;
+		public uint table1Entry = 0xFFFFFFFF;
 		// AbilityProcesses
 		public uint table2Entry = 0x00000000;
 		// AbilityInfos
-		public quadWord table3Entries = new quadWord();
+		public uint[] table3Entries = { 0x00000000, 0x00000001, 0x0000023B, 0x00000000};
 		// AbilityConvertParams
-		public quadWord table4Entries = new quadWord();
-
-		public bool hatInfoPresent()
-		{
-			bool result = false;
-
-			result |= table1Entry != uint.MaxValue;
-			result |= table2Entry != 0x00000000;
-			result |= table4Entries.anyNonzero();
-
-			return result;
-		}
+		public uint[] table4Entries = { 0x00000000, 0x00000000, 0x00000000, 0x00000000};
 	}
 
 	class KirbyHatManager
@@ -240,6 +221,7 @@ namespace lKHM
 		byte[] tableSectionBody = null;
 		bool tableSectionBodyIsDirty = false;
 
+		HatInfoPack defaultInfoPack = new HatInfoPack();
 		Dictionary<uint, HatInfoPack> fighterIDToInfoPacks = new Dictionary<uint, HatInfoPack>();
 
 		uint getTable1EntryOffset(uint charIDIn)
@@ -315,19 +297,28 @@ namespace lKHM
 				destinationPack.table2Entry = getWordFromByteArr(sectionBodyIn, getTable2EntryOffset(fighterID));
 
 				uint table3EntriesStart = getTable3EntryOffset(fighterID);
-				destinationPack.table3Entries.w1 = getWordFromByteArr(sectionBodyIn, table3EntriesStart);
-				destinationPack.table3Entries.w2 = getWordFromByteArr(sectionBodyIn, table3EntriesStart + 0x4);
-				destinationPack.table3Entries.w3 = getWordFromByteArr(sectionBodyIn, table3EntriesStart + 0x8);
-				destinationPack.table3Entries.w4 = getWordFromByteArr(sectionBodyIn, table3EntriesStart + 0xC);
+				destinationPack.table3Entries[0] = getWordFromByteArr(sectionBodyIn, table3EntriesStart);
+				destinationPack.table3Entries[1] = getWordFromByteArr(sectionBodyIn, table3EntriesStart + 0x4);
+				destinationPack.table3Entries[2] = getWordFromByteArr(sectionBodyIn, table3EntriesStart + 0x8);
+				destinationPack.table3Entries[3] = getWordFromByteArr(sectionBodyIn, table3EntriesStart + 0xC);
 
 				uint table4EntriesStart = getTable4EntryOffset(fighterID);
-				destinationPack.table4Entries.w1 = getWordFromByteArr(sectionBodyIn, table4EntriesStart);
-				destinationPack.table4Entries.w2 = getWordFromByteArr(sectionBodyIn, table4EntriesStart + 0x4);
-				destinationPack.table4Entries.w3 = getWordFromByteArr(sectionBodyIn, table4EntriesStart + 0x8);
-				destinationPack.table4Entries.w4 = getWordFromByteArr(sectionBodyIn, table4EntriesStart + 0xC);
+				destinationPack.table4Entries[0] = getWordFromByteArr(sectionBodyIn, table4EntriesStart);
+				destinationPack.table4Entries[1] = getWordFromByteArr(sectionBodyIn, table4EntriesStart + 0x4);
+				destinationPack.table4Entries[2] = getWordFromByteArr(sectionBodyIn, table4EntriesStart + 0x8);
+				destinationPack.table4Entries[3] = getWordFromByteArr(sectionBodyIn, table4EntriesStart + 0xC);
 
 				result = true;
 			}
+
+			return result;
+		}
+		bool infoPackHasDefaultData(HatInfoPack sourcePack)
+		{
+			bool result = sourcePack.table1Entry == defaultInfoPack.table1Entry;
+			result &= sourcePack.table2Entry == defaultInfoPack.table2Entry;
+			result &= Enumerable.SequenceEqual(sourcePack.table3Entries, defaultInfoPack.table3Entries);
+			result &= Enumerable.SequenceEqual(sourcePack.table4Entries, defaultInfoPack.table4Entries);
 
 			return result;
 		}
@@ -378,15 +369,29 @@ namespace lKHM
 			foreach (var currPair in fighterIDToInfoPacks)
 			{
 				Console.Write("[FID 0x" + currPair.Key.ToString("X2") + " - ");
-				if (Constants.fighterIDsToNames.ContainsKey(currPair.Key))
+				if (Values.fighterIDsToNames.ContainsKey(currPair.Key))
 				{
-					Console.Write(Constants.fighterIDsToNames[currPair.Key]);
+					Console.Write(Values.fighterIDsToNames[currPair.Key]);
 				}
 				else
 				{
 					Console.Write("UNNAMED_FIGHTER");
 				}
-				Console.WriteLine("] TopStatusKind: 0x" + currPair.Value.table1Entry.ToString("X3"));
+				Console.WriteLine("]");
+				Console.WriteLine("  - Entry 1: 0x" + currPair.Value.table1Entry.ToString("X8"));
+				Console.WriteLine("  - Entry 2: 0x" + currPair.Value.table2Entry.ToString("X8"));
+				Console.Write("  - Entry 3:");
+				foreach (uint value in currPair.Value.table3Entries)
+				{
+					Console.Write(" 0x" + value.ToString("X8"));
+				}
+				Console.WriteLine("");
+				Console.Write("  - Entry 4:");
+				foreach (uint value in currPair.Value.table4Entries)
+				{
+					Console.Write(" 0x" + value.ToString("X8"));
+				}
+				Console.WriteLine("");
 			}
 		}
 		public bool parseHatsSectionBody()
@@ -398,7 +403,7 @@ namespace lKHM
 				for (uint i = 0x00; i < maxCharCount; i++)
 				{
 					HatInfoPack newInfoPack = new HatInfoPack();
-					if (populateHatInfoFromSectionHex(i, newInfoPack, tableSectionBody) && newInfoPack.hatInfoPresent())
+					if (populateHatInfoFromSectionHex(i, newInfoPack, tableSectionBody) && !infoPackHasDefaultData(newInfoPack))
 					{
 						fighterIDToInfoPacks[i] = newInfoPack;
 					}
@@ -407,18 +412,18 @@ namespace lKHM
 
 			return result;
 		}
-		public bool copyHatInfoToEmptySlot(uint sourceFighterID, uint destinationFighterID)
+		public bool copyHatInfoToEmptySlot(uint sourceFighterID, uint destinationFighterID, string destSlotName = null)
 		{
 			bool result = false;
 
 			if (!fighterIDToInfoPacks.ContainsKey(destinationFighterID))
 			{
-				result = copyHatInfoToSlot(sourceFighterID, destinationFighterID);
+				result = copyHatInfoToSlot(sourceFighterID, destinationFighterID, destSlotName);
 			}
 
 			return result;
 		}
-		public bool copyHatInfoToSlot(uint sourceFighterID, uint destinationFighterID)
+		public bool copyHatInfoToSlot(uint sourceFighterID, uint destinationFighterID, string destSlotName = null)
 		{
 			bool result = false;
 
@@ -426,6 +431,10 @@ namespace lKHM
 			{
 				fighterIDToInfoPacks[destinationFighterID] = fighterIDToInfoPacks[sourceFighterID];
 				tableSectionBodyIsDirty = true;
+				if (!String.IsNullOrEmpty(destSlotName))
+				{
+					Values.fighterIDsToNames[destinationFighterID] = destSlotName;
+				}
 			}
 
 			return result;

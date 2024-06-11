@@ -27,7 +27,7 @@ namespace lKHM
 			{
 				hatManager.parseHatsSectionBody();
 				hatManager.summarizeHatTable();
-				hatManager.copyHatInfoToEmptySlot((uint)Constants.LAVA_CHARA_FIGHTER_IDS.CAPTAIN_FALCON, 0x69);
+				hatManager.copyHatInfoToEmptySlot((uint)Values.LAVA_CHARA_FIGHTER_IDS.CAPTAIN_FALCON, 0x69, "GARBONZO");
 				hatManager.summarizeHatTable();
 			}
 		}
