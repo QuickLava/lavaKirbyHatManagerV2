@@ -9,58 +9,6 @@ namespace lKHM
 {
 	public static class Values
 	{
-		public enum LAVA_CHARA_SLOT_IDS
-		{
-			BOWSER = 12,
-			CAPTAIN_FALCON = 10,
-			CHARIZARD = 30,
-			DEDEDE = 35,
-			DIDDY_KONG = 28,
-			DONKEY_KONG = 1,
-			FALCO = 21,
-			FOX = 7,
-			GANONDORF = 22,
-			GIGA_BOWSER = 44,
-			ICE_CLIMBERS = 16,
-			IKE = 37,
-			IVYSAUR = 34,
-			JIGGLYPUFF = 39,
-			KIRBY = 6,
-			LINK = 2,
-			LUCARIO = 36,
-			LUCAS = 27,
-			LUIGI = 9,
-			MARIO = 0,
-			MARTH = 19,
-			META_KNIGHT = 24,
-			MR_GAME_AND_WATCH = 20,
-			NESS = 11,
-			OLIMAR = 26,
-			PEACH = 13,
-			PIKACHU = 8,
-			PIT = 25,
-			POKEMON_TRAINER = 72,
-			ROB = 38,
-			SAMUS = 3,
-			SHEIK = 15,
-			SNAKE = 42,
-			SONIC = 43,
-			SOPO = 17,
-			SQUIRTLE = 32,
-			TOON_LINK = 40,
-			WARIO = 23,
-			WARIOMAN = 45,
-			WOLF = 41,
-			YOSHI = 5,
-			ZELDA = 14,
-			ZERO_SUIT_SAMUS = 4,
-			MEWTWO = 51,
-			ROY = 50,
-			KNUCKLES = 53,
-			RIDLEY = 56,
-			//DARK_SAMUS = 0x40,
-			//WALUIGI = 0x39,
-		};
 		public enum LAVA_CHARA_FIGHTER_IDS
 		{
 			BOWSER = 0x0B,
@@ -121,71 +69,91 @@ namespace lKHM
 			EX_KRYSTAL = 0x41,
 		}
 
-		public static SortedDictionary<uint, string> fighterIDsToNames = new SortedDictionary<uint, string>();
+		public const string defaultName = "UNNAMED_FIGHTER";
+
+		static SortedDictionary<uint, string> fighterIDsToCanonNames = new SortedDictionary<uint, string>();
+		public static bool getFIDHasCanonName(uint fighterIDIn)
+		{
+			return fighterIDsToCanonNames.ContainsKey(fighterIDIn);
+		}
+		public static string getCanonNameFromFID(uint fighterIDIn)
+		{
+			string result = defaultName;
+
+			if (getFIDHasCanonName(fighterIDIn))
+			{
+				result = fighterIDsToCanonNames[fighterIDIn];
+			}
+
+			return result;
+		}
 
 		static Values()
 		{
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.CAPTAIN_FALCON] = "CAPTAIN";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.DEDEDE] = "DEDEDE";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.DIDDY_KONG] = "DIDDY";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.DONKEY_KONG] = "DONKEY";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.FALCO] = "FALCO";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.FOX] = "FOX";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.GANONDORF] = "GANON";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.MR_GAME_AND_WATCH] = "GAMEWATCH";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.GIGA_BOWSER] = "GKOOPA";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.IKE] = "IKE";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.KIRBY] = "KIRBY";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.BOWSER] = "KOOPA";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.LINK] = "LINK";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.LUCARIO] = "LUCARIO";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.LUCAS] = "LUCAS";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.LUIGI] = "LUIGI";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.MARIO] = "MARIO";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.MARTH] = "MARTH";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.META_KNIGHT] = "METAKNIGHT";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.NANA] = "NANA";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.NESS] = "NESS";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.PEACH] = "PEACH";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.PIKACHU] = "PIKACHU";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.OLIMAR] = "PIKMIN";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.PIT] = "PIT";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.IVYSAUR] = "POKEFUSHIGISOU";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.CHARIZARD] = "POKELIZARDON";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.POKEMON_TRAINER] = "POKETRAINER";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.SQUIRTLE] = "POKEZENIGAME";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.POPO] = "POPO";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.JIGGLYPUFF] = "PURIN";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.ROB] = "ROBOT";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.SAMUS] = "SAMUS";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.SHEIK] = "SHEIK";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.SNAKE] = "SNAKE";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.SONIC] = "SONIC";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.SOPO] = "SOPO";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.ZERO_SUIT_SAMUS] = "SZEROSUIT";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.TOON_LINK] = "TOONLINK";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.WARIO] = "WARIO";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.WARIOMAN] = "WARIOMAN";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.WOLF] = "WOLF";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.YOSHI] = "YOSHI";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.ZELDA] = "ZELDA";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.RED_ALLOY] = "RED_ALLOY";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.BLUE_ALLOY] = "BLUE_ALLOY";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.YELLOW_ALLOY] = "YELLOW_ALLOY";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.GREEN_ALLOY] = "GREEN_ALLOY";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.PM_MEWTWO] = "PM_MEWTWO";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.PM_ROY] = "PM_ROY";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.PP_KNUCKLES] = "P+_KNUCKLES";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.EX_RIDLEY] = "EX_RIDLEY";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.EX_WALUIGI] = "EX_WALUIGI";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.EX_DARK_SAMUS] = "EX_DARK_SAMUS";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.EX_SCEPTILE] = "EX_SCEPTILE";
-			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.EX_KRYSTAL] = "EX_KRYSTAL";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.CAPTAIN_FALCON] = "CAPTAIN";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.DEDEDE] = "DEDEDE";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.DIDDY_KONG] = "DIDDY";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.DONKEY_KONG] = "DONKEY";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.FALCO] = "FALCO";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.FOX] = "FOX";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.GANONDORF] = "GANON";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.MR_GAME_AND_WATCH] = "GAMEWATCH";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.GIGA_BOWSER] = "GKOOPA";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.IKE] = "IKE";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.KIRBY] = "KIRBY";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.BOWSER] = "KOOPA";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.LINK] = "LINK";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.LUCARIO] = "LUCARIO";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.LUCAS] = "LUCAS";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.LUIGI] = "LUIGI";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.MARIO] = "MARIO";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.MARTH] = "MARTH";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.META_KNIGHT] = "METAKNIGHT";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.NANA] = "NANA";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.NESS] = "NESS";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.PEACH] = "PEACH";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.PIKACHU] = "PIKACHU";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.OLIMAR] = "PIKMIN";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.PIT] = "PIT";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.IVYSAUR] = "POKEFUSHIGISOU";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.CHARIZARD] = "POKELIZARDON";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.POKEMON_TRAINER] = "POKETRAINER";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.SQUIRTLE] = "POKEZENIGAME";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.POPO] = "POPO";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.JIGGLYPUFF] = "PURIN";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.ROB] = "ROBOT";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.SAMUS] = "SAMUS";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.SHEIK] = "SHEIK";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.SNAKE] = "SNAKE";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.SONIC] = "SONIC";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.SOPO] = "SOPO";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.ZERO_SUIT_SAMUS] = "SZEROSUIT";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.TOON_LINK] = "TOONLINK";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.WARIO] = "WARIO";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.WARIOMAN] = "WARIOMAN";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.WOLF] = "WOLF";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.YOSHI] = "YOSHI";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.ZELDA] = "ZELDA";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.RED_ALLOY] = "RED_ALLOY";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.BLUE_ALLOY] = "BLUE_ALLOY";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.YELLOW_ALLOY] = "YELLOW_ALLOY";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.GREEN_ALLOY] = "GREEN_ALLOY";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.PM_MEWTWO] = "PM_MEWTWO";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.PM_ROY] = "PM_ROY";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.PP_KNUCKLES] = "P+_KNUCKLES";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.EX_RIDLEY] = "EX_RIDLEY";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.EX_WALUIGI] = "EX_WALUIGI";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.EX_DARK_SAMUS] = "EX_DARK_SAMUS";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.EX_SCEPTILE] = "EX_SCEPTILE";
+			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.EX_KRYSTAL] = "EX_KRYSTAL";
 		}
 	}
 
 	public class HatInfoPack
 	{
+		// Name
+		public string name = "";
+
 		// AbilityTopStatusKind
 		public uint table1Entry = 0xFFFFFFFF;
 		// AbilityProcesses
@@ -218,7 +186,7 @@ namespace lKHM
 		const string tableSectionName = "Section [7]";
 
 		HatInfoPack defaultInfoPack = new HatInfoPack();
-		public Dictionary<uint, HatInfoPack> fighterIDToInfoPacks = new Dictionary<uint, HatInfoPack>();
+		public SortedDictionary<uint, HatInfoPack> fighterIDToInfoPacks = new SortedDictionary<uint, HatInfoPack>();
 
 		uint getTable1EntryOffset(uint charIDIn)
 		{
@@ -303,30 +271,30 @@ namespace lKHM
 			return result;
 		}
 
-		public bool registerName(uint targetFighterID, string nameIn, bool allowOverwrite = false)
-		{
-			bool result = false;
+		//public bool registerName(uint targetFighterID, string nameIn, bool allowOverwrite = false)
+		//{
+		//	bool result = false;
 
-			if (!String.IsNullOrEmpty(nameIn) && (allowOverwrite || !Values.fighterIDsToNames.ContainsKey(targetFighterID)))
-			{
-				Values.fighterIDsToNames[targetFighterID] = nameIn;
-				result = true;
-			}
+		//	if (!String.IsNullOrEmpty(nameIn) && (allowOverwrite || !Values.getFIDHasCanonName(targetFighterID)))
+		//	{
+		//		Values.fighterIDsToCanonNames[targetFighterID] = nameIn;
+		//		result = true;
+		//	}
 
-			return result;
-		}
-		public bool unregisterName(uint targetFighterID)
-		{
-			bool result = false;
+		//	return result;
+		//}
+		//public bool unregisterName(uint targetFighterID)
+		//{
+		//	bool result = false;
 
-			if (Values.fighterIDsToNames.ContainsKey(targetFighterID))
-			{
-				Values.fighterIDsToNames.Remove(targetFighterID);
-				result = true;
-			}
+		//	if (Values.fighterIDsToCanonNames.ContainsKey(targetFighterID))
+		//	{
+		//		Values.fighterIDsToCanonNames.Remove(targetFighterID);
+		//		result = true;
+		//	}
 
-			return result;
-		}
+		//	return result;
+		//}
 
 		bool populateHatInfoFromSectionHex(uint fighterID, HatInfoPack destinationPack, byte[] sectionBodyIn)
 		{
@@ -334,6 +302,8 @@ namespace lKHM
 
 			if (fighterID < maxCharCount)
 			{
+				destinationPack.name = Values.getCanonNameFromFID(fighterID);
+
 				destinationPack.table1Entry = getWordFromByteArr(sectionBodyIn, getTable1EntryOffset(fighterID));
 
 				destinationPack.table2Entry = getWordFromByteArr(sectionBodyIn, getTable2EntryOffset(fighterID));
@@ -459,16 +429,7 @@ namespace lKHM
 		{
 			foreach (var currPair in fighterIDToInfoPacks)
 			{
-				Console.Write("[FID 0x" + currPair.Key.ToString("X2") + " - ");
-				if (Values.fighterIDsToNames.ContainsKey(currPair.Key))
-				{
-					Console.Write(Values.fighterIDsToNames[currPair.Key]);
-				}
-				else
-				{
-					Console.Write("UNNAMED_FIGHTER");
-				}
-				Console.WriteLine("]");
+				Console.WriteLine("[FID 0x" + currPair.Key.ToString("X2") + " - " + currPair.Value.name + "]");
 				Console.WriteLine("  - Entry 1: 0x" + currPair.Value.table1Entry.ToString("X8"));
 				Console.WriteLine("  - Entry 2: 0x" + currPair.Value.table2Entry.ToString("X8"));
 				Console.Write("  - Entry 3:");
@@ -486,25 +447,39 @@ namespace lKHM
 			}
 		}
 		
-		public bool copyHatInfoToEmptySlot(uint sourceFighterID, uint destinationFighterID, string destSlotName = null)
+		public bool copyHatInfoToEmptySlot(uint sourceFighterID, uint destinationFighterID, string copyNewName = Values.defaultName)
 		{
 			bool result = false;
 
 			if (!fighterIDToInfoPacks.ContainsKey(destinationFighterID))
 			{
-				result = copyHatInfoToSlot(sourceFighterID, destinationFighterID, destSlotName);
+				result = copyHatInfoToSlot(sourceFighterID, destinationFighterID, false);
+			}
+			if (result && !String.IsNullOrEmpty(copyNewName))
+			{
+				fighterIDToInfoPacks[destinationFighterID].name = copyNewName;
 			}
 
 			return result;
 		}
-		public bool copyHatInfoToSlot(uint sourceFighterID, uint destinationFighterID, string destSlotName = null)
+		public bool copyHatInfoToSlot(uint sourceFighterID, uint destinationFighterID, bool retainOriginalName = false)
 		{
 			bool result = false;
 
 			if ((sourceFighterID != destinationFighterID) && (destinationFighterID < maxCharCount) && fighterIDToInfoPacks.ContainsKey(sourceFighterID))
 			{
+				string bakName = null;
+				if (fighterIDToInfoPacks.ContainsKey(destinationFighterID))
+				{
+					bakName = fighterIDToInfoPacks[destinationFighterID].name;
+				}
+
 				fighterIDToInfoPacks[destinationFighterID] = fighterIDToInfoPacks[sourceFighterID];
-				registerName(destinationFighterID, destSlotName);
+
+				if (bakName != null && retainOriginalName)
+				{
+					fighterIDToInfoPacks[destinationFighterID].name = bakName;
+				}
 				result = true;
 			}
 
@@ -516,7 +491,7 @@ namespace lKHM
 
 			if (fighterIDToInfoPacks.ContainsKey(sourceFighterID) && (allowOverwrite || !fighterIDToInfoPacks.ContainsKey(destinationFighterID)))
 			{
-				if (copyHatInfoToSlot(sourceFighterID, destinationFighterID, Values.fighterIDsToNames[sourceFighterID]))
+				if (copyHatInfoToSlot(sourceFighterID, destinationFighterID))
 				{
 					result = eraseHatInfo(sourceFighterID);
 				}
@@ -524,14 +499,14 @@ namespace lKHM
 
 			return result;
 		}
-		public bool createNewHatInfo(uint targetFighterID, string targetSlotName = null)
+		public bool createNewHatInfo(uint targetFighterID, string targetSlotName = Values.defaultName)
 		{
 			bool result = false;
 
 			if (targetFighterID < maxCharCount && !fighterIDToInfoPacks.ContainsKey(targetFighterID))
 			{
 				fighterIDToInfoPacks[targetFighterID] = defaultInfoPack;
-				registerName(targetFighterID, targetSlotName);
+				fighterIDToInfoPacks[targetFighterID].name = targetSlotName;
 				result = true;
 			}
 
@@ -544,7 +519,6 @@ namespace lKHM
 			if (fighterIDToInfoPacks.ContainsKey(targetFighterID))
 			{
 				fighterIDToInfoPacks.Remove(targetFighterID);
-				unregisterName(targetFighterID);
 				result = true;
 			}
 

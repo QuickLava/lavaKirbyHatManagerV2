@@ -22,20 +22,27 @@ namespace lKHM
 			treeViewKirbyHats.Nodes.Clear();
 			foreach (var x in hatManager.fighterIDToInfoPacks)
 			{
-				TreeNode newNode = new TreeNode("[" + x.Key.ToString("X2") + "] ");
+				TreeNode newNode = new TreeNode("[" + x.Key.ToString("X2") + "] " + x.Value.name);
 				newNode.Tag = x.Key;
-				if (Values.fighterIDsToNames.ContainsKey(x.Key))
-				{
-					newNode.Text += Values.fighterIDsToNames[x.Key];
-				}
-				else
-				{
-					newNode.Text += "UNNAMED_FIGHTER";
-				}
 				treeViewKirbyHats.Nodes.Add(newNode);
 			}
 
 			treeViewKirbyHats.EndUpdate();
+		}
+		bool selectKirbyHatFromFID(uint targetFID)
+		{
+			bool result = false;
+
+			foreach (TreeNode x in treeViewKirbyHats.Nodes)
+			{
+				uint currFID = (uint)x.Tag;
+
+				if (currFID < targetFID) continue;
+				if (currFID > targetFID) break;
+				treeViewKirbyHats.SelectedNode = x;
+			}
+
+			return result;
 		}
 
 		public Form1()
@@ -88,6 +95,61 @@ namespace lKHM
 				}
 				treeViewKirbyHats.Focus();
 			}
+		}
+
+		private void buttonCloneHat_Click(object sender, EventArgs e)
+		{
+			var IDForm = new SelectFighterIDForm("Fighter ID to Clone to:");
+			if (IDForm.ShowDialog() != DialogResult.OK) return;
+
+			if (hatManager.fighterIDToInfoPacks.ContainsKey((uint)IDForm.numericUpDownFID.Value))
+			{
+				if (MessageBox.Show("Target ID already has a hat! Overwrite the associated hat?", "Confirm Overwrite", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+			}
+
+			uint sourceID = (uint)treeViewKirbyHats.SelectedNode.Tag;
+			uint destinationID = (uint)IDForm.numericUpDownFID.Value;
+			hatManager.copyHatInfoToSlot(sourceID, (uint)IDForm.numericUpDownFID.Value);
+
+			populateTreeView();
+			selectKirbyHatFromFID(destinationID);
+			treeViewKirbyHats.Focus();
+		}
+
+		private void buttonMoveHat_Click(object sender, EventArgs e)
+		{
+			var IDForm = new SelectFighterIDForm("Fighter ID to Move to:");
+			if (IDForm.ShowDialog() != DialogResult.OK) return;
+
+			if (hatManager.fighterIDToInfoPacks.ContainsKey((uint)IDForm.numericUpDownFID.Value))
+			{
+				if (MessageBox.Show("Target ID already has a hat! Overwrite the associated hat?", "Confirm Overwrite", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+			}
+
+			uint sourceID = (uint)treeViewKirbyHats.SelectedNode.Tag;
+			uint destinationID = (uint)IDForm.numericUpDownFID.Value;
+			hatManager.moveHatToNewFID(sourceID, (uint)IDForm.numericUpDownFID.Value);
+
+			populateTreeView();
+			selectKirbyHatFromFID(destinationID);
+			treeViewKirbyHats.Focus();
+		}
+
+		private void buttonCreateHat_Click(object sender, EventArgs e)
+		{
+			var IDForm = new SelectFighterIDForm("Fighter ID for New Hat:");
+			if (IDForm.ShowDialog() != DialogResult.OK) return;
+			if (hatManager.fighterIDToInfoPacks.ContainsKey((uint)IDForm.numericUpDownFID.Value))
+			{
+				if (MessageBox.Show("Target ID already has a hat! Overwrite the associated hat?", "Confirm Overwrite", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+			}
+
+			uint destinationID = (uint)IDForm.numericUpDownFID.Value;
+			hatManager.createNewHatInfo((uint)IDForm.numericUpDownFID.Value);
+
+			populateTreeView();
+			selectKirbyHatFromFID(destinationID);
+			treeViewKirbyHats.Focus();
 		}
 	}
 }

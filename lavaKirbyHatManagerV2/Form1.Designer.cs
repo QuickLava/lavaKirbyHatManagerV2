@@ -38,6 +38,7 @@ namespace lKHM
 			this.buttonCreateHat = new System.Windows.Forms.Button();
 			this.buttonCloneHat = new System.Windows.Forms.Button();
 			this.buttonDeleteHat = new System.Windows.Forms.Button();
+			this.buttonMoveHat = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// labelInputFile
@@ -114,6 +115,7 @@ namespace lKHM
 			this.buttonCreateHat.TabIndex = 41;
 			this.buttonCreateHat.Text = "New Hat";
 			this.buttonCreateHat.UseVisualStyleBackColor = true;
+			this.buttonCreateHat.Click += new System.EventHandler(this.buttonCreateHat_Click);
 			// 
 			// buttonCloneHat
 			// 
@@ -124,6 +126,7 @@ namespace lKHM
 			this.buttonCloneHat.TabIndex = 42;
 			this.buttonCloneHat.Text = "Clone Selected";
 			this.buttonCloneHat.UseVisualStyleBackColor = true;
+			this.buttonCloneHat.Click += new System.EventHandler(this.buttonCloneHat_Click);
 			// 
 			// buttonDeleteHat
 			// 
@@ -136,11 +139,23 @@ namespace lKHM
 			this.buttonDeleteHat.UseVisualStyleBackColor = true;
 			this.buttonDeleteHat.Click += new System.EventHandler(this.buttonDeleteHat_Click);
 			// 
+			// buttonMoveHat
+			// 
+			this.buttonMoveHat.Location = new System.Drawing.Point(292, 201);
+			this.buttonMoveHat.Margin = new System.Windows.Forms.Padding(4);
+			this.buttonMoveHat.Name = "buttonMoveHat";
+			this.buttonMoveHat.Size = new System.Drawing.Size(134, 28);
+			this.buttonMoveHat.TabIndex = 44;
+			this.buttonMoveHat.Text = "Move Selected";
+			this.buttonMoveHat.UseVisualStyleBackColor = true;
+			this.buttonMoveHat.Click += new System.EventHandler(this.buttonMoveHat_Click);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(776, 519);
+			this.Controls.Add(this.buttonMoveHat);
 			this.Controls.Add(this.buttonDeleteHat);
 			this.Controls.Add(this.buttonCloneHat);
 			this.Controls.Add(this.buttonCreateHat);
@@ -169,6 +184,7 @@ namespace lKHM
 		private System.Windows.Forms.Button buttonCreateHat;
 		private System.Windows.Forms.Button buttonCloneHat;
 		private System.Windows.Forms.Button buttonDeleteHat;
+		private System.Windows.Forms.Button buttonMoveHat;
 	}
 }
 

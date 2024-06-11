@@ -1164,6 +1164,12 @@
     <Compile Include="KirbyHatManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SelectFighterIDForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SelectFighterIDForm.Designer.cs">
+      <DependentUpon>SelectFighterIDForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="BrawlLib\Internal\Windows\Controls\ASLIndicator.resx">
       <DependentUpon>ASLIndicator.cs</DependentUpon>
     </EmbeddedResource>
@@ -1255,6 +1261,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="SelectFighterIDForm.resx">
+      <DependentUpon>SelectFighterIDForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="BrawlLib\bin\AnyCPU\Debug\net472\OpenTK.dll.config" />
     <None Include="BrawlLib\bin\AnyCPU\Release\net472\OpenTK.dll.config" />
     <None Include="BrawlLib\BrawlLib.csproj" />
