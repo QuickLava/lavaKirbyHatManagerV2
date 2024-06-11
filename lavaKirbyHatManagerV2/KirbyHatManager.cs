@@ -183,7 +183,7 @@ namespace lKHM
 		const uint table4Length = maxCharCount * table4EntrySize;
 		const uint tablesEndOffset = table4StartOffset + table4Length;
 
-		const string tableSectionName = "Section [7]";
+		public const string tableSectionName = "Section [7]";
 
 		HatInfoPack defaultInfoPack = new HatInfoPack();
 		public SortedDictionary<uint, HatInfoPack> fighterIDToInfoPacks = new SortedDictionary<uint, HatInfoPack>();
@@ -526,8 +526,6 @@ namespace lKHM
 		}
 		public bool buildAndExportTables(string filepathIn)
 		{
-			bool result = false;
-
 			byte[] tableBody = new byte[tablesEndOffset];
 
 			for (uint i = 0; i < maxCharCount; i++)
@@ -559,7 +557,7 @@ namespace lKHM
 
 			File.WriteAllBytes(filepathIn, tableBody);
 
-			return result;
+			return File.Exists(filepathIn);
 		}
 	}
 }

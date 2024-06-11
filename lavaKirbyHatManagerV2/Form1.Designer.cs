@@ -39,6 +39,7 @@ namespace lKHM
 			this.buttonCloneHat = new System.Windows.Forms.Button();
 			this.buttonDeleteHat = new System.Windows.Forms.Button();
 			this.buttonMoveHat = new System.Windows.Forms.Button();
+			this.buttonSave = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// labelInputFile
@@ -150,11 +151,24 @@ namespace lKHM
 			this.buttonMoveHat.UseVisualStyleBackColor = true;
 			this.buttonMoveHat.Click += new System.EventHandler(this.buttonMoveHat_Click);
 			// 
+			// buttonSave
+			// 
+			this.buttonSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonSave.Location = new System.Drawing.Point(632, 61);
+			this.buttonSave.Margin = new System.Windows.Forms.Padding(4);
+			this.buttonSave.Name = "buttonSave";
+			this.buttonSave.Size = new System.Drawing.Size(134, 28);
+			this.buttonSave.TabIndex = 45;
+			this.buttonSave.Text = "Save";
+			this.buttonSave.UseVisualStyleBackColor = true;
+			this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(776, 519);
+			this.Controls.Add(this.buttonSave);
 			this.Controls.Add(this.buttonMoveHat);
 			this.Controls.Add(this.buttonDeleteHat);
 			this.Controls.Add(this.buttonCloneHat);
@@ -185,6 +199,7 @@ namespace lKHM
 		private System.Windows.Forms.Button buttonCloneHat;
 		private System.Windows.Forms.Button buttonDeleteHat;
 		private System.Windows.Forms.Button buttonMoveHat;
+		private System.Windows.Forms.Button buttonSave;
 	}
 }
 

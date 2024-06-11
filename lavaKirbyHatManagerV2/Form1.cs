@@ -14,7 +14,31 @@ namespace lKHM
 	{
 		String defaultKirbyRelPath = "./ft_kirby.rel";
 		KirbyHatManager hatManager = new KirbyHatManager();
+		BrawlLib.SSBB.ResourceNodes.RELNode kirbyModule = null;
 
+		bool loadModule(string filepath)
+		{
+			bool result = false;
+
+			if (System.IO.File.Exists(filepath))
+			{
+				kirbyModule = new BrawlLib.SSBB.ResourceNodes.RELNode();
+				kirbyModule.Replace(filepath);
+				kirbyModule._origPath = filepath;
+
+				if (hatManager.loadHatEntriesFromREL(kirbyModule))
+				{
+					populateTreeView();
+					result = true;
+				}
+				else
+				{
+					kirbyModule = null;
+				}
+			}
+
+			return result;
+		}
 		void populateTreeView()
 		{
 			treeViewKirbyHats.BeginUpdate();
@@ -52,10 +76,9 @@ namespace lKHM
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
-			if (hatManager.loadHatEntriesFromREL(defaultKirbyRelPath))
+			if (loadModule(defaultKirbyRelPath))
 			{
 				textBoxInputFile.Text = defaultKirbyRelPath;
-				populateTreeView();
 			}
 		}
 
@@ -70,10 +93,7 @@ namespace lKHM
 		}
 		private void buttonOpen_Click(object sender, EventArgs e)
 		{
-			if (hatManager.loadHatEntriesFromREL(textBoxInputFile.Text))
-			{
-				populateTreeView();
-			}
+			loadModule(textBoxInputFile.Text);
 		}
 
 		private void buttonDeleteHat_Click(object sender, EventArgs e)
@@ -149,6 +169,29 @@ namespace lKHM
 			populateTreeView();
 			selectKirbyHatFromFID(destinationID);
 			treeViewKirbyHats.Focus();
+		}
+
+		private void buttonSave_Click(object sender, EventArgs e)
+		{
+			string tempFilename = System.IO.Path.GetTempFileName();
+			if (hatManager.buildAndExportTables(tempFilename))
+			{
+				var tableSectionNode = kirbyModule.FindChild(KirbyHatManager.tableSectionName) as BrawlLib.SSBB.ResourceNodes.ModuleSectionNode;
+				if (tableSectionNode != null)
+				{
+					tableSectionNode.Replace(tempFilename);
+
+					SaveFileDialog sfd = new SaveFileDialog();
+					sfd.Filter = "*Module File(*.rel)|*.rel";
+					if (sfd.ShowDialog() == DialogResult.OK)
+					{
+						Console.WriteLine("");
+						kirbyModule.Export(sfd.FileName);
+					}
+
+					System.IO.File.Delete(tempFilename);
+				}
+			}
 		}
 	}
 }
