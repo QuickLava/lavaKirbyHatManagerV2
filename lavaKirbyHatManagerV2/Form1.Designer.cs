@@ -29,69 +29,28 @@ namespace lKHM
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.labelInputFile = new System.Windows.Forms.Label();
-			this.buttonBrowse = new System.Windows.Forms.Button();
-			this.textBoxInputFile = new System.Windows.Forms.TextBox();
-			this.buttonOpen = new System.Windows.Forms.Button();
 			this.labelKirbyHats = new System.Windows.Forms.Label();
 			this.treeViewKirbyHats = new System.Windows.Forms.TreeView();
 			this.buttonCreateHat = new System.Windows.Forms.Button();
 			this.buttonCloneHat = new System.Windows.Forms.Button();
 			this.buttonDeleteHat = new System.Windows.Forms.Button();
 			this.buttonMoveHat = new System.Windows.Forms.Button();
-			this.buttonSave = new System.Windows.Forms.Button();
+			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.openModuleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.saveModuleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.buttonExpandContract = new System.Windows.Forms.Button();
+			this.labelHatSpecs = new System.Windows.Forms.Label();
+			this.propertyGridHatDetails = new System.Windows.Forms.PropertyGrid();
+			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
-			// 
-			// labelInputFile
-			// 
-			this.labelInputFile.AutoSize = true;
-			this.labelInputFile.Location = new System.Drawing.Point(13, 9);
-			this.labelInputFile.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.labelInputFile.Name = "labelInputFile";
-			this.labelInputFile.Size = new System.Drawing.Size(80, 17);
-			this.labelInputFile.TabIndex = 35;
-			this.labelInputFile.Text = "Module File";
-			// 
-			// buttonBrowse
-			// 
-			this.buttonBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonBrowse.Location = new System.Drawing.Point(591, 29);
-			this.buttonBrowse.Margin = new System.Windows.Forms.Padding(4);
-			this.buttonBrowse.Name = "buttonBrowse";
-			this.buttonBrowse.Size = new System.Drawing.Size(33, 28);
-			this.buttonBrowse.TabIndex = 34;
-			this.buttonBrowse.Text = "...";
-			this.buttonBrowse.UseVisualStyleBackColor = true;
-			this.buttonBrowse.Click += new System.EventHandler(this.buttonBrowse_Click);
-			// 
-			// textBoxInputFile
-			// 
-			this.textBoxInputFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxInputFile.Enabled = false;
-			this.textBoxInputFile.Location = new System.Drawing.Point(13, 32);
-			this.textBoxInputFile.Margin = new System.Windows.Forms.Padding(4);
-			this.textBoxInputFile.Name = "textBoxInputFile";
-			this.textBoxInputFile.Size = new System.Drawing.Size(569, 22);
-			this.textBoxInputFile.TabIndex = 36;
-			this.textBoxInputFile.TabStop = false;
-			// 
-			// buttonOpen
-			// 
-			this.buttonOpen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonOpen.Location = new System.Drawing.Point(632, 29);
-			this.buttonOpen.Margin = new System.Windows.Forms.Padding(4);
-			this.buttonOpen.Name = "buttonOpen";
-			this.buttonOpen.Size = new System.Drawing.Size(134, 28);
-			this.buttonOpen.TabIndex = 37;
-			this.buttonOpen.Text = "Open";
-			this.buttonOpen.UseVisualStyleBackColor = true;
-			this.buttonOpen.Click += new System.EventHandler(this.buttonOpen_Click);
 			// 
 			// labelKirbyHats
 			// 
 			this.labelKirbyHats.AutoSize = true;
-			this.labelKirbyHats.Location = new System.Drawing.Point(13, 72);
+			this.labelKirbyHats.Location = new System.Drawing.Point(13, 38);
 			this.labelKirbyHats.Name = "labelKirbyHats";
 			this.labelKirbyHats.Size = new System.Drawing.Size(77, 17);
 			this.labelKirbyHats.TabIndex = 39;
@@ -100,107 +59,183 @@ namespace lKHM
 			// treeViewKirbyHats
 			// 
 			this.treeViewKirbyHats.HideSelection = false;
-			this.treeViewKirbyHats.Location = new System.Drawing.Point(13, 93);
+			this.treeViewKirbyHats.Location = new System.Drawing.Point(13, 59);
 			this.treeViewKirbyHats.Name = "treeViewKirbyHats";
 			this.treeViewKirbyHats.ShowPlusMinus = false;
 			this.treeViewKirbyHats.ShowRootLines = false;
-			this.treeViewKirbyHats.Size = new System.Drawing.Size(272, 414);
-			this.treeViewKirbyHats.TabIndex = 40;
+			this.treeViewKirbyHats.Size = new System.Drawing.Size(270, 325);
+			this.treeViewKirbyHats.TabIndex = 0;
+			this.treeViewKirbyHats.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewKirbyHats_AfterSelect);
 			// 
 			// buttonCreateHat
 			// 
-			this.buttonCreateHat.Location = new System.Drawing.Point(292, 93);
+			this.buttonCreateHat.Location = new System.Drawing.Point(290, 59);
 			this.buttonCreateHat.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonCreateHat.Name = "buttonCreateHat";
 			this.buttonCreateHat.Size = new System.Drawing.Size(134, 28);
-			this.buttonCreateHat.TabIndex = 41;
+			this.buttonCreateHat.TabIndex = 1;
 			this.buttonCreateHat.Text = "New Hat";
 			this.buttonCreateHat.UseVisualStyleBackColor = true;
 			this.buttonCreateHat.Click += new System.EventHandler(this.buttonCreateHat_Click);
 			// 
 			// buttonCloneHat
 			// 
-			this.buttonCloneHat.Location = new System.Drawing.Point(292, 129);
+			this.buttonCloneHat.Location = new System.Drawing.Point(290, 95);
 			this.buttonCloneHat.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonCloneHat.Name = "buttonCloneHat";
 			this.buttonCloneHat.Size = new System.Drawing.Size(134, 28);
-			this.buttonCloneHat.TabIndex = 42;
+			this.buttonCloneHat.TabIndex = 2;
 			this.buttonCloneHat.Text = "Clone Selected";
 			this.buttonCloneHat.UseVisualStyleBackColor = true;
 			this.buttonCloneHat.Click += new System.EventHandler(this.buttonCloneHat_Click);
 			// 
 			// buttonDeleteHat
 			// 
-			this.buttonDeleteHat.Location = new System.Drawing.Point(292, 165);
+			this.buttonDeleteHat.Location = new System.Drawing.Point(290, 131);
 			this.buttonDeleteHat.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonDeleteHat.Name = "buttonDeleteHat";
 			this.buttonDeleteHat.Size = new System.Drawing.Size(134, 28);
-			this.buttonDeleteHat.TabIndex = 43;
+			this.buttonDeleteHat.TabIndex = 3;
 			this.buttonDeleteHat.Text = "Delete Selected";
 			this.buttonDeleteHat.UseVisualStyleBackColor = true;
 			this.buttonDeleteHat.Click += new System.EventHandler(this.buttonDeleteHat_Click);
 			// 
 			// buttonMoveHat
 			// 
-			this.buttonMoveHat.Location = new System.Drawing.Point(292, 201);
+			this.buttonMoveHat.Location = new System.Drawing.Point(290, 167);
 			this.buttonMoveHat.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonMoveHat.Name = "buttonMoveHat";
 			this.buttonMoveHat.Size = new System.Drawing.Size(134, 28);
-			this.buttonMoveHat.TabIndex = 44;
+			this.buttonMoveHat.TabIndex = 4;
 			this.buttonMoveHat.Text = "Move Selected";
 			this.buttonMoveHat.UseVisualStyleBackColor = true;
 			this.buttonMoveHat.Click += new System.EventHandler(this.buttonMoveHat_Click);
 			// 
-			// buttonSave
+			// menuStrip1
 			// 
-			this.buttonSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonSave.Location = new System.Drawing.Point(632, 61);
-			this.buttonSave.Margin = new System.Windows.Forms.Padding(4);
-			this.buttonSave.Name = "buttonSave";
-			this.buttonSave.Size = new System.Drawing.Size(134, 28);
-			this.buttonSave.TabIndex = 45;
-			this.buttonSave.Text = "Save";
-			this.buttonSave.UseVisualStyleBackColor = true;
-			this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
+			this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.helpToolStripMenuItem});
+			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+			this.menuStrip1.Name = "menuStrip1";
+			this.menuStrip1.Size = new System.Drawing.Size(732, 28);
+			this.menuStrip1.TabIndex = 47;
+			this.menuStrip1.Text = "menuStrip1";
+			// 
+			// fileToolStripMenuItem
+			// 
+			this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openModuleToolStripMenuItem,
+            this.saveModuleToolStripMenuItem});
+			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+			this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
+			this.fileToolStripMenuItem.Text = "File";
+			// 
+			// openModuleToolStripMenuItem
+			// 
+			this.openModuleToolStripMenuItem.Name = "openModuleToolStripMenuItem";
+			this.openModuleToolStripMenuItem.Size = new System.Drawing.Size(183, 26);
+			this.openModuleToolStripMenuItem.Text = "Open Module";
+			this.openModuleToolStripMenuItem.Click += new System.EventHandler(this.openModuleToolStripMenuItem_Click);
+			// 
+			// saveModuleToolStripMenuItem
+			// 
+			this.saveModuleToolStripMenuItem.Name = "saveModuleToolStripMenuItem";
+			this.saveModuleToolStripMenuItem.Size = new System.Drawing.Size(183, 26);
+			this.saveModuleToolStripMenuItem.Text = "Save Module";
+			this.saveModuleToolStripMenuItem.Click += new System.EventHandler(this.saveModuleToolStripMenuItem_Click);
+			// 
+			// helpToolStripMenuItem
+			// 
+			this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.aboutToolStripMenuItem});
+			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+			this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
+			this.helpToolStripMenuItem.Text = "Help";
+			// 
+			// aboutToolStripMenuItem
+			// 
+			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(133, 26);
+			this.aboutToolStripMenuItem.Text = "About";
+			// 
+			// buttonExpandContract
+			// 
+			this.buttonExpandContract.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonExpandContract.Location = new System.Drawing.Point(690, 27);
+			this.buttonExpandContract.Margin = new System.Windows.Forms.Padding(4);
+			this.buttonExpandContract.Name = "buttonExpandContract";
+			this.buttonExpandContract.Size = new System.Drawing.Size(32, 28);
+			this.buttonExpandContract.TabIndex = 5;
+			this.buttonExpandContract.Text = "<<";
+			this.buttonExpandContract.UseVisualStyleBackColor = true;
+			this.buttonExpandContract.Click += new System.EventHandler(this.buttonExpandContract_Click);
+			// 
+			// labelHatSpecs
+			// 
+			this.labelHatSpecs.AutoSize = true;
+			this.labelHatSpecs.Location = new System.Drawing.Point(429, 38);
+			this.labelHatSpecs.Name = "labelHatSpecs";
+			this.labelHatSpecs.Size = new System.Drawing.Size(81, 17);
+			this.labelHatSpecs.TabIndex = 49;
+			this.labelHatSpecs.Text = "Hat Details:";
+			// 
+			// propertyGridHatDetails
+			// 
+			this.propertyGridHatDetails.HelpVisible = false;
+			this.propertyGridHatDetails.Location = new System.Drawing.Point(432, 59);
+			this.propertyGridHatDetails.Name = "propertyGridHatDetails";
+			this.propertyGridHatDetails.PropertySort = System.Windows.Forms.PropertySort.Categorized;
+			this.propertyGridHatDetails.Size = new System.Drawing.Size(290, 325);
+			this.propertyGridHatDetails.TabIndex = 6;
+			this.propertyGridHatDetails.ToolbarVisible = false;
+			this.propertyGridHatDetails.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGridHatDetails_PropertyValueChanged);
 			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(776, 519);
-			this.Controls.Add(this.buttonSave);
+			this.ClientSize = new System.Drawing.Size(732, 403);
+			this.Controls.Add(this.propertyGridHatDetails);
+			this.Controls.Add(this.labelHatSpecs);
+			this.Controls.Add(this.buttonExpandContract);
 			this.Controls.Add(this.buttonMoveHat);
 			this.Controls.Add(this.buttonDeleteHat);
 			this.Controls.Add(this.buttonCloneHat);
 			this.Controls.Add(this.buttonCreateHat);
 			this.Controls.Add(this.treeViewKirbyHats);
 			this.Controls.Add(this.labelKirbyHats);
-			this.Controls.Add(this.buttonOpen);
-			this.Controls.Add(this.labelInputFile);
-			this.Controls.Add(this.buttonBrowse);
-			this.Controls.Add(this.textBoxInputFile);
+			this.Controls.Add(this.menuStrip1);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+			this.MainMenuStrip = this.menuStrip1;
+			this.MaximizeBox = false;
 			this.Name = "Form1";
 			this.Text = "lavaKirbyHatManager";
 			this.Load += new System.EventHandler(this.Form1_Load);
+			this.menuStrip1.ResumeLayout(false);
+			this.menuStrip1.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
 		}
 
 		#endregion
-
-		private System.Windows.Forms.Label labelInputFile;
-		private System.Windows.Forms.Button buttonBrowse;
-		private System.Windows.Forms.TextBox textBoxInputFile;
-		private System.Windows.Forms.Button buttonOpen;
 		private System.Windows.Forms.Label labelKirbyHats;
 		private System.Windows.Forms.TreeView treeViewKirbyHats;
 		private System.Windows.Forms.Button buttonCreateHat;
 		private System.Windows.Forms.Button buttonCloneHat;
 		private System.Windows.Forms.Button buttonDeleteHat;
 		private System.Windows.Forms.Button buttonMoveHat;
-		private System.Windows.Forms.Button buttonSave;
+		private System.Windows.Forms.MenuStrip menuStrip1;
+		private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem openModuleToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem saveModuleToolStripMenuItem;
+		private System.Windows.Forms.Button buttonExpandContract;
+		private System.Windows.Forms.Label labelHatSpecs;
+		private System.Windows.Forms.PropertyGrid propertyGridHatDetails;
 	}
 }
 

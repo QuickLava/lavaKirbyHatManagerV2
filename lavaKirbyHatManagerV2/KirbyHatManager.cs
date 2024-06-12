@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Globalization;
+using System.ComponentModel;
 
 namespace lKHM
 {
@@ -162,6 +164,206 @@ namespace lKHM
 		public uint[] table3Entries = { 0x00000000, 0x00000001, 0x0000023B, 0x00000000};
 		// AbilityConvertParams
 		public uint[] table4Entries = { 0x00000000, 0x00000000, 0x00000000, 0x00000000};
+
+		// Properties
+		const string table1CatName = "Table 1";
+		const string table2CatName = "Table 2";
+		const string table3CatName = "Table 3";
+		const string table4CatName = "Table 4";
+
+		[Category("Miscellaneous")]
+		public string Name
+		{
+			get => name;
+			set
+			{
+				name = value.ToUpper();
+			}
+		}
+
+		[Category(table1CatName)]
+		public string TopStatusKind
+		{
+			get => "0x" + table1Entry.ToString("X8");
+			set
+			{
+				uint convertedInput = uint.MaxValue;
+				string tempStr = value;
+				if (tempStr.StartsWith("0x"))
+				{
+					tempStr = tempStr.Substring(2);
+				}
+				if (uint.TryParse(tempStr, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out convertedInput))
+				{
+					table1Entry = convertedInput;
+				}
+			}
+		}
+
+		[Category(table2CatName)]
+		public string AbilityProcesses
+		{
+			get => "0x" + table2Entry.ToString("X8");
+			set
+			{
+				uint convertedInput = uint.MaxValue;
+				string tempStr = value;
+				if (tempStr.StartsWith("0x"))
+				{
+					tempStr = tempStr.Substring(2);
+				}
+				if (uint.TryParse(tempStr, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out convertedInput))
+				{
+					table2Entry = convertedInput;
+				}
+			}
+		}
+
+		[Category(table3CatName)]
+		public string AbilityInfo1
+		{
+			get => "0x" + table3Entries[0].ToString("X8");
+			set
+			{
+				uint convertedInput = uint.MaxValue;
+				string tempStr = value;
+				if (tempStr.StartsWith("0x"))
+				{
+					tempStr = tempStr.Substring(2);
+				}
+				if (uint.TryParse(tempStr, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out convertedInput))
+				{
+					table3Entries[0] = convertedInput;
+				}
+			}
+		}
+		[Category(table3CatName)]
+		public string AbilityInfo2
+		{
+			get => "0x" + table3Entries[1].ToString("X8");
+			set
+			{
+				uint convertedInput = uint.MaxValue;
+				string tempStr = value;
+				if (tempStr.StartsWith("0x"))
+				{
+					tempStr = tempStr.Substring(2);
+				}
+				if (uint.TryParse(tempStr, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out convertedInput))
+				{
+					table3Entries[1] = convertedInput;
+				}
+			}
+		}
+		[Category(table3CatName)]
+		public string AbilityInfo3
+		{
+			get => "0x" + table3Entries[2].ToString("X8");
+			set
+			{
+				uint convertedInput = uint.MaxValue;
+				string tempStr = value;
+				if (tempStr.StartsWith("0x"))
+				{
+					tempStr = tempStr.Substring(2);
+				}
+				if (uint.TryParse(tempStr, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out convertedInput))
+				{
+					table3Entries[2] = convertedInput;
+				}
+			}
+		}
+		[Category(table3CatName)]
+		public string AbilityInfo4
+		{
+			get => "0x" + table3Entries[3].ToString("X8");
+			set
+			{
+				uint convertedInput = uint.MaxValue;
+				string tempStr = value;
+				if (tempStr.StartsWith("0x"))
+				{
+					tempStr = tempStr.Substring(2);
+				}
+				if (uint.TryParse(tempStr, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out convertedInput))
+				{
+					table3Entries[3] = convertedInput;
+				}
+			}
+		}
+
+		[Category(table4CatName)]
+		public string ConvertParams1
+		{
+			get => "0x" + table4Entries[0].ToString("X8");
+			set
+			{
+				uint convertedInput = uint.MaxValue;
+				string tempStr = value;
+				if (tempStr.StartsWith("0x"))
+				{
+					tempStr = tempStr.Substring(2);
+				}
+				if (uint.TryParse(tempStr, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out convertedInput))
+				{
+					table4Entries[0] = convertedInput;
+				}
+			}
+		}
+		[Category(table4CatName)]
+		public string ConvertParams2
+		{
+			get => "0x" + table4Entries[1].ToString("X8");
+			set
+			{
+				uint convertedInput = uint.MaxValue;
+				string tempStr = value;
+				if (tempStr.StartsWith("0x"))
+				{
+					tempStr = tempStr.Substring(2);
+				}
+				if (uint.TryParse(tempStr, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out convertedInput))
+				{
+					table4Entries[1] = convertedInput;
+				}
+			}
+		}
+		[Category(table4CatName)]
+		public string ConvertParams3
+		{
+			get => "0x" + table4Entries[2].ToString("X8");
+			set
+			{
+				uint convertedInput = uint.MaxValue;
+				string tempStr = value;
+				if (tempStr.StartsWith("0x"))
+				{
+					tempStr = tempStr.Substring(2);
+				}
+				if (uint.TryParse(tempStr, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out convertedInput))
+				{
+					table4Entries[2] = convertedInput;
+				}
+			}
+		}
+		[Category(table4CatName)]
+		public string ConvertParams4
+		{
+			get => "0x" + table4Entries[3].ToString("X8");
+			set
+			{
+				uint convertedInput = uint.MaxValue;
+				string tempStr = value;
+				if (tempStr.StartsWith("0x"))
+				{
+					tempStr = tempStr.Substring(2);
+				}
+				if (uint.TryParse(tempStr, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out convertedInput))
+				{
+					table4Entries[3] = convertedInput;
+				}
+			}
+		}
 	}
 
 	class KirbyHatManager
@@ -270,31 +472,6 @@ namespace lKHM
 
 			return result;
 		}
-
-		//public bool registerName(uint targetFighterID, string nameIn, bool allowOverwrite = false)
-		//{
-		//	bool result = false;
-
-		//	if (!String.IsNullOrEmpty(nameIn) && (allowOverwrite || !Values.getFIDHasCanonName(targetFighterID)))
-		//	{
-		//		Values.fighterIDsToCanonNames[targetFighterID] = nameIn;
-		//		result = true;
-		//	}
-
-		//	return result;
-		//}
-		//public bool unregisterName(uint targetFighterID)
-		//{
-		//	bool result = false;
-
-		//	if (Values.fighterIDsToCanonNames.ContainsKey(targetFighterID))
-		//	{
-		//		Values.fighterIDsToCanonNames.Remove(targetFighterID);
-		//		result = true;
-		//	}
-
-		//	return result;
-		//}
 
 		bool populateHatInfoFromSectionHex(uint fighterID, HatInfoPack destinationPack, byte[] sectionBodyIn)
 		{
@@ -447,13 +624,13 @@ namespace lKHM
 			}
 		}
 		
-		public bool copyHatInfoToEmptySlot(uint sourceFighterID, uint destinationFighterID, string copyNewName = Values.defaultName)
+		public bool copyHatToEmptySlot(uint sourceFighterID, uint destinationFighterID, string copyNewName = Values.defaultName)
 		{
 			bool result = false;
 
 			if (!fighterIDToInfoPacks.ContainsKey(destinationFighterID))
 			{
-				result = copyHatInfoToSlot(sourceFighterID, destinationFighterID, false);
+				result = copyHatToSlot(sourceFighterID, destinationFighterID, false);
 			}
 			if (result && !String.IsNullOrEmpty(copyNewName))
 			{
@@ -462,7 +639,7 @@ namespace lKHM
 
 			return result;
 		}
-		public bool copyHatInfoToSlot(uint sourceFighterID, uint destinationFighterID, bool retainOriginalName = false)
+		public bool copyHatToSlot(uint sourceFighterID, uint destinationFighterID, bool retainOriginalName = false)
 		{
 			bool result = false;
 
@@ -491,15 +668,15 @@ namespace lKHM
 
 			if (fighterIDToInfoPacks.ContainsKey(sourceFighterID) && (allowOverwrite || !fighterIDToInfoPacks.ContainsKey(destinationFighterID)))
 			{
-				if (copyHatInfoToSlot(sourceFighterID, destinationFighterID))
+				if (copyHatToSlot(sourceFighterID, destinationFighterID))
 				{
-					result = eraseHatInfo(sourceFighterID);
+					result = eraseHat(sourceFighterID);
 				}
 			}
 
 			return result;
 		}
-		public bool createNewHatInfo(uint targetFighterID, string targetSlotName = Values.defaultName)
+		public bool createNewHat(uint targetFighterID, string targetSlotName = Values.defaultName)
 		{
 			bool result = false;
 
@@ -512,7 +689,7 @@ namespace lKHM
 
 			return result;
 		}
-		public bool eraseHatInfo(uint targetFighterID)
+		public bool eraseHat(uint targetFighterID)
 		{
 			bool result = false;
 
