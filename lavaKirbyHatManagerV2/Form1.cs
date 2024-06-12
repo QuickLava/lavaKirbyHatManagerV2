@@ -71,6 +71,7 @@ namespace lKHM
 			buttonMoveHat.Enabled = true;
 			buttonExpandContract.Enabled = true;
 			propertyGridHatDetails.Enabled = true;
+			saveModuleToolStripMenuItem.Enabled = true;
 		}
 		void disableControls()
 		{
@@ -80,6 +81,7 @@ namespace lKHM
 			buttonMoveHat.Enabled = false;
 			buttonExpandContract.Enabled = false;
 			propertyGridHatDetails.Enabled = false;
+			saveModuleToolStripMenuItem.Enabled = false;
 		}
 		void expandForm()
 		{
@@ -165,6 +167,7 @@ namespace lKHM
 					if (sfd.ShowDialog() == DialogResult.OK)
 					{
 						Console.WriteLine("");
+						kirbyModule.Rebuild();
 						kirbyModule.Export(sfd.FileName);
 					}
 

@@ -707,15 +707,11 @@ namespace lKHM
 
 			for (uint i = 0; i < maxCharCount; i++)
 			{
-				HatInfoPack sourcePack = null;
+				HatInfoPack sourcePack = defaultInfoPack;
 
 				if (fighterIDToInfoPacks.ContainsKey(i))
 				{
 					sourcePack = fighterIDToInfoPacks[i];
-				}
-				else
-				{
-					sourcePack = defaultInfoPack;
 				}
 
 				writeWordToByteArr(tableBody, sourcePack.table1Entry, getTable1EntryOffset(i));

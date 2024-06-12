@@ -135,14 +135,18 @@ namespace lKHM
 			// openModuleToolStripMenuItem
 			// 
 			this.openModuleToolStripMenuItem.Name = "openModuleToolStripMenuItem";
-			this.openModuleToolStripMenuItem.Size = new System.Drawing.Size(183, 26);
+			this.openModuleToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+O";
+			this.openModuleToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+			this.openModuleToolStripMenuItem.Size = new System.Drawing.Size(236, 26);
 			this.openModuleToolStripMenuItem.Text = "Open Module";
 			this.openModuleToolStripMenuItem.Click += new System.EventHandler(this.openModuleToolStripMenuItem_Click);
 			// 
 			// saveModuleToolStripMenuItem
 			// 
 			this.saveModuleToolStripMenuItem.Name = "saveModuleToolStripMenuItem";
-			this.saveModuleToolStripMenuItem.Size = new System.Drawing.Size(183, 26);
+			this.saveModuleToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+S";
+			this.saveModuleToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+			this.saveModuleToolStripMenuItem.Size = new System.Drawing.Size(236, 26);
 			this.saveModuleToolStripMenuItem.Text = "Save Module";
 			this.saveModuleToolStripMenuItem.Click += new System.EventHandler(this.saveModuleToolStripMenuItem_Click);
 			// 
