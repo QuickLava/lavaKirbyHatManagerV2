@@ -71,7 +71,7 @@ namespace lKHM
 			EX_KRYSTAL = 0x41,
 		}
 
-		public const string defaultName = "UNNAMED_FIGHTER";
+		public const string defaultName = "UNRECOGNIZED";
 
 		static SortedDictionary<uint, string> fighterIDsToCanonNames = new SortedDictionary<uint, string>();
 		public static bool getFIDHasCanonName(uint fighterIDIn)
@@ -164,6 +164,19 @@ namespace lKHM
 		public uint[] table3Entries = { 0x00000000, 0x00000001, 0x0000023B, 0x00000000};
 		// AbilityConvertParams
 		public uint[] table4Entries = { 0x00000000, 0x00000000, 0x00000000, 0x00000000};
+
+		public void copyInfoFrom(HatInfoPack sourceHat, bool copyName = true)
+		{
+			if (copyName)
+			{
+				name = sourceHat.name;
+			}
+
+			table1Entry = sourceHat.table1Entry;
+			table2Entry = sourceHat.table2Entry;
+			sourceHat.table3Entries.CopyTo(table3Entries, 0);
+			sourceHat.table4Entries.CopyTo(table4Entries, 0);
+		}
 
 		// Properties
 		const string table1CatName = "Table 1";
@@ -601,6 +614,68 @@ namespace lKHM
 
 			return result;
 		}
+		
+		public bool copyHatToSlot(uint sourceFighterID, uint destinationFighterID, bool allowOverwrite, bool copyName = false)
+		{
+			bool result = false;
+
+			if (fighterIDToInfoPacks.ContainsKey(sourceFighterID) && destinationFighterID < maxCharCount)
+			{
+				result = true;
+
+				if (!fighterIDToInfoPacks.ContainsKey(destinationFighterID))
+				{
+					result = createNewHat(destinationFighterID);
+				}
+				else
+				{
+					result = allowOverwrite;
+				}
+
+				if (result)
+				{
+					fighterIDToInfoPacks[destinationFighterID].copyInfoFrom(fighterIDToInfoPacks[sourceFighterID], copyName);
+				}
+			}
+
+			return result;
+		}
+		public bool moveHatToSlot(uint sourceFighterID, uint destinationFighterID, bool allowOverwrite)
+		{
+			bool result = false;
+
+			if (copyHatToSlot(sourceFighterID, destinationFighterID, allowOverwrite, true))
+			{
+				result = eraseHat(sourceFighterID);
+			}
+
+			return result;
+		}
+		public bool createNewHat(uint targetFighterID, string targetSlotName = Values.defaultName)
+		{
+			bool result = false;
+
+			if (targetFighterID < maxCharCount && !fighterIDToInfoPacks.ContainsKey(targetFighterID))
+			{
+				fighterIDToInfoPacks[targetFighterID] = new HatInfoPack();
+				fighterIDToInfoPacks[targetFighterID].name = targetSlotName;
+				result = true;
+			}
+
+			return result;
+		}
+		public bool eraseHat(uint targetFighterID)
+		{
+			bool result = false;
+
+			if (targetFighterID < maxCharCount && fighterIDToInfoPacks.ContainsKey(targetFighterID))
+			{
+				fighterIDToInfoPacks.Remove(targetFighterID);
+				result = true;
+			}
+
+			return result;
+		}
 
 		public void summarizeHatTable()
 		{
@@ -622,84 +697,6 @@ namespace lKHM
 				}
 				Console.WriteLine("");
 			}
-		}
-		
-		public bool copyHatToEmptySlot(uint sourceFighterID, uint destinationFighterID, string copyNewName = Values.defaultName)
-		{
-			bool result = false;
-
-			if (!fighterIDToInfoPacks.ContainsKey(destinationFighterID))
-			{
-				result = copyHatToSlot(sourceFighterID, destinationFighterID, false);
-			}
-			if (result && !String.IsNullOrEmpty(copyNewName))
-			{
-				fighterIDToInfoPacks[destinationFighterID].name = copyNewName;
-			}
-
-			return result;
-		}
-		public bool copyHatToSlot(uint sourceFighterID, uint destinationFighterID, bool retainOriginalName = false)
-		{
-			bool result = false;
-
-			if ((sourceFighterID != destinationFighterID) && (destinationFighterID < maxCharCount) && fighterIDToInfoPacks.ContainsKey(sourceFighterID))
-			{
-				string bakName = null;
-				if (fighterIDToInfoPacks.ContainsKey(destinationFighterID))
-				{
-					bakName = fighterIDToInfoPacks[destinationFighterID].name;
-				}
-
-				fighterIDToInfoPacks[destinationFighterID] = fighterIDToInfoPacks[sourceFighterID];
-
-				if (bakName != null && retainOriginalName)
-				{
-					fighterIDToInfoPacks[destinationFighterID].name = bakName;
-				}
-				result = true;
-			}
-
-			return result;
-		}
-		public bool moveHatToNewFID(uint sourceFighterID, uint destinationFighterID, bool allowOverwrite = false)
-		{
-			bool result = false;
-
-			if (fighterIDToInfoPacks.ContainsKey(sourceFighterID) && (allowOverwrite || !fighterIDToInfoPacks.ContainsKey(destinationFighterID)))
-			{
-				if (copyHatToSlot(sourceFighterID, destinationFighterID))
-				{
-					result = eraseHat(sourceFighterID);
-				}
-			}
-
-			return result;
-		}
-		public bool createNewHat(uint targetFighterID, string targetSlotName = Values.defaultName)
-		{
-			bool result = false;
-
-			if (targetFighterID < maxCharCount && !fighterIDToInfoPacks.ContainsKey(targetFighterID))
-			{
-				fighterIDToInfoPacks[targetFighterID] = defaultInfoPack;
-				fighterIDToInfoPacks[targetFighterID].name = targetSlotName;
-				result = true;
-			}
-
-			return result;
-		}
-		public bool eraseHat(uint targetFighterID)
-		{
-			bool result = false;
-
-			if (fighterIDToInfoPacks.ContainsKey(targetFighterID))
-			{
-				fighterIDToInfoPacks.Remove(targetFighterID);
-				result = true;
-			}
-
-			return result;
 		}
 		public bool buildAndExportTables(string filepathIn)
 		{

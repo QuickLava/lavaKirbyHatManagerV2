@@ -207,7 +207,7 @@ namespace lKHM
 
 			uint sourceID = (uint)treeViewKirbyHats.SelectedNode.Tag;
 			uint destinationID = (uint)IDForm.numericUpDownFID.Value;
-			hatManager.copyHatToSlot(sourceID, (uint)IDForm.numericUpDownFID.Value);
+			hatManager.copyHatToSlot(sourceID, (uint)IDForm.numericUpDownFID.Value, true, true);
 
 			populateTreeView();
 			selectKirbyHatFromFID(destinationID);
@@ -225,7 +225,7 @@ namespace lKHM
 
 			uint sourceID = (uint)treeViewKirbyHats.SelectedNode.Tag;
 			uint destinationID = (uint)IDForm.numericUpDownFID.Value;
-			hatManager.moveHatToNewFID(sourceID, (uint)IDForm.numericUpDownFID.Value);
+			hatManager.moveHatToSlot(sourceID, (uint)IDForm.numericUpDownFID.Value, true);
 
 			populateTreeView();
 			selectKirbyHatFromFID(destinationID);
