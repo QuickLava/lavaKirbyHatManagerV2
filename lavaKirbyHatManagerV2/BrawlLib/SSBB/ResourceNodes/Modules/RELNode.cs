@@ -414,55 +414,44 @@ namespace BrawlLib.SSBB.ResourceNodes
                     ((int) (_impOffset - (dataOffset + dataSize))).ClampMin(0);
             }
 
-            //Larger modules may take slightly longer to relocate
-            //Use a background worker so the UI thread isn't suspended
-            Action<object, DoWorkEventArgs> work = (object sender, DoWorkEventArgs e) =>
+            Stopwatch watch = Stopwatch.StartNew();
+
+            ApplyRelocations();
+
+            //Scan for branches, add extra tags
+            foreach (ModuleSectionNode s in Sections)
             {
-                Stopwatch watch = Stopwatch.StartNew();
-
-                ApplyRelocations();
-
-                //Scan for branches, add extra tags
-                foreach (ModuleSectionNode s in Sections)
+                if (s.HasCode)
                 {
-                    if (s.HasCode)
+                    PPCOpCode code;
+                    buint* opPtr = s.BufferAddress;
+                    for (int i = 0; i < s._dataBuffer.Length / 4; i++)
                     {
-                        PPCOpCode code;
-                        buint* opPtr = s.BufferAddress;
-                        for (int i = 0; i < s._dataBuffer.Length / 4; i++)
+                        if ((code = (uint)*opPtr++) is PPCBranch && !(code is PPCblr || code is PPCbctr))
                         {
-                            if ((code = (uint) *opPtr++) is PPCBranch && !(code is PPCblr || code is PPCbctr))
-                            {
-                                s._manager.LinkBranch(i, true);
-                            }
+                            s._manager.LinkBranch(i, true);
                         }
+                    }
 
-                        KeyValuePair<int, RelCommand>[] cmds = s._manager.GetCommands();
-                        foreach (KeyValuePair<int, RelCommand> x in cmds)
+                    KeyValuePair<int, RelCommand>[] cmds = s._manager.GetCommands();
+                    foreach (KeyValuePair<int, RelCommand> x in cmds)
+                    {
+                        RelocationTarget target = x.Value.GetTargetRelocation();
+                        string value = null;
+                        if (target.Section != null && target._sectionID == 5 &&
+                            !string.IsNullOrEmpty(value = target.Section._manager.GetString(target._index)))
                         {
-                            RelocationTarget target = x.Value.GetTargetRelocation();
-                            string value = null;
-                            if (target.Section != null && target._sectionID == 5 &&
-                                !string.IsNullOrEmpty(value = target.Section._manager.GetString(target._index)))
-                            {
-                                s._manager.AddTag(x.Key, value);
-                            }
+                            s._manager.AddTag(x.Key, value);
                         }
                     }
                 }
-
-                Sections[5].Populate();
-
-                watch.Stop();
-                Console.WriteLine("Took {0} seconds to relocate {1} module", watch.ElapsedMilliseconds / 1000d, Name);
-                _populated = true;
-            };
-
-            using (BackgroundWorker b = new BackgroundWorker())
-            {
-                b.DoWork += new DoWorkEventHandler(work);
-                b.RunWorkerAsync();
             }
+
+            Sections[5].Populate();
+
+            watch.Stop();
+            Console.WriteLine("Took {0} seconds to relocate {1} module", watch.ElapsedMilliseconds / 1000d, Name);
+            _populated = true;
 
             // Stage module conversion
             byte* bptr = (byte*) WorkingUncompressed.Address;
