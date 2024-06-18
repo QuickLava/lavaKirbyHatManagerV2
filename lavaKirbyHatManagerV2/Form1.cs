@@ -86,7 +86,7 @@ namespace lKHM
 		void expandForm()
 		{
 			var tempSize = this.Size;
-			tempSize.Width = 750;
+			tempSize.Width = 800;
 			buttonExpandContract.Text = "<<";
 			propertyGridHatDetails.TabStop = true;
 			formExpanded = true;
@@ -154,24 +154,13 @@ namespace lKHM
 		}
 		private void saveModuleToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			string tempFilename = System.IO.Path.GetTempFileName();
-			if (hatManager.buildAndExportTables(tempFilename))
+			SaveFileDialog sfd = new SaveFileDialog();
+			sfd.Filter = "*Module File(*.rel)|*.rel";
+			if (sfd.ShowDialog() == DialogResult.OK)
 			{
-				var tableSectionNode = kirbyModule.FindChild(KirbyHatManager.tableSectionName) as BrawlLib.SSBB.ResourceNodes.ModuleSectionNode;
-				if (tableSectionNode != null)
+				if (hatManager.writeTablesToREL(kirbyModule))
 				{
-					tableSectionNode.Replace(tempFilename);
-
-					SaveFileDialog sfd = new SaveFileDialog();
-					sfd.Filter = "*Module File(*.rel)|*.rel";
-					if (sfd.ShowDialog() == DialogResult.OK)
-					{
-						Console.WriteLine("");
-						kirbyModule.Rebuild();
-						kirbyModule.Export(sfd.FileName);
-					}
-
-					System.IO.File.Delete(tempFilename);
+					kirbyModule.Export(sfd.FileName);
 				}
 			}
 		}
@@ -253,6 +242,7 @@ namespace lKHM
 			if (treeViewKirbyHats.SelectedNode != null)
 			{
 				propertyGridHatDetails.SelectedObject = hatManager.fighterIDToInfoPacks[(uint)treeViewKirbyHats.SelectedNode.Tag];
+				propertyGridHatDetails.ExpandAllGridItems();
 			}
 		}
 

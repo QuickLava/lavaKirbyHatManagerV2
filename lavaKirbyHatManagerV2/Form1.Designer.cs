@@ -59,11 +59,11 @@ namespace lKHM
 			// treeViewKirbyHats
 			// 
 			this.treeViewKirbyHats.HideSelection = false;
-			this.treeViewKirbyHats.Location = new System.Drawing.Point(13, 59);
+			this.treeViewKirbyHats.Location = new System.Drawing.Point(13, 60);
 			this.treeViewKirbyHats.Name = "treeViewKirbyHats";
 			this.treeViewKirbyHats.ShowPlusMinus = false;
 			this.treeViewKirbyHats.ShowRootLines = false;
-			this.treeViewKirbyHats.Size = new System.Drawing.Size(270, 325);
+			this.treeViewKirbyHats.Size = new System.Drawing.Size(270, 630);
 			this.treeViewKirbyHats.TabIndex = 0;
 			this.treeViewKirbyHats.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewKirbyHats_AfterSelect);
 			// 
@@ -119,7 +119,7 @@ namespace lKHM
             this.helpToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Size = new System.Drawing.Size(732, 28);
+			this.menuStrip1.Size = new System.Drawing.Size(782, 28);
 			this.menuStrip1.TabIndex = 47;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
@@ -167,7 +167,7 @@ namespace lKHM
 			// buttonExpandContract
 			// 
 			this.buttonExpandContract.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonExpandContract.Location = new System.Drawing.Point(690, 27);
+			this.buttonExpandContract.Location = new System.Drawing.Point(740, 27);
 			this.buttonExpandContract.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonExpandContract.Name = "buttonExpandContract";
 			this.buttonExpandContract.Size = new System.Drawing.Size(32, 28);
@@ -188,10 +188,10 @@ namespace lKHM
 			// propertyGridHatDetails
 			// 
 			this.propertyGridHatDetails.HelpVisible = false;
-			this.propertyGridHatDetails.Location = new System.Drawing.Point(432, 59);
+			this.propertyGridHatDetails.Location = new System.Drawing.Point(432, 60);
 			this.propertyGridHatDetails.Name = "propertyGridHatDetails";
 			this.propertyGridHatDetails.PropertySort = System.Windows.Forms.PropertySort.Categorized;
-			this.propertyGridHatDetails.Size = new System.Drawing.Size(290, 325);
+			this.propertyGridHatDetails.Size = new System.Drawing.Size(340, 630);
 			this.propertyGridHatDetails.TabIndex = 6;
 			this.propertyGridHatDetails.ToolbarVisible = false;
 			this.propertyGridHatDetails.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGridHatDetails_PropertyValueChanged);
@@ -200,7 +200,7 @@ namespace lKHM
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(732, 403);
+			this.ClientSize = new System.Drawing.Size(782, 703);
 			this.Controls.Add(this.propertyGridHatDetails);
 			this.Controls.Add(this.labelHatSpecs);
 			this.Controls.Add(this.buttonExpandContract);

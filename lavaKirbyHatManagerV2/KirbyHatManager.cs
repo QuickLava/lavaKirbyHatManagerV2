@@ -9,8 +9,36 @@ using System.ComponentModel;
 
 namespace lKHM
 {
+	internal static class Conversions
+	{
+		internal static string convertNumToHexString(uint numIn)
+		{
+			return "0x" + numIn.ToString("X8"); ;
+		}
+		internal static uint convertHexStringToNum(string strIn, uint defaultValue)
+		{
+			uint result = defaultValue;
+
+			string tempStr = strIn;
+			uint tempConv = uint.MaxValue;
+			if (tempStr.StartsWith("0x"))
+			{
+				tempStr = tempStr.Substring(2);
+			}
+			if (uint.TryParse(tempStr, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out tempConv))
+			{
+				result = tempConv;
+			}
+
+			return result;
+		}
+	}
+
 	public static class Values
 	{
+		public const uint kirbyModuleID = 0x60;
+		public const uint soraMeleeModuleID = 0X1B;
+
 		public enum LAVA_CHARA_FIGHTER_IDS
 		{
 			BOWSER = 0x0B,
@@ -151,19 +179,114 @@ namespace lKHM
 		}
 	}
 
+	public class WriteWordCmdTypeConverter : TypeConverter
+	{
+		public override bool GetPropertiesSupported(ITypeDescriptorContext context)
+		{
+			return true;
+		}
+
+		public override PropertyDescriptorCollection GetProperties(ITypeDescriptorContext context, object value, Attribute[] attributes)
+		{
+			return TypeDescriptor.GetProperties(typeof(writeWordCmd));
+		}
+	}
+	[TypeConverter(typeof(WriteWordCmdTypeConverter))]
+	public class writeWordCmd
+	{
+		internal bool populated = false;
+		internal uint _targetOffset = uint.MaxValue;
+		internal uint _targetSection = byte.MaxValue;
+		internal uint _targetModuleID = uint.MaxValue;
+
+		[TypeConverter(typeof(BrawlLib.Internal.DropDownListRELModuleIDs))]
+		public string TargetModuleID
+		{
+			get
+			{
+				return BrawlLib.SSBB.ResourceNodes.RELNode._idNames.ContainsKey(_targetModuleID) ?
+				BrawlLib.SSBB.ResourceNodes.RELNode._idNames[_targetModuleID] :
+				Conversions.convertNumToHexString(_targetModuleID);
+			}
+			set
+			{
+				string tempStr = value;
+				if (tempStr.StartsWith("0x"))
+				{
+					tempStr = tempStr.Substring(2);
+				}
+				if (!uint.TryParse(tempStr, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out uint id) 
+					&& BrawlLib.SSBB.ResourceNodes.RELNode._idNames.ContainsValue(value))
+				{
+					id = BrawlLib.SSBB.ResourceNodes.RELNode._idNames.Keys[BrawlLib.SSBB.ResourceNodes.RELNode._idNames.IndexOfValue(value)];
+				}
+
+				_targetModuleID = id;
+			}
+		}
+		public string TargetOffset
+		{
+			get => Conversions.convertNumToHexString(_targetOffset);
+			set
+			{
+				_targetOffset = Conversions.convertHexStringToNum(value, _targetOffset);
+			}
+		}
+		public string TargetSection
+		{
+			get => Conversions.convertNumToHexString(_targetSection);
+			set
+			{
+				_targetSection = Conversions.convertHexStringToNum(value, _targetSection);
+			}
+		}
+
+		public override string ToString()
+		{
+			return "";
+		}
+		public bool isSameAs(writeWordCmd sourceCmd)
+		{
+			bool result = _targetOffset == sourceCmd._targetOffset;
+			result &= _targetSection == sourceCmd._targetSection;
+			result &= _targetModuleID == sourceCmd._targetModuleID;
+
+			return result;
+		}
+		public void copyInfoFrom(writeWordCmd sourceCmd)
+		{
+			_targetOffset = sourceCmd._targetOffset;
+			_targetSection = sourceCmd._targetSection;
+			_targetModuleID = sourceCmd._targetModuleID;
+		}
+		public string summaryString()
+		{
+			return "Write @ " + TargetOffset + " in " + TargetModuleID + "[" + TargetSection + "]" ;
+		}
+	}
+
 	public class HatInfoPack
 	{
 		// Name
-		public string name = "";
+		internal string name = "";
 
 		// AbilityTopStatusKind
-		public uint table1Entry = 0xFFFFFFFF;
-		// AbilityProcesses
-		public uint table2Entry = 0x00000000;
+		internal uint table1Entry = 0xFFFFFFFF;
+
+		// AbilityProcesses (REL Command Offset Value)
+		internal writeWordCmd table2Entry = new writeWordCmd();
+
 		// AbilityInfos
-		public uint[] table3Entries = { 0x00000000, 0x00000001, 0x0000023B, 0x00000000};
+		internal writeWordCmd table3Entry1 = new writeWordCmd();
+		internal uint table3Entry2 = 0x00000001;
+		internal uint table3Entry3 = 0x0000023B;
+		internal uint table3Entry4 = 0x00000000;
+
 		// AbilityConvertParams
-		public uint[] table4Entries = { 0x00000000, 0x00000000, 0x00000000, 0x00000000};
+		internal writeWordCmd table4Entry1 = new writeWordCmd();
+		internal writeWordCmd table4Entry2 = new writeWordCmd();
+		internal writeWordCmd table4Entry3 = new writeWordCmd();
+		internal writeWordCmd table4Entry4 = new writeWordCmd();
 
 		public void copyInfoFrom(HatInfoPack sourceHat, bool copyName = true)
 		{
@@ -174,8 +297,14 @@ namespace lKHM
 
 			table1Entry = sourceHat.table1Entry;
 			table2Entry = sourceHat.table2Entry;
-			sourceHat.table3Entries.CopyTo(table3Entries, 0);
-			sourceHat.table4Entries.CopyTo(table4Entries, 0);
+			table3Entry1.copyInfoFrom(sourceHat.table3Entry1);
+			table3Entry2 = sourceHat.table3Entry2;
+			table3Entry3 = sourceHat.table3Entry3;
+			table3Entry4 = sourceHat.table3Entry4;
+			table4Entry1.copyInfoFrom(sourceHat.table4Entry1);
+			table4Entry2.copyInfoFrom(sourceHat.table4Entry2);
+			table4Entry3.copyInfoFrom(sourceHat.table4Entry3);
+			table4Entry4.copyInfoFrom(sourceHat.table4Entry4);
 		}
 
 		// Properties
@@ -214,175 +343,68 @@ namespace lKHM
 		}
 
 		[Category(table2CatName)]
-		public string AbilityProcesses
+		public writeWordCmd AbilityProcesses
 		{
-			get => "0x" + table2Entry.ToString("X8");
-			set
-			{
-				uint convertedInput = uint.MaxValue;
-				string tempStr = value;
-				if (tempStr.StartsWith("0x"))
-				{
-					tempStr = tempStr.Substring(2);
-				}
-				if (uint.TryParse(tempStr, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out convertedInput))
-				{
-					table2Entry = convertedInput;
-				}
-			}
+			get => table2Entry;
 		}
 
 		[Category(table3CatName)]
-		public string AbilityInfo1
+		public writeWordCmd AbilityInfo1
 		{
-			get => "0x" + table3Entries[0].ToString("X8");
-			set
-			{
-				uint convertedInput = uint.MaxValue;
-				string tempStr = value;
-				if (tempStr.StartsWith("0x"))
-				{
-					tempStr = tempStr.Substring(2);
-				}
-				if (uint.TryParse(tempStr, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out convertedInput))
-				{
-					table3Entries[0] = convertedInput;
-				}
-			}
+			get => table3Entry1;
 		}
 		[Category(table3CatName)]
 		public string AbilityInfo2
 		{
-			get => "0x" + table3Entries[1].ToString("X8");
+			get => Conversions.convertNumToHexString(table3Entry2);
 			set
 			{
-				uint convertedInput = uint.MaxValue;
-				string tempStr = value;
-				if (tempStr.StartsWith("0x"))
-				{
-					tempStr = tempStr.Substring(2);
-				}
-				if (uint.TryParse(tempStr, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out convertedInput))
-				{
-					table3Entries[1] = convertedInput;
-				}
+				table3Entry2 = Conversions.convertHexStringToNum(value, table3Entry2);
 			}
 		}
 		[Category(table3CatName)]
 		public string AbilityInfo3
 		{
-			get => "0x" + table3Entries[2].ToString("X8");
+			get => Conversions.convertNumToHexString(table3Entry3);
 			set
 			{
-				uint convertedInput = uint.MaxValue;
-				string tempStr = value;
-				if (tempStr.StartsWith("0x"))
-				{
-					tempStr = tempStr.Substring(2);
-				}
-				if (uint.TryParse(tempStr, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out convertedInput))
-				{
-					table3Entries[2] = convertedInput;
-				}
+				table3Entry3 = Conversions.convertHexStringToNum(value, table3Entry3);
 			}
 		}
 		[Category(table3CatName)]
 		public string AbilityInfo4
 		{
-			get => "0x" + table3Entries[3].ToString("X8");
+			get => Conversions.convertNumToHexString(table3Entry4);
 			set
 			{
-				uint convertedInput = uint.MaxValue;
-				string tempStr = value;
-				if (tempStr.StartsWith("0x"))
-				{
-					tempStr = tempStr.Substring(2);
-				}
-				if (uint.TryParse(tempStr, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out convertedInput))
-				{
-					table3Entries[3] = convertedInput;
-				}
+				table3Entry4 = Conversions.convertHexStringToNum(value, table3Entry4);
 			}
 		}
 
 		[Category(table4CatName)]
-		public string ConvertParams1
+		public writeWordCmd ConvertParams1
 		{
-			get => "0x" + table4Entries[0].ToString("X8");
-			set
-			{
-				uint convertedInput = uint.MaxValue;
-				string tempStr = value;
-				if (tempStr.StartsWith("0x"))
-				{
-					tempStr = tempStr.Substring(2);
-				}
-				if (uint.TryParse(tempStr, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out convertedInput))
-				{
-					table4Entries[0] = convertedInput;
-				}
-			}
+			get => table4Entry1;
 		}
 		[Category(table4CatName)]
-		public string ConvertParams2
+		public writeWordCmd ConvertParams2
 		{
-			get => "0x" + table4Entries[1].ToString("X8");
-			set
-			{
-				uint convertedInput = uint.MaxValue;
-				string tempStr = value;
-				if (tempStr.StartsWith("0x"))
-				{
-					tempStr = tempStr.Substring(2);
-				}
-				if (uint.TryParse(tempStr, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out convertedInput))
-				{
-					table4Entries[1] = convertedInput;
-				}
-			}
+			get => table4Entry2;
 		}
 		[Category(table4CatName)]
-		public string ConvertParams3
+		public writeWordCmd ConvertParams3
 		{
-			get => "0x" + table4Entries[2].ToString("X8");
-			set
-			{
-				uint convertedInput = uint.MaxValue;
-				string tempStr = value;
-				if (tempStr.StartsWith("0x"))
-				{
-					tempStr = tempStr.Substring(2);
-				}
-				if (uint.TryParse(tempStr, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out convertedInput))
-				{
-					table4Entries[2] = convertedInput;
-				}
-			}
+			get => table4Entry3;
 		}
 		[Category(table4CatName)]
-		public string ConvertParams4
+		public writeWordCmd ConvertParams4
 		{
-			get => "0x" + table4Entries[3].ToString("X8");
-			set
-			{
-				uint convertedInput = uint.MaxValue;
-				string tempStr = value;
-				if (tempStr.StartsWith("0x"))
-				{
-					tempStr = tempStr.Substring(2);
-				}
-				if (uint.TryParse(tempStr, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out convertedInput))
-				{
-					table4Entries[3] = convertedInput;
-				}
-			}
+			get => table4Entry4;
 		}
 	}
 
 	class KirbyHatManager
 	{
-		const uint kirbyModuleID = 0x60;
-
 		const uint maxCharCount = 0x100;
 		const uint table1EntrySize = 0x4;
 		const uint table2EntrySize = 0x4;
@@ -399,6 +421,8 @@ namespace lKHM
 		const uint tablesEndOffset = table4StartOffset + table4Length;
 
 		public const string tableSectionName = "Section [7]";
+
+		private byte[] _convBuf = new byte[4];
 
 		HatInfoPack defaultInfoPack = new HatInfoPack();
 		public SortedDictionary<uint, HatInfoPack> fighterIDToInfoPacks = new SortedDictionary<uint, HatInfoPack>();
@@ -448,69 +472,137 @@ namespace lKHM
 			return result;
 		}
 
-		uint getWordFromByteArr(byte[] arrIn, uint offset)
+		unsafe UnmanagedMemoryStream getHexStreamFromSectionNode(BrawlLib.SSBB.ResourceNodes.ModuleSectionNode sectionIn)
+		{
+			UnmanagedMemoryStream result = null;
+
+			if (sectionIn != null)
+			{
+				result = new UnmanagedMemoryStream((byte*)sectionIn._dataBuffer.Address,
+						sectionIn._dataBuffer.Length, sectionIn._dataBuffer.Length, FileAccess.ReadWrite);
+			}
+
+			return result;
+		}
+		uint readWordFromByteArr(UnmanagedMemoryStream hexStreamIn, uint offset)
 		{
 			uint result = uint.MaxValue;
 
-			if (offset + 4 <= arrIn.Length)
+			if (offset + 4 <= hexStreamIn.Length)
 			{
-				byte[] conversionBuffer = new byte[4];
-				conversionBuffer = arrIn.Skip((int)offset).Take(4).ToArray();
+				hexStreamIn.Seek(offset, SeekOrigin.Begin);
+				hexStreamIn.Read(_convBuf, 0, 4);
 				if (BitConverter.IsLittleEndian)
 				{
-					conversionBuffer = conversionBuffer.Reverse().ToArray();
+					_convBuf = _convBuf.Reverse().ToArray();
 				}
-				result = BitConverter.ToUInt32(conversionBuffer, 0);
+				result = BitConverter.ToUInt32(_convBuf, 0);
 			}
 
 			return result;
 		}
-		bool writeWordToByteArr(byte[] arrIn, uint valueIn, uint offset)
+		bool writeWordToByteArr(UnmanagedMemoryStream hexStreamIn, uint valueIn, uint offset)
 		{
 			bool result = false;
 
-			if (offset + 4 <= arrIn.Length)
+			if (offset + 4 <= hexStreamIn.Length)
 			{
-				byte[] conversionBuffer = new byte[4];
-				conversionBuffer = BitConverter.GetBytes(valueIn);
+				_convBuf = BitConverter.GetBytes(valueIn);
 				if (BitConverter.IsLittleEndian)
 				{
-					conversionBuffer = conversionBuffer.Reverse().ToArray();
+					_convBuf = _convBuf.Reverse().ToArray();
 				}
-				arrIn[offset] = conversionBuffer[0];
-				arrIn[offset + 1] = conversionBuffer[1];
-				arrIn[offset + 2] = conversionBuffer[2];
-				arrIn[offset + 3] = conversionBuffer[3];
-			}
-
-			return result;
-		}
-
-		bool populateHatInfoFromSectionHex(uint fighterID, HatInfoPack destinationPack, byte[] sectionBodyIn)
-		{
-			bool result = false;
-
-			if (fighterID < maxCharCount)
-			{
-				destinationPack.name = Values.getCanonNameFromFID(fighterID);
-
-				destinationPack.table1Entry = getWordFromByteArr(sectionBodyIn, getTable1EntryOffset(fighterID));
-
-				destinationPack.table2Entry = getWordFromByteArr(sectionBodyIn, getTable2EntryOffset(fighterID));
-
-				uint table3EntriesStart = getTable3EntryOffset(fighterID);
-				destinationPack.table3Entries[0] = getWordFromByteArr(sectionBodyIn, table3EntriesStart);
-				destinationPack.table3Entries[1] = getWordFromByteArr(sectionBodyIn, table3EntriesStart + 0x4);
-				destinationPack.table3Entries[2] = getWordFromByteArr(sectionBodyIn, table3EntriesStart + 0x8);
-				destinationPack.table3Entries[3] = getWordFromByteArr(sectionBodyIn, table3EntriesStart + 0xC);
-
-				uint table4EntriesStart = getTable4EntryOffset(fighterID);
-				destinationPack.table4Entries[0] = getWordFromByteArr(sectionBodyIn, table4EntriesStart);
-				destinationPack.table4Entries[1] = getWordFromByteArr(sectionBodyIn, table4EntriesStart + 0x4);
-				destinationPack.table4Entries[2] = getWordFromByteArr(sectionBodyIn, table4EntriesStart + 0x8);
-				destinationPack.table4Entries[3] = getWordFromByteArr(sectionBodyIn, table4EntriesStart + 0xC);
+				hexStreamIn.Seek(offset, SeekOrigin.Begin);
+				hexStreamIn.Write(_convBuf, 0, 4);
 
 				result = true;
+			}
+
+			return result;
+		}
+		writeWordCmd readRELWriteCMD(BrawlLib.SSBB.ResourceNodes.ModuleSectionNode sectionIn, uint offset)
+		{
+			writeWordCmd result = new writeWordCmd();
+
+			if (sectionIn != null && sectionIn._manager != null)
+			{
+				int convertedOffset = (int)(offset / 0x4);
+
+				var cmd = sectionIn._manager.GetCommand(convertedOffset);
+				if (cmd != null && cmd._command == BrawlLib.SSBB.ResourceNodes.RELCommandType.WriteWord)
+				{
+					result._targetOffset = cmd._addend;
+					result._targetSection = cmd._targetSectionId;
+					result._targetModuleID = cmd._moduleID;
+				}
+			}
+
+			return result;
+		}
+		bool writeRELWriteCMD(BrawlLib.SSBB.ResourceNodes.ModuleSectionNode sectionIn, writeWordCmd commandIn, uint offset)
+		{
+			bool result = false;
+
+			if (sectionIn != null && sectionIn._manager != null)
+			{
+				int convertedOffset = (int)(offset / 0x4);
+
+				var cmd = new BrawlLib.SSBB.ResourceNodes.RelCommand(
+					(sectionIn.Root as BrawlLib.SSBB.ResourceNodes.ModuleNode).ID,
+					sectionIn,
+					new BrawlLib.SSBB.Types.RELLink());
+
+				cmd.Command = BrawlLib.SSBB.ResourceNodes.RELCommandType.WriteWord;
+				cmd._addend = commandIn._targetOffset;
+				cmd._targetSectionId = commandIn._targetSection;
+				cmd._moduleID = commandIn._targetModuleID;
+
+				if (sectionIn._manager._commands.ContainsKey(convertedOffset))
+				{
+					sectionIn._manager.ClearCommand(convertedOffset);
+				}
+
+				sectionIn._manager.SetCommand(convertedOffset, cmd);
+				result = true;
+			}
+
+			return result;
+		}
+		bool writeRELWriteCMDAndWord(BrawlLib.SSBB.ResourceNodes.ModuleSectionNode sectionIn, UnmanagedMemoryStream hexStreamIn, writeWordCmd commandIn, uint offset)
+		{
+			bool result = false;
+
+			if (writeWordToByteArr(hexStreamIn, 0x00000000, offset))
+			{
+				result = writeRELWriteCMD(sectionIn, commandIn, offset);
+			}
+
+			return result;
+		}
+
+		HatInfoPack buildHatFromSection(uint fighterID, BrawlLib.SSBB.ResourceNodes.ModuleSectionNode sectionIn, UnmanagedMemoryStream hexStreamIn)
+		{
+			HatInfoPack result = new HatInfoPack();
+
+			if (fighterID < maxCharCount && getTable4EntryOffset(fighterID) < hexStreamIn.Length)
+			{
+				result.name = Values.getCanonNameFromFID(fighterID);
+
+				result.table1Entry = readWordFromByteArr(hexStreamIn, getTable1EntryOffset(fighterID));
+
+				result.table2Entry = readRELWriteCMD(sectionIn, getTable2EntryOffset(fighterID));
+
+				uint table3EntriesStart = getTable3EntryOffset(fighterID);
+				result.table3Entry1 = readRELWriteCMD(sectionIn, table3EntriesStart);
+				result.table3Entry2 = readWordFromByteArr(hexStreamIn, table3EntriesStart + 0x4);
+				result.table3Entry3 = readWordFromByteArr(hexStreamIn, table3EntriesStart + 0x8);
+				result.table3Entry4 = readWordFromByteArr(hexStreamIn, table3EntriesStart + 0xC);
+
+				uint table4EntriesStart = getTable4EntryOffset(fighterID);
+				result.table4Entry1 = readRELWriteCMD(sectionIn, table4EntriesStart);
+				result.table4Entry2 = readRELWriteCMD(sectionIn, table4EntriesStart + 0x4);
+				result.table4Entry3 = readRELWriteCMD(sectionIn, table4EntriesStart + 0x8);
+				result.table4Entry4 = readRELWriteCMD(sectionIn, table4EntriesStart + 0xC);
 			}
 
 			return result;
@@ -518,71 +610,53 @@ namespace lKHM
 		bool infoPackHasDefaultData(HatInfoPack sourcePack)
 		{
 			bool result = sourcePack.table1Entry == defaultInfoPack.table1Entry;
-			result &= sourcePack.table2Entry == defaultInfoPack.table2Entry;
-			result &= Enumerable.SequenceEqual(sourcePack.table3Entries, defaultInfoPack.table3Entries);
-			result &= Enumerable.SequenceEqual(sourcePack.table4Entries, defaultInfoPack.table4Entries);
+			result &= sourcePack.table2Entry.isSameAs(defaultInfoPack.table2Entry);
+			result &= sourcePack.table3Entry1.isSameAs(defaultInfoPack.table3Entry1);
+			result &= sourcePack.table3Entry2 == defaultInfoPack.table3Entry2;
+			result &= sourcePack.table3Entry3 == defaultInfoPack.table3Entry3;
+			result &= sourcePack.table3Entry4 == defaultInfoPack.table3Entry4;
+			result &= sourcePack.table4Entry1.isSameAs(defaultInfoPack.table4Entry1);
+			result &= sourcePack.table4Entry2.isSameAs(defaultInfoPack.table4Entry2);
+			result &= sourcePack.table4Entry3.isSameAs(defaultInfoPack.table4Entry3);
+			result &= sourcePack.table4Entry4.isSameAs(defaultInfoPack.table4Entry4);
 
 			return result;
 		}
 
-		public bool loadHatEntriesFromSectionHex(byte[] tableSectionBody)
-		{
-			bool result = false;
-
-			if (tableSectionBody.Length >= tablesEndOffset)
-			{
-				fighterIDToInfoPacks.Clear();
-
-				for (uint i = 0x00; i < maxCharCount; i++)
-				{
-					HatInfoPack newInfoPack = new HatInfoPack();
-					if (populateHatInfoFromSectionHex(i, newInfoPack, tableSectionBody) && !infoPackHasDefaultData(newInfoPack))
-					{
-						fighterIDToInfoPacks[i] = newInfoPack;
-					}
-				}
-				result = fighterIDToInfoPacks.Count > 0;
-			}
-
-			return result;
-		}
-		public bool loadHatEntriesFromSectionHex(string filepathIn)
-		{
-			bool result = false;
-
-			if (File.Exists(filepathIn))
-			{
-				byte[] tableSectionBody = File.ReadAllBytes(filepathIn);
-				result = loadHatEntriesFromSectionHex(tableSectionBody);
-			}
-			else
-			{
-				Console.WriteLine("Failed to load Table Section Hex file!");
-			}
-
-			return result;
-		}
 		public bool loadHatEntriesFromREL(BrawlLib.SSBB.ResourceNodes.RELNode kirbyModule)
 		{
 			bool result = false;
 
-			if (kirbyModule.ModuleID == kirbyModuleID)
+			if (kirbyModule.ModuleID == Values.kirbyModuleID)
 			{
 				Console.WriteLine("Kirby Module Loaded:");
 				Console.WriteLine("Name: " + kirbyModule.Name + "\n");
 				Console.WriteLine("Size: " + kirbyModule.UncompressedSize.ToString("X3") + " bytes\n");
 
 				var tableSectionNode = kirbyModule.FindChild(tableSectionName) as BrawlLib.SSBB.ResourceNodes.ModuleSectionNode;
-				if (tableSectionNode != null && tableSectionNode.UncompressedSize >= tablesEndOffset)
+				UnmanagedMemoryStream sectionHexStream = getHexStreamFromSectionNode(tableSectionNode);
+				if (sectionHexStream != null && sectionHexStream.Length >= tablesEndOffset)
 				{
-					string tempFilename = Path.GetTempFileName();
-					tableSectionNode.Export(tempFilename);
-					result = loadHatEntriesFromSectionHex(tempFilename);
+					fighterIDToInfoPacks.Clear();
+
+					// Grab default Table 2 and 3 Entries from Mario's slot, since that's what vBrawl defaults to.
+					defaultInfoPack.table2Entry = readRELWriteCMD(tableSectionNode, getTable2EntryOffset(0x00));
+					defaultInfoPack.table3Entry1 = readRELWriteCMD(tableSectionNode, getTable3EntryOffset(0x00));
+
+					for (uint i = 0x00; i < maxCharCount; i++)
+					{
+						HatInfoPack newInfoPack = buildHatFromSection(i, tableSectionNode, sectionHexStream);
+						if (!infoPackHasDefaultData(newInfoPack))
+						{
+							fighterIDToInfoPacks[i] = newInfoPack;
+						}
+					}
+
+					result = fighterIDToInfoPacks.Count > 0;
 					if (result)
 					{
 						Console.WriteLine("Successfully loaded and parsed Hat Table!");
 					}
-					File.Delete(tempFilename);
 				}
 				else
 				{
@@ -592,7 +666,7 @@ namespace lKHM
 			else
 			{
 				Console.WriteLine("Loaded Module file is not Kirby Module!");
-				Console.WriteLine("Kirby Module must have ModuleID " + kirbyModuleID.ToString() + ", loaded Module has ID " + kirbyModule.ModuleID.ToString() + "!");
+				Console.WriteLine("Kirby Module must have ModuleID " + Values.kirbyModuleID.ToString() + ", loaded Module has ID " + kirbyModule.ModuleID.ToString() + "!");
 			}
 
 			return result;
@@ -682,52 +756,71 @@ namespace lKHM
 			foreach (var currPair in fighterIDToInfoPacks)
 			{
 				Console.WriteLine("[FID 0x" + currPair.Key.ToString("X2") + " - " + currPair.Value.name + "]");
-				Console.WriteLine("  - Entry 1: 0x" + currPair.Value.table1Entry.ToString("X8"));
-				Console.WriteLine("  - Entry 2: 0x" + currPair.Value.table2Entry.ToString("X8"));
-				Console.Write("  - Entry 3:");
-				foreach (uint value in currPair.Value.table3Entries)
-				{
-					Console.Write(" 0x" + value.ToString("X8"));
-				}
-				Console.WriteLine("");
-				Console.Write("  - Entry 4:");
-				foreach (uint value in currPair.Value.table4Entries)
-				{
-					Console.Write(" 0x" + value.ToString("X8"));
-				}
+				Console.WriteLine("  - Table 1: " + currPair.Value.TopStatusKind);
+				Console.WriteLine("  - Table 2: " + currPair.Value.table2Entry.summaryString());
+				Console.WriteLine("  - Table 3:");
+				Console.WriteLine("    - Entry 1: " + currPair.Value.table3Entry1.summaryString());
+				Console.WriteLine("    - Entry 2: " + currPair.Value.AbilityInfo2);
+				Console.WriteLine("    - Entry 2: " + currPair.Value.AbilityInfo3);
+				Console.WriteLine("    - Entry 2: " + currPair.Value.AbilityInfo4);
+				Console.WriteLine("  - Table 4:");
+				Console.WriteLine("    - Entry 1: " + currPair.Value.table4Entry1.summaryString());
+				Console.WriteLine("    - Entry 2: " + currPair.Value.table4Entry2.summaryString());
+				Console.WriteLine("    - Entry 3: " + currPair.Value.table4Entry3.summaryString());
+				Console.WriteLine("    - Entry 4: " + currPair.Value.table4Entry4.summaryString());
 				Console.WriteLine("");
 			}
 		}
-		public bool buildAndExportTables(string filepathIn)
+		unsafe public bool writeTablesToREL(BrawlLib.SSBB.ResourceNodes.RELNode kirbyModule)
 		{
-			byte[] tableBody = new byte[tablesEndOffset];
+			bool result = false;
 
-			for (uint i = 0; i < maxCharCount; i++)
+			var tableSectionNode = kirbyModule.FindChild(tableSectionName) as BrawlLib.SSBB.ResourceNodes.ModuleSectionNode;
+			UnmanagedMemoryStream sectionHexStream = getHexStreamFromSectionNode(tableSectionNode);
+			if (sectionHexStream != null && sectionHexStream.Length >= tablesEndOffset)
 			{
-				HatInfoPack sourcePack = defaultInfoPack;
+				result = true;
 
-				if (fighterIDToInfoPacks.ContainsKey(i))
+				for (uint i = 0; i < maxCharCount; i++)
 				{
-					sourcePack = fighterIDToInfoPacks[i];
+					HatInfoPack sourcePack = defaultInfoPack;
+
+					if (fighterIDToInfoPacks.ContainsKey(i))
+					{
+						sourcePack = fighterIDToInfoPacks[i];
+					}
+
+					result &= writeWordToByteArr(sectionHexStream, sourcePack.table1Entry, getTable1EntryOffset(i));
+
+					result &= writeRELWriteCMDAndWord(tableSectionNode, sectionHexStream, sourcePack.table2Entry, getTable2EntryOffset(i));
+
+					uint table3EntryOffset = getTable3EntryOffset(i);
+					result &= writeRELWriteCMDAndWord(tableSectionNode, sectionHexStream, sourcePack.table3Entry1, table3EntryOffset);
+					result &= writeWordToByteArr(sectionHexStream, sourcePack.table3Entry2, table3EntryOffset + 0x4);
+					result &= writeWordToByteArr(sectionHexStream, sourcePack.table3Entry3, table3EntryOffset + 0x8);
+					result &= writeWordToByteArr(sectionHexStream, sourcePack.table3Entry4, table3EntryOffset + 0xC);
+
+					uint table4EntryOffset = getTable4EntryOffset(i);
+					result &= writeRELWriteCMDAndWord(tableSectionNode, sectionHexStream, sourcePack.table4Entry1, table4EntryOffset);
+					result &= writeRELWriteCMDAndWord(tableSectionNode, sectionHexStream, sourcePack.table4Entry2, table4EntryOffset + 0x4);
+					result &= writeRELWriteCMDAndWord(tableSectionNode, sectionHexStream, sourcePack.table4Entry3, table4EntryOffset + 0x8);
+					result &= writeRELWriteCMDAndWord(tableSectionNode, sectionHexStream, sourcePack.table4Entry4, table4EntryOffset + 0xC);
 				}
 
-				writeWordToByteArr(tableBody, sourcePack.table1Entry, getTable1EntryOffset(i));
-				writeWordToByteArr(tableBody, sourcePack.table2Entry, getTable2EntryOffset(i));
-				uint table3EntryOffset = getTable3EntryOffset(i);
-				for (uint u = 0; u < 4; u++)
-				{
-					writeWordToByteArr(tableBody, sourcePack.table3Entries[u], table3EntryOffset + (u * 4));
-				}
-				uint table4EntryOffset = getTable4EntryOffset(i);
-				for (uint u = 0; u < 4; u++)
-				{
-					writeWordToByteArr(tableBody, sourcePack.table4Entries[u], table4EntryOffset + (u * 4));
-				}
+				BrawlLib.Internal.UnsafeBuffer newBuffer = new BrawlLib.Internal.UnsafeBuffer((int)sectionHexStream.Length);
+				sectionHexStream.Seek(0, SeekOrigin.Begin);
+				BrawlLib.Internal.Memory.Move(newBuffer.Address, sectionHexStream.PositionPointer, (uint)sectionHexStream.Length);
+
+				tableSectionNode._dataBuffer.Dispose();
+				tableSectionNode._dataBuffer = newBuffer;
+				tableSectionNode.SignalPropertyChange();
+				kirbyModule.UpdateItemIDs();
+				kirbyModule.Rebuild();
+
+				result = true;
 			}
 
-			File.WriteAllBytes(filepathIn, tableBody);
-
-			return File.Exists(filepathIn);
+			return result;
 		}
 	}
 }
