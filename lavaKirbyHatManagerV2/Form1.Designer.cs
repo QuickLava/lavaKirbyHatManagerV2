@@ -69,7 +69,7 @@ namespace lKHM
 			// 
 			// buttonCreateHat
 			// 
-			this.buttonCreateHat.Location = new System.Drawing.Point(290, 59);
+			this.buttonCreateHat.Location = new System.Drawing.Point(290, 60);
 			this.buttonCreateHat.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonCreateHat.Name = "buttonCreateHat";
 			this.buttonCreateHat.Size = new System.Drawing.Size(134, 28);
@@ -80,7 +80,7 @@ namespace lKHM
 			// 
 			// buttonCloneHat
 			// 
-			this.buttonCloneHat.Location = new System.Drawing.Point(290, 95);
+			this.buttonCloneHat.Location = new System.Drawing.Point(290, 130);
 			this.buttonCloneHat.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonCloneHat.Name = "buttonCloneHat";
 			this.buttonCloneHat.Size = new System.Drawing.Size(134, 28);
@@ -91,7 +91,7 @@ namespace lKHM
 			// 
 			// buttonDeleteHat
 			// 
-			this.buttonDeleteHat.Location = new System.Drawing.Point(290, 131);
+			this.buttonDeleteHat.Location = new System.Drawing.Point(290, 95);
 			this.buttonDeleteHat.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonDeleteHat.Name = "buttonDeleteHat";
 			this.buttonDeleteHat.Size = new System.Drawing.Size(134, 28);
@@ -102,7 +102,7 @@ namespace lKHM
 			// 
 			// buttonMoveHat
 			// 
-			this.buttonMoveHat.Location = new System.Drawing.Point(290, 167);
+			this.buttonMoveHat.Location = new System.Drawing.Point(290, 165);
 			this.buttonMoveHat.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonMoveHat.Name = "buttonMoveHat";
 			this.buttonMoveHat.Size = new System.Drawing.Size(134, 28);
@@ -119,7 +119,7 @@ namespace lKHM
             this.helpToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Size = new System.Drawing.Size(782, 28);
+			this.menuStrip1.Size = new System.Drawing.Size(782, 30);
 			this.menuStrip1.TabIndex = 47;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
