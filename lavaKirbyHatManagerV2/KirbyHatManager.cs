@@ -789,6 +789,8 @@ namespace lKHM
 			{
 				result = true;
 
+				tableSectionNode._manager.ClearCommands();
+
 				for (uint i = 0; i < maxCharCount; i++)
 				{
 					HatInfoPack sourcePack = defaultInfoPack;
