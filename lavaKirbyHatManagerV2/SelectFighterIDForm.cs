@@ -66,7 +66,8 @@ namespace lKHM
 		private void numericUpDownFID_KeyDown(object sender, KeyEventArgs e)
 		{
 			string allowedChars = "0123456789ABCDEF";
-			if (!allowedChars.Contains((char)e.KeyCode))
+			Keys[] allowedKeys = { Keys.Back, Keys.Delete, Keys.Shift, Keys.Left, Keys.Right, Keys.Up, Keys.Down };
+			if (!allowedChars.Contains((char)e.KeyCode) && !allowedKeys.Contains(e.KeyCode))
 			{
 				e.SuppressKeyPress = true;
 			}
