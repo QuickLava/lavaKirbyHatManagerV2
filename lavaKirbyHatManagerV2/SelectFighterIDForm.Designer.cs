@@ -48,22 +48,23 @@ namespace lKHM
 			// numericUpDownFID
 			// 
 			this.numericUpDownFID.Hexadecimal = true;
-			this.numericUpDownFID.Location = new System.Drawing.Point(16, 34);
+			this.numericUpDownFID.Location = new System.Drawing.Point(10, 35);
 			this.numericUpDownFID.Maximum = new decimal(new int[] {
-            256,
+            255,
             0,
             0,
             0});
 			this.numericUpDownFID.Name = "numericUpDownFID";
-			this.numericUpDownFID.Size = new System.Drawing.Size(156, 22);
+			this.numericUpDownFID.Size = new System.Drawing.Size(170, 22);
 			this.numericUpDownFID.TabIndex = 1;
 			this.numericUpDownFID.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.numericUpDownFID.KeyDown += new System.Windows.Forms.KeyEventHandler(this.numericUpDownFID_KeyDown);
 			// 
 			// buttonOkay
 			// 
-			this.buttonOkay.Location = new System.Drawing.Point(16, 63);
+			this.buttonOkay.Location = new System.Drawing.Point(10, 63);
 			this.buttonOkay.Name = "buttonOkay";
-			this.buttonOkay.Size = new System.Drawing.Size(75, 23);
+			this.buttonOkay.Size = new System.Drawing.Size(80, 30);
 			this.buttonOkay.TabIndex = 2;
 			this.buttonOkay.Text = "Okay";
 			this.buttonOkay.UseVisualStyleBackColor = true;
@@ -72,9 +73,9 @@ namespace lKHM
 			// buttonCancel
 			// 
 			this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.buttonCancel.Location = new System.Drawing.Point(97, 63);
+			this.buttonCancel.Location = new System.Drawing.Point(100, 63);
 			this.buttonCancel.Name = "buttonCancel";
-			this.buttonCancel.Size = new System.Drawing.Size(75, 23);
+			this.buttonCancel.Size = new System.Drawing.Size(80, 30);
 			this.buttonCancel.TabIndex = 3;
 			this.buttonCancel.Text = "Cancel";
 			this.buttonCancel.UseVisualStyleBackColor = true;
@@ -86,7 +87,7 @@ namespace lKHM
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.buttonCancel;
-			this.ClientSize = new System.Drawing.Size(188, 98);
+			this.ClientSize = new System.Drawing.Size(192, 113);
 			this.Controls.Add(this.buttonCancel);
 			this.Controls.Add(this.buttonOkay);
 			this.Controls.Add(this.numericUpDownFID);
@@ -95,7 +96,7 @@ namespace lKHM
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "SelectFighterIDForm";
-			this.Text = "Select ID";
+			this.Text = "Select Fighter ID";
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownFID)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();

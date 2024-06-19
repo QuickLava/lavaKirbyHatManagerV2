@@ -16,6 +16,9 @@ namespace lKHM
 		{
 			InitializeComponent();
 			labelContext.Text = contextStringIn;
+			TextBox numTextBox = numericUpDownFID.Controls[1] as TextBox;
+			numTextBox.CharacterCasing = CharacterCasing.Upper;
+			numTextBox.MaxLength = 2;
 		}
 
 		private void buttonOkay_Click(object sender, EventArgs e)
@@ -28,6 +31,15 @@ namespace lKHM
 		{
 			DialogResult = DialogResult.Cancel;
 			Close();
+		}
+
+		private void numericUpDownFID_KeyDown(object sender, KeyEventArgs e)
+		{
+			string allowedChars = "0123456789ABCDEF";
+			if (!allowedChars.Contains((char)e.KeyCode))
+			{
+				e.SuppressKeyPress = true;
+			}
 		}
 	}
 }
