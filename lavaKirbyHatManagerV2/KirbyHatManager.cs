@@ -11,9 +11,9 @@ namespace lKHM
 {
 	internal static class Conversions
 	{
-		internal static string convertNumToHexString(uint numIn)
+		internal static string convertNumToHexString(uint numIn, uint paddingLength = 0x8)
 		{
-			return "0x" + numIn.ToString("X8"); ;
+			return "0x" + numIn.ToString("X" + Math.Min(paddingLength, 0x8).ToString());
 		}
 		internal static uint convertHexStringToNum(string strIn, uint defaultValue)
 		{
@@ -194,50 +194,51 @@ namespace lKHM
 	[TypeConverter(typeof(WriteWordCmdTypeConverter))]
 	public class writeWordCmd
 	{
-		internal bool populated = false;
 		internal uint _targetOffset = uint.MaxValue;
-		internal uint _targetSection = byte.MaxValue;
+		internal byte _targetSection = byte.MaxValue;
 		internal uint _targetModuleID = uint.MaxValue;
+
+		internal bool targetModuleIDValid()
+		{
+			return BrawlLib.SSBB.ResourceNodes.RELNode._idNames.ContainsKey(_targetModuleID);
+		}
 
 		[TypeConverter(typeof(BrawlLib.Internal.DropDownListRELModuleIDs))]
 		public string TargetModuleID
 		{
-			get
-			{
-				return BrawlLib.SSBB.ResourceNodes.RELNode._idNames.ContainsKey(_targetModuleID) ?
-				BrawlLib.SSBB.ResourceNodes.RELNode._idNames[_targetModuleID] :
-				Conversions.convertNumToHexString(_targetModuleID);
-			}
+			get => targetModuleIDValid() ? BrawlLib.SSBB.ResourceNodes.RELNode._idNames[_targetModuleID] : "---";
 			set
 			{
-				string tempStr = value;
-				if (tempStr.StartsWith("0x"))
+				if (BrawlLib.SSBB.ResourceNodes.RELNode._idNames.ContainsValue(value))
 				{
-					tempStr = tempStr.Substring(2);
+					_targetModuleID = BrawlLib.SSBB.ResourceNodes.RELNode._idNames.Keys[BrawlLib.SSBB.ResourceNodes.RELNode._idNames.IndexOfValue(value)];
 				}
-				if (!uint.TryParse(tempStr, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out uint id) 
-					&& BrawlLib.SSBB.ResourceNodes.RELNode._idNames.ContainsValue(value))
+				else
 				{
-					id = BrawlLib.SSBB.ResourceNodes.RELNode._idNames.Keys[BrawlLib.SSBB.ResourceNodes.RELNode._idNames.IndexOfValue(value)];
+					_targetModuleID = uint.MaxValue;
 				}
-
-				_targetModuleID = id;
 			}
 		}
 		public string TargetOffset
 		{
-			get => Conversions.convertNumToHexString(_targetOffset);
+			get => (targetModuleIDValid()) ? Conversions.convertNumToHexString(_targetOffset) : "";
 			set
 			{
-				_targetOffset = Conversions.convertHexStringToNum(value, _targetOffset);
+				if (targetModuleIDValid())
+				{
+					_targetOffset = Conversions.convertHexStringToNum(value, _targetOffset);
+				}
 			}
 		}
 		public string TargetSection
 		{
-			get => Conversions.convertNumToHexString(_targetSection);
+			get => (targetModuleIDValid()) ? Conversions.convertNumToHexString(_targetSection, 0x2) : "";
 			set
 			{
-				_targetSection = Conversions.convertHexStringToNum(value, _targetSection);
+				if (targetModuleIDValid())
+				{
+					_targetSection = (byte)Conversions.convertHexStringToNum(value, _targetSection);
+				}
 			}
 		}
 
@@ -420,7 +421,7 @@ namespace lKHM
 		const uint table4Length = maxCharCount * table4EntrySize;
 		const uint tablesEndOffset = table4StartOffset + table4Length;
 
-		public const string tableSectionName = "Section [7]";
+		const string tableSectionName = "Section [7]";
 
 		private byte[] _convBuf = new byte[4];
 
@@ -532,7 +533,7 @@ namespace lKHM
 				if (cmd != null && cmd._command == BrawlLib.SSBB.ResourceNodes.RELCommandType.WriteWord)
 				{
 					result._targetOffset = cmd._addend;
-					result._targetSection = cmd._targetSectionId;
+					result._targetSection = (byte)cmd._targetSectionId;
 					result._targetModuleID = cmd._moduleID;
 				}
 			}
@@ -574,7 +575,14 @@ namespace lKHM
 
 			if (writeWordToByteArr(hexStreamIn, 0x00000000, offset))
 			{
-				result = writeRELWriteCMD(sectionIn, commandIn, offset);
+				if (commandIn.targetModuleIDValid())
+				{
+					result = writeRELWriteCMD(sectionIn, commandIn, offset);
+				}
+				else
+				{
+					result = true;
+				}
 			}
 
 			return result;

@@ -21,6 +21,9 @@ namespace lKHM
 		{
 			bool result = false;
 
+			treeViewKirbyHats.Nodes.Clear();
+			propertyGridHatDetails.SelectedObject = null;
+
 			if (System.IO.File.Exists(filepath))
 			{
 				kirbyModule = new BrawlLib.SSBB.ResourceNodes.RELNode();
@@ -259,6 +262,7 @@ namespace lKHM
 				populateTreeView();
 				selectKirbyHatFromFID(selectedNodeFID);
 			}
+			propertyGridHatDetails.Refresh();
 		}
 	}
 }
