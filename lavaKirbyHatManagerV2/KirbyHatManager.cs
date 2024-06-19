@@ -404,9 +404,9 @@ namespace lKHM
 		}
 	}
 
-	class KirbyHatManager
+	public class KirbyHatManager
 	{
-		const uint maxCharCount = 0x100;
+		public const uint maxCharCount = 0x100;
 		const uint table1EntrySize = 0x4;
 		const uint table2EntrySize = 0x4;
 		const uint table3EntrySize = 0x10;

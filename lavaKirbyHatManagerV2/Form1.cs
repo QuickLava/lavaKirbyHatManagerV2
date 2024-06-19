@@ -189,17 +189,13 @@ namespace lKHM
 		}
 		private void buttonCloneHat_Click(object sender, EventArgs e)
 		{
-			var IDForm = new SelectFighterIDForm("Fighter ID to Clone to:");
+			var IDForm = new SelectFighterIDForm("Fighter ID to Clone to:", hatManager);
+			IDForm.checkBoxSetName.Visible = true;
 			if (IDForm.ShowDialog() != DialogResult.OK) return;
-
-			if (hatManager.fighterIDToInfoPacks.ContainsKey((uint)IDForm.numericUpDownFID.Value))
-			{
-				if (MessageBox.Show("Target ID already has a hat! Overwrite the associated hat?", "Confirm Overwrite", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
-			}
 
 			uint sourceID = (uint)treeViewKirbyHats.SelectedNode.Tag;
 			uint destinationID = (uint)IDForm.numericUpDownFID.Value;
-			hatManager.copyHatToSlot(sourceID, (uint)IDForm.numericUpDownFID.Value, true, true);
+			hatManager.copyHatToSlot(sourceID, (uint)IDForm.numericUpDownFID.Value, true, IDForm.checkBoxSetName.Checked);
 
 			populateTreeView();
 			selectKirbyHatFromFID(destinationID);
@@ -207,13 +203,9 @@ namespace lKHM
 		}
 		private void buttonMoveHat_Click(object sender, EventArgs e)
 		{
-			var IDForm = new SelectFighterIDForm("Fighter ID to Move to:");
+			var IDForm = new SelectFighterIDForm("Fighter ID to Move to:", hatManager);
+			IDForm.checkBoxSetName.Visible = false;
 			if (IDForm.ShowDialog() != DialogResult.OK) return;
-
-			if (hatManager.fighterIDToInfoPacks.ContainsKey((uint)IDForm.numericUpDownFID.Value))
-			{
-				if (MessageBox.Show("Target ID already has a hat! Overwrite the associated hat?", "Confirm Overwrite", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
-			}
 
 			uint sourceID = (uint)treeViewKirbyHats.SelectedNode.Tag;
 			uint destinationID = (uint)IDForm.numericUpDownFID.Value;
@@ -225,12 +217,8 @@ namespace lKHM
 		}
 		private void buttonCreateHat_Click(object sender, EventArgs e)
 		{
-			var IDForm = new SelectFighterIDForm("Fighter ID for New Hat:");
+			var IDForm = new SelectFighterIDForm("Fighter ID for New Hat:", hatManager);
 			if (IDForm.ShowDialog() != DialogResult.OK) return;
-			if (hatManager.fighterIDToInfoPacks.ContainsKey((uint)IDForm.numericUpDownFID.Value))
-			{
-				if (MessageBox.Show("Target ID already has a hat! Overwrite the associated hat?", "Confirm Overwrite", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
-			}
 
 			uint destinationID = (uint)IDForm.numericUpDownFID.Value;
 			hatManager.createNewHat((uint)IDForm.numericUpDownFID.Value);

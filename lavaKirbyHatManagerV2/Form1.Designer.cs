@@ -85,7 +85,7 @@ namespace lKHM
 			this.buttonCloneHat.Name = "buttonCloneHat";
 			this.buttonCloneHat.Size = new System.Drawing.Size(134, 28);
 			this.buttonCloneHat.TabIndex = 2;
-			this.buttonCloneHat.Text = "Clone Selected";
+			this.buttonCloneHat.Text = "Copy Selected";
 			this.buttonCloneHat.UseVisualStyleBackColor = true;
 			this.buttonCloneHat.Click += new System.EventHandler(this.buttonCloneHat_Click);
 			// 

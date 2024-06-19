@@ -12,18 +12,48 @@ namespace lKHM
 {
 	public partial class SelectFighterIDForm : Form
 	{
-		public SelectFighterIDForm(string contextStringIn = "")
+		KirbyHatManager sourceManager = null;
+
+		bool hatSlotIsPopulated(uint FID)
+		{
+			return sourceManager.fighterIDToInfoPacks.ContainsKey(FID);
+		}
+		void updateSlotNameText()
+		{
+			uint selectedHatID = (uint)numericUpDownFID.Value;
+			if (hatSlotIsPopulated(selectedHatID))
+			{
+				textBoxSlotName.Text = sourceManager.fighterIDToInfoPacks[selectedHatID].Name;
+			}
+			else
+			{
+				textBoxSlotName.Text = "EMPTY_SLOT";
+			}
+		}
+
+		public SelectFighterIDForm(string contextStringIn, KirbyHatManager managerIn)
 		{
 			InitializeComponent();
+
 			labelContext.Text = contextStringIn;
 			TextBox numTextBox = numericUpDownFID.Controls[1] as TextBox;
 			numTextBox.CharacterCasing = CharacterCasing.Upper;
 			numTextBox.MaxLength = 2;
+			sourceManager = managerIn;
+
+			updateSlotNameText();
 		}
 
 		private void buttonOkay_Click(object sender, EventArgs e)
 		{
 			DialogResult = DialogResult.OK;
+
+			if (hatSlotIsPopulated((uint)numericUpDownFID.Value))
+			{
+				DialogResult = MessageBox.Show("Destination Hat Slot is already configured! Overwrite the associated configuration?",
+					"Confirm Overwrite", MessageBoxButtons.OKCancel);
+			}
+
 			Close();
 		}
 
@@ -40,6 +70,11 @@ namespace lKHM
 			{
 				e.SuppressKeyPress = true;
 			}
+		}
+
+		private void numericUpDownFID_ValueChanged(object sender, EventArgs e)
+		{
+			updateSlotNameText();
 		}
 	}
 }

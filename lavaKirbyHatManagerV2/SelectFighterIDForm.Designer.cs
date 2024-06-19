@@ -33,6 +33,8 @@ namespace lKHM
 			this.numericUpDownFID = new System.Windows.Forms.NumericUpDown();
 			this.buttonOkay = new System.Windows.Forms.Button();
 			this.buttonCancel = new System.Windows.Forms.Button();
+			this.textBoxSlotName = new System.Windows.Forms.TextBox();
+			this.checkBoxSetName = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownFID)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -48,21 +50,22 @@ namespace lKHM
 			// numericUpDownFID
 			// 
 			this.numericUpDownFID.Hexadecimal = true;
-			this.numericUpDownFID.Location = new System.Drawing.Point(10, 35);
+			this.numericUpDownFID.Location = new System.Drawing.Point(16, 39);
 			this.numericUpDownFID.Maximum = new decimal(new int[] {
             255,
             0,
             0,
             0});
 			this.numericUpDownFID.Name = "numericUpDownFID";
-			this.numericUpDownFID.Size = new System.Drawing.Size(170, 22);
+			this.numericUpDownFID.Size = new System.Drawing.Size(58, 22);
 			this.numericUpDownFID.TabIndex = 1;
 			this.numericUpDownFID.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.numericUpDownFID.ValueChanged += new System.EventHandler(this.numericUpDownFID_ValueChanged);
 			this.numericUpDownFID.KeyDown += new System.Windows.Forms.KeyEventHandler(this.numericUpDownFID_KeyDown);
 			// 
 			// buttonOkay
 			// 
-			this.buttonOkay.Location = new System.Drawing.Point(10, 63);
+			this.buttonOkay.Location = new System.Drawing.Point(119, 67);
 			this.buttonOkay.Name = "buttonOkay";
 			this.buttonOkay.Size = new System.Drawing.Size(80, 30);
 			this.buttonOkay.TabIndex = 2;
@@ -73,7 +76,7 @@ namespace lKHM
 			// buttonCancel
 			// 
 			this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.buttonCancel.Location = new System.Drawing.Point(100, 63);
+			this.buttonCancel.Location = new System.Drawing.Point(205, 67);
 			this.buttonCancel.Name = "buttonCancel";
 			this.buttonCancel.Size = new System.Drawing.Size(80, 30);
 			this.buttonCancel.TabIndex = 3;
@@ -81,13 +84,34 @@ namespace lKHM
 			this.buttonCancel.UseVisualStyleBackColor = true;
 			this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
 			// 
+			// textBoxSlotName
+			// 
+			this.textBoxSlotName.Location = new System.Drawing.Point(80, 39);
+			this.textBoxSlotName.Name = "textBoxSlotName";
+			this.textBoxSlotName.ReadOnly = true;
+			this.textBoxSlotName.Size = new System.Drawing.Size(205, 22);
+			this.textBoxSlotName.TabIndex = 5;
+			this.textBoxSlotName.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			// 
+			// checkBoxSetName
+			// 
+			this.checkBoxSetName.AutoSize = true;
+			this.checkBoxSetName.Location = new System.Drawing.Point(16, 73);
+			this.checkBoxSetName.Name = "checkBoxSetName";
+			this.checkBoxSetName.Size = new System.Drawing.Size(103, 21);
+			this.checkBoxSetName.TabIndex = 7;
+			this.checkBoxSetName.Text = "Copy Name";
+			this.checkBoxSetName.UseVisualStyleBackColor = true;
+			// 
 			// SelectFighterIDForm
 			// 
 			this.AcceptButton = this.buttonOkay;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.buttonCancel;
-			this.ClientSize = new System.Drawing.Size(192, 113);
+			this.ClientSize = new System.Drawing.Size(297, 105);
+			this.Controls.Add(this.checkBoxSetName);
+			this.Controls.Add(this.textBoxSlotName);
 			this.Controls.Add(this.buttonCancel);
 			this.Controls.Add(this.buttonOkay);
 			this.Controls.Add(this.numericUpDownFID);
@@ -109,5 +133,7 @@ namespace lKHM
 		private System.Windows.Forms.Button buttonOkay;
 		private System.Windows.Forms.Button buttonCancel;
 		public System.Windows.Forms.NumericUpDown numericUpDownFID;
+		private System.Windows.Forms.TextBox textBoxSlotName;
+		public System.Windows.Forms.CheckBox checkBoxSetName;
 	}
 }
