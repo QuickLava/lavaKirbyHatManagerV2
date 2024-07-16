@@ -17,6 +17,23 @@ namespace lKHM
 		KirbyHatManager hatManager = new KirbyHatManager();
 		BrawlLib.SSBB.ResourceNodes.RELNode kirbyModule = null;
 
+		void applyHatsFromTXT(string filepath)
+		{
+			if (System.IO.File.Exists(filepath))
+			{
+				List<TXTHatInfo> temp = new List<TXTHatInfo>();
+				KirbyHatTXTParser.parseKirbyHatsTXT(filepath, temp);
+
+				foreach (TXTHatInfo hat in temp)
+				{
+					hatManager.copyHatToSlot(hat.sourceID, hat.destinationID, true);
+					HatNames.setFIDName(hat.destinationID, hat.name, true);
+				}
+
+				populateTreeView();
+			}
+		}
+
 		bool tryLoadHatNamesFromBuildConfigFolder(string relPath)
 		{
 			bool result = false;
@@ -49,6 +66,7 @@ namespace lKHM
 				if (hatManager.loadHatEntriesFromREL(kirbyModule))
 				{
 					tryLoadHatNamesFromBuildConfigFolder(filepath);
+					HatNames.pruneNamesWithNoAssociatedHat(hatManager);
 					populateTreeView();
 					result = true;
 				}
@@ -284,6 +302,16 @@ namespace lKHM
 				selectKirbyHatFromFID(selectedNodeFID);
 			}
 			propertyGridHatDetails.Refresh();
+		}
+
+		private void applyHatsFromTXTToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog ofd = new OpenFileDialog();
+			ofd.Filter = "Hat List File(*.txt)|*.txt";
+			if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+			{
+				applyHatsFromTXT(ofd.FileName);
+			}
 		}
 	}
 }

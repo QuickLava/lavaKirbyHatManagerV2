@@ -44,6 +44,7 @@ namespace lKHM
 			this.buttonExpandContract = new System.Windows.Forms.Button();
 			this.labelHatSpecs = new System.Windows.Forms.Label();
 			this.propertyGridHatDetails = new System.Windows.Forms.PropertyGrid();
+			this.applyHatsFromTXTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -119,7 +120,7 @@ namespace lKHM
             this.helpToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Size = new System.Drawing.Size(782, 30);
+			this.menuStrip1.Size = new System.Drawing.Size(782, 28);
 			this.menuStrip1.TabIndex = 47;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
@@ -127,7 +128,8 @@ namespace lKHM
 			// 
 			this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openModuleToolStripMenuItem,
-            this.saveModuleToolStripMenuItem});
+            this.saveModuleToolStripMenuItem,
+            this.applyHatsFromTXTToolStripMenuItem});
 			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
 			this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
 			this.fileToolStripMenuItem.Text = "File";
@@ -196,6 +198,13 @@ namespace lKHM
 			this.propertyGridHatDetails.ToolbarVisible = false;
 			this.propertyGridHatDetails.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGridHatDetails_PropertyValueChanged);
 			// 
+			// applyHatsFromTXTToolStripMenuItem
+			// 
+			this.applyHatsFromTXTToolStripMenuItem.Name = "applyHatsFromTXTToolStripMenuItem";
+			this.applyHatsFromTXTToolStripMenuItem.Size = new System.Drawing.Size(236, 26);
+			this.applyHatsFromTXTToolStripMenuItem.Text = "Apply Hats from .TXT";
+			this.applyHatsFromTXTToolStripMenuItem.Click += new System.EventHandler(this.applyHatsFromTXTToolStripMenuItem_Click);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -240,6 +249,7 @@ namespace lKHM
 		private System.Windows.Forms.Button buttonExpandContract;
 		private System.Windows.Forms.Label labelHatSpecs;
 		private System.Windows.Forms.PropertyGrid propertyGridHatDetails;
+		private System.Windows.Forms.ToolStripMenuItem applyHatsFromTXTToolStripMenuItem;
 	}
 }
 

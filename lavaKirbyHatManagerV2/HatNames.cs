@@ -163,6 +163,18 @@ namespace lKHM
 
 			return result;
 		}
+		public static bool pruneNamesWithNoAssociatedHat(KirbyHatManager hatManagerIn)
+		{
+			bool result = false;
+
+			uint[] toRemove = fighterIDsToNames.Keys.Except(hatManagerIn.fighterIDToInfoPacks.Keys).ToArray();
+			foreach (uint currID in toRemove)
+			{
+				fighterIDsToNames.Remove(currID);
+			}
+
+			return result;
+		}
 
 		public static bool getFIDHasName(uint fighterIDIn)
 		{
