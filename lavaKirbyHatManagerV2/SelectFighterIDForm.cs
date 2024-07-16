@@ -23,7 +23,7 @@ namespace lKHM
 			uint selectedHatID = (uint)numericUpDownFID.Value;
 			if (hatSlotIsPopulated(selectedHatID))
 			{
-				textBoxSlotName.Text = sourceManager.fighterIDToInfoPacks[selectedHatID].Name;
+				textBoxSlotName.Text = HatNames.getNameFromFID(selectedHatID);
 			}
 			else
 			{

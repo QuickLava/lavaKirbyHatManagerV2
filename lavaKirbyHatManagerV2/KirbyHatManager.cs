@@ -34,150 +34,7 @@ namespace lKHM
 		}
 	}
 
-	public static class Values
-	{
-		public const uint kirbyModuleID = 0x60;
-		public const uint soraMeleeModuleID = 0X1B;
-
-		public enum LAVA_CHARA_FIGHTER_IDS
-		{
-			BOWSER = 0x0B,
-			CAPTAIN_FALCON = 0x09,
-			CHARIZARD = 0x1D,
-			DEDEDE = 0x20,
-			DIDDY_KONG = 0x1B,
-			DONKEY_KONG = 0x01,
-			FALCO = 0x13,
-			FOX = 0x06,
-			GANONDORF = 0x14,
-			GIGA_BOWSER = 0x30,
-			IKE = 0x22,
-			IVYSAUR = 0x1F,
-			JIGGLYPUFF = 0x25,
-			KIRBY = 0x05,
-			LINK = 0x02,
-			LUCARIO = 0x21,
-			LUCAS = 0x1A,
-			LUIGI = 0x08,
-			MARIO = 0x00,
-			MARTH = 0x11,
-			META_KNIGHT = 0x16,
-			MR_GAME_AND_WATCH = 0x12,
-			NANA = 0x10,
-			NESS = 0x0A,
-			OLIMAR = 0x19,
-			PEACH = 0x0C,
-			PIKACHU = 0x07,
-			PIT = 0x17,
-			POKEMON_TRAINER = 0x1C,
-			POPO = 0x0F,
-			ROB = 0x23,
-			SAMUS = 0x03,
-			SHEIK = 0x0E,
-			SNAKE = 0x2E,
-			SONIC = 0x2F,
-			SOPO = 0x0F,
-			SQUIRTLE = 0x1E,
-			TOON_LINK = 0x29,
-			WARIO = 0x15,
-			WARIOMAN = 0x31,
-			WOLF = 0x2C,
-			YOSHI = 0x04,
-			ZELDA = 0x0D,
-			ZERO_SUIT_SAMUS = 0x18,
-			RED_ALLOY = 0x32,
-			BLUE_ALLOY = 0x33,
-			YELLOW_ALLOY = 0x34,
-			GREEN_ALLOY = 0x35,
-			PM_MEWTWO = 0x26,
-			PM_ROY = 0x27,
-			PP_KNUCKLES = 0x2D,
-			EX_RIDLEY = 0x2A,
-			EX_WALUIGI = 0x28,
-			EX_DARK_SAMUS = 0x40,
-			EX_SCEPTILE = 0x62,
-			EX_KRYSTAL = 0x41,
-		}
-
-		public const string defaultName = "UNRECOGNIZED";
-
-		static SortedDictionary<uint, string> fighterIDsToCanonNames = new SortedDictionary<uint, string>();
-		public static bool getFIDHasCanonName(uint fighterIDIn)
-		{
-			return fighterIDsToCanonNames.ContainsKey(fighterIDIn);
-		}
-		public static string getCanonNameFromFID(uint fighterIDIn)
-		{
-			string result = defaultName;
-
-			if (getFIDHasCanonName(fighterIDIn))
-			{
-				result = fighterIDsToCanonNames[fighterIDIn];
-			}
-
-			return result;
-		}
-
-		static Values()
-		{
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.CAPTAIN_FALCON] = "CAPTAIN";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.DEDEDE] = "DEDEDE";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.DIDDY_KONG] = "DIDDY";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.DONKEY_KONG] = "DONKEY";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.FALCO] = "FALCO";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.FOX] = "FOX";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.GANONDORF] = "GANON";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.MR_GAME_AND_WATCH] = "GAMEWATCH";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.GIGA_BOWSER] = "GKOOPA";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.IKE] = "IKE";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.KIRBY] = "KIRBY";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.BOWSER] = "KOOPA";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.LINK] = "LINK";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.LUCARIO] = "LUCARIO";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.LUCAS] = "LUCAS";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.LUIGI] = "LUIGI";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.MARIO] = "MARIO";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.MARTH] = "MARTH";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.META_KNIGHT] = "METAKNIGHT";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.NANA] = "NANA";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.NESS] = "NESS";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.PEACH] = "PEACH";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.PIKACHU] = "PIKACHU";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.OLIMAR] = "PIKMIN";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.PIT] = "PIT";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.IVYSAUR] = "POKEFUSHIGISOU";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.CHARIZARD] = "POKELIZARDON";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.POKEMON_TRAINER] = "POKETRAINER";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.SQUIRTLE] = "POKEZENIGAME";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.POPO] = "POPO";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.JIGGLYPUFF] = "PURIN";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.ROB] = "ROBOT";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.SAMUS] = "SAMUS";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.SHEIK] = "SHEIK";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.SNAKE] = "SNAKE";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.SONIC] = "SONIC";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.SOPO] = "SOPO";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.ZERO_SUIT_SAMUS] = "SZEROSUIT";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.TOON_LINK] = "TOONLINK";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.WARIO] = "WARIO";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.WARIOMAN] = "WARIOMAN";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.WOLF] = "WOLF";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.YOSHI] = "YOSHI";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.ZELDA] = "ZELDA";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.RED_ALLOY] = "RED_ALLOY";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.BLUE_ALLOY] = "BLUE_ALLOY";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.YELLOW_ALLOY] = "YELLOW_ALLOY";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.GREEN_ALLOY] = "GREEN_ALLOY";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.PM_MEWTWO] = "PM_MEWTWO";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.PM_ROY] = "PM_ROY";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.PP_KNUCKLES] = "P+_KNUCKLES";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.EX_RIDLEY] = "EX_RIDLEY";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.EX_WALUIGI] = "EX_WALUIGI";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.EX_DARK_SAMUS] = "EX_DARK_SAMUS";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.EX_SCEPTILE] = "EX_SCEPTILE";
-			fighterIDsToCanonNames[(uint)LAVA_CHARA_FIGHTER_IDS.EX_KRYSTAL] = "EX_KRYSTAL";
-		}
-	}
+	
 
 	public class WriteWordCmdTypeConverter : TypeConverter
 	{
@@ -268,9 +125,6 @@ namespace lKHM
 
 	public class HatInfoPack
 	{
-		// Name
-		internal string name = "";
-
 		// AbilityTopStatusKind
 		internal uint table1Entry = 0xFFFFFFFF;
 
@@ -289,13 +143,8 @@ namespace lKHM
 		internal writeWordCmd table4Entry3 = new writeWordCmd();
 		internal writeWordCmd table4Entry4 = new writeWordCmd();
 
-		public void copyInfoFrom(HatInfoPack sourceHat, bool copyName = true)
+		public void copyInfoFrom(HatInfoPack sourceHat)
 		{
-			if (copyName)
-			{
-				name = sourceHat.name;
-			}
-
 			table1Entry = sourceHat.table1Entry;
 			table2Entry = sourceHat.table2Entry;
 			table3Entry1.copyInfoFrom(sourceHat.table3Entry1);
@@ -313,16 +162,6 @@ namespace lKHM
 		const string table2CatName = "Table 2";
 		const string table3CatName = "Table 3";
 		const string table4CatName = "Table 4";
-
-		[Category("Miscellaneous")]
-		public string Name
-		{
-			get => name;
-			set
-			{
-				name = value.ToUpper();
-			}
-		}
 
 		[Category(table1CatName)]
 		public string TopStatusKind
@@ -406,19 +245,22 @@ namespace lKHM
 
 	public class KirbyHatManager
 	{
-		public const uint maxCharCount = 0x100;
+		public const uint kirbyModuleID = 0x60;
+		public const uint soraMeleeModuleID = 0x1B;
+
+		public const uint maxHatCount = 0x100;
 		const uint table1EntrySize = 0x4;
 		const uint table2EntrySize = 0x4;
 		const uint table3EntrySize = 0x10;
 		const uint table4EntrySize = 0x10;
 		const uint table1StartOffset = 0x0;
-		const uint table1Length = maxCharCount * table1EntrySize;
+		const uint table1Length = maxHatCount * table1EntrySize;
 		const uint table2StartOffset = table1StartOffset + table1Length;
-		const uint table2Length = maxCharCount * table2EntrySize;
+		const uint table2Length = maxHatCount * table2EntrySize;
 		const uint table3StartOffset = table2StartOffset + table2Length;
-		const uint table3Length = maxCharCount * table3EntrySize;
+		const uint table3Length = maxHatCount * table3EntrySize;
 		const uint table4StartOffset = table3StartOffset + table3Length;
-		const uint table4Length = maxCharCount * table4EntrySize;
+		const uint table4Length = maxHatCount * table4EntrySize;
 		const uint tablesEndOffset = table4StartOffset + table4Length;
 
 		const string tableSectionName = "Section [7]";
@@ -432,7 +274,7 @@ namespace lKHM
 		{
 			uint result = uint.MaxValue;
 
-			if (charIDIn < maxCharCount)
+			if (charIDIn < maxHatCount)
 			{
 				result = (charIDIn * table1EntrySize) + table1StartOffset;
 			}
@@ -443,7 +285,7 @@ namespace lKHM
 		{
 			uint result = uint.MaxValue;
 
-			if (charIDIn < maxCharCount)
+			if (charIDIn < maxHatCount)
 			{
 				result = (charIDIn * table2EntrySize) + table2StartOffset;
 			}
@@ -454,7 +296,7 @@ namespace lKHM
 		{
 			uint result = uint.MaxValue;
 
-			if (charIDIn < maxCharCount)
+			if (charIDIn < maxHatCount)
 			{
 				result = (charIDIn * table3EntrySize) + table3StartOffset;
 			}
@@ -465,7 +307,7 @@ namespace lKHM
 		{
 			uint result = uint.MaxValue;
 
-			if (charIDIn < maxCharCount)
+			if (charIDIn < maxHatCount)
 			{
 				result = (charIDIn * table4EntrySize) + table4StartOffset;
 			}
@@ -592,10 +434,8 @@ namespace lKHM
 		{
 			HatInfoPack result = new HatInfoPack();
 
-			if (fighterID < maxCharCount && getTable4EntryOffset(fighterID) < hexStreamIn.Length)
+			if (fighterID < maxHatCount && getTable4EntryOffset(fighterID) < hexStreamIn.Length)
 			{
-				result.name = Values.getCanonNameFromFID(fighterID);
-
 				result.table1Entry = readWordFromByteArr(hexStreamIn, getTable1EntryOffset(fighterID));
 
 				result.table2Entry = readRELWriteCMD(sectionIn, getTable2EntryOffset(fighterID));
@@ -635,7 +475,7 @@ namespace lKHM
 		{
 			bool result = false;
 
-			if (kirbyModule.ModuleID == Values.kirbyModuleID)
+			if (kirbyModule.ModuleID == kirbyModuleID)
 			{
 				Console.WriteLine("Kirby Module Loaded:");
 				Console.WriteLine("Name: " + kirbyModule.Name + "\n");
@@ -651,7 +491,7 @@ namespace lKHM
 					defaultInfoPack.table2Entry = readRELWriteCMD(tableSectionNode, getTable2EntryOffset(0x00));
 					defaultInfoPack.table3Entry1 = readRELWriteCMD(tableSectionNode, getTable3EntryOffset(0x00));
 
-					for (uint i = 0x00; i < maxCharCount; i++)
+					for (uint i = 0x00; i < maxHatCount; i++)
 					{
 						HatInfoPack newInfoPack = buildHatFromSection(i, tableSectionNode, sectionHexStream);
 						if (!infoPackHasDefaultData(newInfoPack))
@@ -674,7 +514,7 @@ namespace lKHM
 			else
 			{
 				Console.WriteLine("Loaded Module file is not Kirby Module!");
-				Console.WriteLine("Kirby Module must have ModuleID " + Values.kirbyModuleID.ToString() + ", loaded Module has ID " + kirbyModule.ModuleID.ToString() + "!");
+				Console.WriteLine("Kirby Module must have ModuleID " + kirbyModuleID.ToString() + ", loaded Module has ID " + kirbyModule.ModuleID.ToString() + "!");
 			}
 
 			return result;
@@ -697,11 +537,11 @@ namespace lKHM
 			return result;
 		}
 		
-		public bool copyHatToSlot(uint sourceFighterID, uint destinationFighterID, bool allowOverwrite, bool copyName = false)
+		public bool copyHatToSlot(uint sourceFighterID, uint destinationFighterID, bool allowOverwrite)
 		{
 			bool result = false;
 
-			if (fighterIDToInfoPacks.ContainsKey(sourceFighterID) && destinationFighterID < maxCharCount)
+			if (fighterIDToInfoPacks.ContainsKey(sourceFighterID) && destinationFighterID < maxHatCount)
 			{
 				result = true;
 
@@ -716,7 +556,7 @@ namespace lKHM
 
 				if (result)
 				{
-					fighterIDToInfoPacks[destinationFighterID].copyInfoFrom(fighterIDToInfoPacks[sourceFighterID], copyName);
+					fighterIDToInfoPacks[destinationFighterID].copyInfoFrom(fighterIDToInfoPacks[sourceFighterID]);
 				}
 			}
 
@@ -726,21 +566,20 @@ namespace lKHM
 		{
 			bool result = false;
 
-			if (copyHatToSlot(sourceFighterID, destinationFighterID, allowOverwrite, true))
+			if (copyHatToSlot(sourceFighterID, destinationFighterID, allowOverwrite))
 			{
 				result = eraseHat(sourceFighterID);
 			}
 
 			return result;
 		}
-		public bool createNewHat(uint targetFighterID, string targetSlotName = Values.defaultName)
+		public bool createNewHat(uint targetFighterID)
 		{
 			bool result = false;
 
-			if (targetFighterID < maxCharCount && !fighterIDToInfoPacks.ContainsKey(targetFighterID))
+			if (targetFighterID < maxHatCount && !fighterIDToInfoPacks.ContainsKey(targetFighterID))
 			{
 				fighterIDToInfoPacks[targetFighterID] = new HatInfoPack();
-				fighterIDToInfoPacks[targetFighterID].name = targetSlotName;
 				result = true;
 			}
 
@@ -750,7 +589,7 @@ namespace lKHM
 		{
 			bool result = false;
 
-			if (targetFighterID < maxCharCount && fighterIDToInfoPacks.ContainsKey(targetFighterID))
+			if (targetFighterID < maxHatCount && fighterIDToInfoPacks.ContainsKey(targetFighterID))
 			{
 				fighterIDToInfoPacks.Remove(targetFighterID);
 				result = true;
@@ -763,7 +602,7 @@ namespace lKHM
 		{
 			foreach (var currPair in fighterIDToInfoPacks)
 			{
-				Console.WriteLine("[FID 0x" + currPair.Key.ToString("X2") + " - " + currPair.Value.name + "]");
+				Console.WriteLine("[FID 0x" + currPair.Key.ToString("X2") + "]");
 				Console.WriteLine("  - Table 1: " + currPair.Value.TopStatusKind);
 				Console.WriteLine("  - Table 2: " + currPair.Value.table2Entry.summaryString());
 				Console.WriteLine("  - Table 3:");
@@ -791,7 +630,7 @@ namespace lKHM
 
 				tableSectionNode._manager.ClearCommands();
 
-				for (uint i = 0; i < maxCharCount; i++)
+				for (uint i = 0; i < maxHatCount; i++)
 				{
 					HatInfoPack sourcePack = defaultInfoPack;
 

@@ -59,7 +59,7 @@ namespace lKHM
 			treeViewKirbyHats.Nodes.Clear();
 			foreach (var x in hatManager.fighterIDToInfoPacks)
 			{
-				TreeNode newNode = new TreeNode("[" + x.Key.ToString("X2") + "] " + x.Value.name);
+				TreeNode newNode = new TreeNode("[" + x.Key.ToString("X2") + "] " + HatNames.getNameFromFID(x.Key));
 				newNode.Tag = x.Key;
 				treeViewKirbyHats.Nodes.Add(newNode);
 			}
@@ -174,7 +174,13 @@ namespace lKHM
 			if (treeViewKirbyHats.SelectedNode != null)
 			{
 				int selectedIndex = treeViewKirbyHats.SelectedNode.Index;
-				hatManager.eraseHat((uint)treeViewKirbyHats.SelectedNode.Tag);
+
+				uint targetFID = (uint)treeViewKirbyHats.SelectedNode.Tag;
+				if (hatManager.eraseHat(targetFID))
+				{
+					HatNames.eraseFIDName(targetFID);
+				}
+
 				populateTreeView();
 				if (selectedIndex < treeViewKirbyHats.Nodes.Count)
 				{
@@ -195,7 +201,11 @@ namespace lKHM
 
 			uint sourceID = (uint)treeViewKirbyHats.SelectedNode.Tag;
 			uint destinationID = (uint)IDForm.numericUpDownFID.Value;
-			hatManager.copyHatToSlot(sourceID, (uint)IDForm.numericUpDownFID.Value, true, IDForm.checkBoxSetName.Checked);
+
+			if (hatManager.copyHatToSlot(sourceID, destinationID, true) && IDForm.checkBoxSetName.Checked)
+			{
+				HatNames.copyFIDName(sourceID, destinationID, true);
+			}
 
 			populateTreeView();
 			selectKirbyHatFromFID(destinationID);
@@ -209,7 +219,10 @@ namespace lKHM
 
 			uint sourceID = (uint)treeViewKirbyHats.SelectedNode.Tag;
 			uint destinationID = (uint)IDForm.numericUpDownFID.Value;
-			hatManager.moveHatToSlot(sourceID, (uint)IDForm.numericUpDownFID.Value, true);
+			if (hatManager.moveHatToSlot(sourceID, destinationID, true))
+			{
+				HatNames.moveFIDName(sourceID, destinationID, true);
+			}
 
 			populateTreeView();
 			selectKirbyHatFromFID(destinationID);
@@ -221,7 +234,7 @@ namespace lKHM
 			if (IDForm.ShowDialog() != DialogResult.OK) return;
 
 			uint destinationID = (uint)IDForm.numericUpDownFID.Value;
-			hatManager.createNewHat((uint)IDForm.numericUpDownFID.Value);
+			hatManager.createNewHat(destinationID);
 
 			populateTreeView();
 			selectKirbyHatFromFID(destinationID);
