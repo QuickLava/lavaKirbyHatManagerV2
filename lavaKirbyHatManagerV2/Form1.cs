@@ -13,9 +13,25 @@ namespace lKHM
 	public partial class Form1 : Form
 	{
 		bool formExpanded = false;
-		String defaultKirbyRelPath = "./ft_kirby.rel";
+		string[] defaultKirbyRelPaths = { "./ft_kirby.rel", "../pf/module/ft_kirby.rel" };
 		KirbyHatManager hatManager = new KirbyHatManager();
 		BrawlLib.SSBB.ResourceNodes.RELNode kirbyModule = null;
+
+		bool tryLoadHatNamesFromBuildConfigFolder(string relPath)
+		{
+			bool result = false;
+
+			string absolutePath = System.IO.Path.GetFullPath(relPath);
+
+			int moduleDirPos = absolutePath.LastIndexOf("module" + System.IO.Path.DirectorySeparatorChar);
+			if (moduleDirPos != -1)
+			{
+				string configFolderPath = absolutePath.Substring(0, moduleDirPos) + "BrawlEx/FighterConfig/";
+				result = HatNames.tryPopulateFromFighterConfigFolder(configFolderPath, true);
+			}
+
+			return result;
+		}
 
 		bool loadModule(string filepath)
 		{
@@ -32,6 +48,7 @@ namespace lKHM
 
 				if (hatManager.loadHatEntriesFromREL(kirbyModule))
 				{
+					tryLoadHatNamesFromBuildConfigFolder(filepath);
 					populateTreeView();
 					result = true;
 				}
@@ -142,7 +159,10 @@ namespace lKHM
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
-			loadModule(defaultKirbyRelPath);
+			foreach (string defaultPath in defaultKirbyRelPaths)
+			{
+				if (loadModule(defaultPath)) break;
+			}
 			setFormExpanded(formExpanded);
 		}
 

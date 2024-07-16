@@ -34,8 +34,6 @@ namespace lKHM
 		}
 	}
 
-	
-
 	public class WriteWordCmdTypeConverter : TypeConverter
 	{
 		public override bool GetPropertiesSupported(ITypeDescriptorContext context)

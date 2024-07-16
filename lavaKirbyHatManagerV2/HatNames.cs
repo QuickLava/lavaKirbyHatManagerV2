@@ -131,6 +131,38 @@ namespace lKHM
 			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.EX_SCEPTILE] = "EX_SCEPTILE";
 			fighterIDsToNames[(uint)LAVA_CHARA_FIGHTER_IDS.EX_KRYSTAL] = "EX_KRYSTAL";
 		}
+		public static bool tryPopulateFromFighterConfigFolder(string folderPath, bool includeInternalListNames)
+		{
+			bool result = false;
+
+			if (System.IO.Directory.Exists(folderPath))
+			{
+				string[] collectedFiles = System.IO.Directory.GetFiles(folderPath, "Fighter??.dat");
+				if (collectedFiles.Length > 0x00)
+				{
+					fighterIDsToNames.Clear();
+					if (includeInternalListNames)
+					{
+						populateFromInternalList();
+					}
+
+					BrawlLib.SSBB.ResourceNodes.FCFGNode currentNode = new BrawlLib.SSBB.ResourceNodes.FCFGNode();
+					foreach (string currentPath in collectedFiles)
+					{
+						string IDString = currentPath.Substring(folderPath.Length + 7, 2);
+						uint currentFID = lKHM.Conversions.convertHexStringToNum(IDString, uint.MaxValue);
+						if (currentFID < lKHM.KirbyHatManager.maxHatCount)
+						{
+							currentNode.Replace(currentPath);
+							fighterIDsToNames[currentFID] = currentNode.FighterName.ToUpper();
+						}
+					}
+					result = fighterIDsToNames.Count > 0;
+				}
+			}
+
+			return result;
+		}
 
 		public static bool getFIDHasName(uint fighterIDIn)
 		{
