@@ -101,6 +101,12 @@ namespace lKHM
 		{
 			return "";
 		}
+		public bool isValid()
+		{
+			return targetModuleIDValid() && 
+				_targetSection != byte.MaxValue &&
+				_targetOffset != uint.MaxValue;
+		}
 		public bool isSameAs(writeWordCmd sourceCmd)
 		{
 			bool result = _targetOffset == sourceCmd._targetOffset;
@@ -156,10 +162,10 @@ namespace lKHM
 		}
 
 		// Properties
-		const string table1CatName = "Table 1";
-		const string table2CatName = "Table 2";
-		const string table3CatName = "Table 3";
-		const string table4CatName = "Table 4";
+		public const string table1CatName = "Table 1";
+		public const string table2CatName = "Table 2";
+		public const string table3CatName = "Table 3";
+		public const string table4CatName = "Table 4";
 
 		[Category(table1CatName)]
 		public string TopStatusKind

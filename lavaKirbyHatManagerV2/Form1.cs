@@ -319,5 +319,27 @@ namespace lKHM
 			var aboutForm = new AboutForm();
 			aboutForm.ShowDialog();
 		}
+
+		private void exportHatsToXMLToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var exportForm = new HatExportForm(treeViewKirbyHats);
+			if (exportForm.ShowDialog() == DialogResult.OK)
+			{
+				SaveFileDialog sfd = new SaveFileDialog();
+				sfd.Filter = "Hat List File(*.xml)|*.xml";
+				if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+				{
+					List<uint> IDsToExport = new List<uint>();
+					foreach (TreeNode currNode in exportForm.treeViewHats.Nodes)
+					{
+						if (!currNode.Checked) continue;
+
+						IDsToExport.Add((uint)currNode.Tag);
+					}
+
+					HatXMLParser.exportHatsToXML(hatManager, sfd.FileName, IDsToExport.ToArray());
+				}
+			}
+		}
 	}
 }

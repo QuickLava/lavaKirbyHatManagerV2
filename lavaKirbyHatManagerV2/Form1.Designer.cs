@@ -45,6 +45,7 @@ namespace lKHM
 			this.buttonExpandContract = new System.Windows.Forms.Button();
 			this.labelHatSpecs = new System.Windows.Forms.Label();
 			this.propertyGridHatDetails = new System.Windows.Forms.PropertyGrid();
+			this.exportHatsToXMLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -129,7 +130,8 @@ namespace lKHM
 			this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openModuleToolStripMenuItem,
             this.saveModuleToolStripMenuItem,
-            this.applyHatsFromTXTToolStripMenuItem});
+            this.applyHatsFromTXTToolStripMenuItem,
+            this.exportHatsToXMLToolStripMenuItem});
 			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
 			this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
 			this.fileToolStripMenuItem.Text = "File";
@@ -170,7 +172,7 @@ namespace lKHM
 			// aboutToolStripMenuItem
 			// 
 			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(133, 26);
 			this.aboutToolStripMenuItem.Text = "About";
 			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
 			// 
@@ -205,6 +207,13 @@ namespace lKHM
 			this.propertyGridHatDetails.TabIndex = 6;
 			this.propertyGridHatDetails.ToolbarVisible = false;
 			this.propertyGridHatDetails.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGridHatDetails_PropertyValueChanged);
+			// 
+			// exportHatsToXMLToolStripMenuItem
+			// 
+			this.exportHatsToXMLToolStripMenuItem.Name = "exportHatsToXMLToolStripMenuItem";
+			this.exportHatsToXMLToolStripMenuItem.Size = new System.Drawing.Size(236, 26);
+			this.exportHatsToXMLToolStripMenuItem.Text = "Export Hats to .XML";
+			this.exportHatsToXMLToolStripMenuItem.Click += new System.EventHandler(this.exportHatsToXMLToolStripMenuItem_Click);
 			// 
 			// Form1
 			// 
@@ -251,6 +260,7 @@ namespace lKHM
 		private System.Windows.Forms.Label labelHatSpecs;
 		private System.Windows.Forms.PropertyGrid propertyGridHatDetails;
 		private System.Windows.Forms.ToolStripMenuItem applyHatsFromTXTToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem exportHatsToXMLToolStripMenuItem;
 	}
 }
 
