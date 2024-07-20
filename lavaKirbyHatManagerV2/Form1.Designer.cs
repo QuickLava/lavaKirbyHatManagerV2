@@ -39,13 +39,14 @@ namespace lKHM
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openModuleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.saveModuleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.applyHatsFromTXTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.exportHatsToXMLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.importHatsFromXMLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.importHatsFromTXTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.buttonExpandContract = new System.Windows.Forms.Button();
 			this.labelHatSpecs = new System.Windows.Forms.Label();
 			this.propertyGridHatDetails = new System.Windows.Forms.PropertyGrid();
-			this.exportHatsToXMLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -130,8 +131,9 @@ namespace lKHM
 			this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openModuleToolStripMenuItem,
             this.saveModuleToolStripMenuItem,
-            this.applyHatsFromTXTToolStripMenuItem,
-            this.exportHatsToXMLToolStripMenuItem});
+            this.exportHatsToXMLToolStripMenuItem,
+            this.importHatsFromXMLToolStripMenuItem,
+            this.importHatsFromTXTToolStripMenuItem});
 			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
 			this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
 			this.fileToolStripMenuItem.Text = "File";
@@ -141,7 +143,7 @@ namespace lKHM
 			this.openModuleToolStripMenuItem.Name = "openModuleToolStripMenuItem";
 			this.openModuleToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+O";
 			this.openModuleToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-			this.openModuleToolStripMenuItem.Size = new System.Drawing.Size(236, 26);
+			this.openModuleToolStripMenuItem.Size = new System.Drawing.Size(243, 26);
 			this.openModuleToolStripMenuItem.Text = "Open Module";
 			this.openModuleToolStripMenuItem.Click += new System.EventHandler(this.openModuleToolStripMenuItem_Click);
 			// 
@@ -150,16 +152,30 @@ namespace lKHM
 			this.saveModuleToolStripMenuItem.Name = "saveModuleToolStripMenuItem";
 			this.saveModuleToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+S";
 			this.saveModuleToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-			this.saveModuleToolStripMenuItem.Size = new System.Drawing.Size(236, 26);
+			this.saveModuleToolStripMenuItem.Size = new System.Drawing.Size(243, 26);
 			this.saveModuleToolStripMenuItem.Text = "Save Module";
 			this.saveModuleToolStripMenuItem.Click += new System.EventHandler(this.saveModuleToolStripMenuItem_Click);
 			// 
-			// applyHatsFromTXTToolStripMenuItem
+			// exportHatsToXMLToolStripMenuItem
 			// 
-			this.applyHatsFromTXTToolStripMenuItem.Name = "applyHatsFromTXTToolStripMenuItem";
-			this.applyHatsFromTXTToolStripMenuItem.Size = new System.Drawing.Size(236, 26);
-			this.applyHatsFromTXTToolStripMenuItem.Text = "Apply Hats from .TXT";
-			this.applyHatsFromTXTToolStripMenuItem.Click += new System.EventHandler(this.applyHatsFromTXTToolStripMenuItem_Click);
+			this.exportHatsToXMLToolStripMenuItem.Name = "exportHatsToXMLToolStripMenuItem";
+			this.exportHatsToXMLToolStripMenuItem.Size = new System.Drawing.Size(243, 26);
+			this.exportHatsToXMLToolStripMenuItem.Text = "Export Hats to .XML";
+			this.exportHatsToXMLToolStripMenuItem.Click += new System.EventHandler(this.exportHatsToXMLToolStripMenuItem_Click);
+			// 
+			// importHatsFromXMLToolStripMenuItem
+			// 
+			this.importHatsFromXMLToolStripMenuItem.Name = "importHatsFromXMLToolStripMenuItem";
+			this.importHatsFromXMLToolStripMenuItem.Size = new System.Drawing.Size(243, 26);
+			this.importHatsFromXMLToolStripMenuItem.Text = "Import Hats from .XML";
+			this.importHatsFromXMLToolStripMenuItem.Click += new System.EventHandler(this.importHatsFromXMLToolStripMenuItem_Click);
+			// 
+			// importHatsFromTXTToolStripMenuItem
+			// 
+			this.importHatsFromTXTToolStripMenuItem.Name = "importHatsFromTXTToolStripMenuItem";
+			this.importHatsFromTXTToolStripMenuItem.Size = new System.Drawing.Size(243, 26);
+			this.importHatsFromTXTToolStripMenuItem.Text = "Import Hats from .TXT";
+			this.importHatsFromTXTToolStripMenuItem.Click += new System.EventHandler(this.importHatsFromTXTToolStripMenuItem_Click);
 			// 
 			// helpToolStripMenuItem
 			// 
@@ -206,14 +222,6 @@ namespace lKHM
 			this.propertyGridHatDetails.Size = new System.Drawing.Size(340, 580);
 			this.propertyGridHatDetails.TabIndex = 6;
 			this.propertyGridHatDetails.ToolbarVisible = false;
-			this.propertyGridHatDetails.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGridHatDetails_PropertyValueChanged);
-			// 
-			// exportHatsToXMLToolStripMenuItem
-			// 
-			this.exportHatsToXMLToolStripMenuItem.Name = "exportHatsToXMLToolStripMenuItem";
-			this.exportHatsToXMLToolStripMenuItem.Size = new System.Drawing.Size(236, 26);
-			this.exportHatsToXMLToolStripMenuItem.Text = "Export Hats to .XML";
-			this.exportHatsToXMLToolStripMenuItem.Click += new System.EventHandler(this.exportHatsToXMLToolStripMenuItem_Click);
 			// 
 			// Form1
 			// 
@@ -259,8 +267,9 @@ namespace lKHM
 		private System.Windows.Forms.Button buttonExpandContract;
 		private System.Windows.Forms.Label labelHatSpecs;
 		private System.Windows.Forms.PropertyGrid propertyGridHatDetails;
-		private System.Windows.Forms.ToolStripMenuItem applyHatsFromTXTToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem importHatsFromTXTToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem exportHatsToXMLToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem importHatsFromXMLToolStripMenuItem;
 	}
 }
 

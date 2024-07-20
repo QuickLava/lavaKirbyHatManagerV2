@@ -87,10 +87,30 @@ namespace lKHM
 
 			return result;
 		}
+		bool selectKirbyHatFromFID(uint targetFID)
+		{
+			bool result = false;
+
+			foreach (TreeNode x in treeViewKirbyHats.Nodes)
+			{
+				uint currFID = (uint)x.Tag;
+
+				if (currFID < targetFID) continue;
+				if (currFID > targetFID) break;
+				treeViewKirbyHats.SelectedNode = x;
+			}
+
+			return result;
+		}
 		void populateTreeView()
 		{
-			treeViewKirbyHats.BeginUpdate();
+			uint selectedNodeFID = uint.MaxValue;
+			if (treeViewKirbyHats.SelectedNode != null)
+			{
+				selectedNodeFID = (uint)treeViewKirbyHats.SelectedNode.Tag;
+			}
 
+			treeViewKirbyHats.BeginUpdate();
 			treeViewKirbyHats.Nodes.Clear();
 			foreach (var x in hatManager.fighterIDToInfoPacks)
 			{
@@ -98,8 +118,13 @@ namespace lKHM
 				newNode.Tag = x.Key;
 				treeViewKirbyHats.Nodes.Add(newNode);
 			}
-
 			treeViewKirbyHats.EndUpdate();
+
+			if (selectedNodeFID != uint.MaxValue)
+			{
+				selectKirbyHatFromFID(selectedNodeFID);
+				propertyGridHatDetails.Refresh();
+			}
 		}
 		void enableControls()
 		{
@@ -154,21 +179,7 @@ namespace lKHM
 		{
 			setFormExpanded(!formExpanded);
 		}
-		bool selectKirbyHatFromFID(uint targetFID)
-		{
-			bool result = false;
-
-			foreach (TreeNode x in treeViewKirbyHats.Nodes)
-			{
-				uint currFID = (uint)x.Tag;
-
-				if (currFID < targetFID) continue;
-				if (currFID > targetFID) break;
-				treeViewKirbyHats.SelectedNode = x;
-			}
-
-			return result;
-		}
+		
 
 		public Form1()
 		{
@@ -293,18 +304,7 @@ namespace lKHM
 			invertFormExpanded();
 		}
 
-		private void propertyGridHatDetails_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
-		{
-			if (treeViewKirbyHats.SelectedNode != null && e.ChangedItem.Label == "Name")
-			{
-				uint selectedNodeFID = (uint)treeViewKirbyHats.SelectedNode.Tag;
-				populateTreeView();
-				selectKirbyHatFromFID(selectedNodeFID);
-			}
-			propertyGridHatDetails.Refresh();
-		}
-
-		private void applyHatsFromTXTToolStripMenuItem_Click(object sender, EventArgs e)
+		private void importHatsFromTXTToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			OpenFileDialog ofd = new OpenFileDialog();
 			ofd.Filter = "Hat List File(*.txt)|*.txt";
@@ -338,7 +338,19 @@ namespace lKHM
 					}
 
 					HatXMLParser.exportHatsToXML(hatManager, sfd.FileName, IDsToExport.ToArray());
+					populateTreeView();
 				}
+			}
+		}
+
+		private void importHatsFromXMLToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog ofd = new OpenFileDialog();
+			ofd.Filter = "Hat List File(*.xml)|*.xml";
+			if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+			{
+				HatXMLParser.importHatsFromXMLs(hatManager, ofd.FileNames);
+				populateTreeView();
 			}
 		}
 	}
