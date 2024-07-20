@@ -313,5 +313,11 @@ namespace lKHM
 				applyHatsFromTXT(ofd.FileName);
 			}
 		}
+
+		private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var aboutForm = new AboutForm();
+			aboutForm.ShowDialog();
+		}
 	}
 }

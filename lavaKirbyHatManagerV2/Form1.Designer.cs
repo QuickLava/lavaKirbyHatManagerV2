@@ -39,12 +39,12 @@ namespace lKHM
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openModuleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.saveModuleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.applyHatsFromTXTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.buttonExpandContract = new System.Windows.Forms.Button();
 			this.labelHatSpecs = new System.Windows.Forms.Label();
 			this.propertyGridHatDetails = new System.Windows.Forms.PropertyGrid();
-			this.applyHatsFromTXTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -64,7 +64,7 @@ namespace lKHM
 			this.treeViewKirbyHats.Name = "treeViewKirbyHats";
 			this.treeViewKirbyHats.ShowPlusMinus = false;
 			this.treeViewKirbyHats.ShowRootLines = false;
-			this.treeViewKirbyHats.Size = new System.Drawing.Size(270, 630);
+			this.treeViewKirbyHats.Size = new System.Drawing.Size(270, 580);
 			this.treeViewKirbyHats.TabIndex = 0;
 			this.treeViewKirbyHats.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewKirbyHats_AfterSelect);
 			// 
@@ -152,6 +152,13 @@ namespace lKHM
 			this.saveModuleToolStripMenuItem.Text = "Save Module";
 			this.saveModuleToolStripMenuItem.Click += new System.EventHandler(this.saveModuleToolStripMenuItem_Click);
 			// 
+			// applyHatsFromTXTToolStripMenuItem
+			// 
+			this.applyHatsFromTXTToolStripMenuItem.Name = "applyHatsFromTXTToolStripMenuItem";
+			this.applyHatsFromTXTToolStripMenuItem.Size = new System.Drawing.Size(236, 26);
+			this.applyHatsFromTXTToolStripMenuItem.Text = "Apply Hats from .TXT";
+			this.applyHatsFromTXTToolStripMenuItem.Click += new System.EventHandler(this.applyHatsFromTXTToolStripMenuItem_Click);
+			// 
 			// helpToolStripMenuItem
 			// 
 			this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -163,8 +170,9 @@ namespace lKHM
 			// aboutToolStripMenuItem
 			// 
 			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(133, 26);
+			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
 			this.aboutToolStripMenuItem.Text = "About";
+			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
 			// 
 			// buttonExpandContract
 			// 
@@ -193,23 +201,16 @@ namespace lKHM
 			this.propertyGridHatDetails.Location = new System.Drawing.Point(432, 60);
 			this.propertyGridHatDetails.Name = "propertyGridHatDetails";
 			this.propertyGridHatDetails.PropertySort = System.Windows.Forms.PropertySort.Categorized;
-			this.propertyGridHatDetails.Size = new System.Drawing.Size(340, 630);
+			this.propertyGridHatDetails.Size = new System.Drawing.Size(340, 580);
 			this.propertyGridHatDetails.TabIndex = 6;
 			this.propertyGridHatDetails.ToolbarVisible = false;
 			this.propertyGridHatDetails.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGridHatDetails_PropertyValueChanged);
-			// 
-			// applyHatsFromTXTToolStripMenuItem
-			// 
-			this.applyHatsFromTXTToolStripMenuItem.Name = "applyHatsFromTXTToolStripMenuItem";
-			this.applyHatsFromTXTToolStripMenuItem.Size = new System.Drawing.Size(236, 26);
-			this.applyHatsFromTXTToolStripMenuItem.Text = "Apply Hats from .TXT";
-			this.applyHatsFromTXTToolStripMenuItem.Click += new System.EventHandler(this.applyHatsFromTXTToolStripMenuItem_Click);
 			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(782, 703);
+			this.ClientSize = new System.Drawing.Size(782, 653);
 			this.Controls.Add(this.propertyGridHatDetails);
 			this.Controls.Add(this.labelHatSpecs);
 			this.Controls.Add(this.buttonExpandContract);
