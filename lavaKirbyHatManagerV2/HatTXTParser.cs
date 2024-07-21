@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace lKHM
 {
-	public class TXTHatInfo
+	public class hatCopyRequest
 	{
 		public string name = "";
 		public uint sourceID = 0xFFFFFFFF;
 		public uint destinationID = 0xFFFFFFFF;
 	}
 
-	class KirbyHatTXTParser
+	class HatTXTParser
 	{
 		private const string commentChars = "/#";
 
@@ -45,7 +45,7 @@ namespace lKHM
 			return result;
 		}
 
-		public static void parseKirbyHatsTXT(string filepath, List<TXTHatInfo> destinationList)
+		public static void parseHatsFromTXT(string filepath, List<hatCopyRequest> destinationList)
 		{
 			if (System.IO.File.Exists(filepath))
 			{
@@ -56,7 +56,7 @@ namespace lKHM
 					if (string.IsNullOrEmpty(currentLine)) continue;
 					if (commentChars.Contains(currentLine[0])) continue;
 
-					TXTHatInfo tempInfo = new TXTHatInfo();
+					hatCopyRequest tempInfo = new hatCopyRequest();
 					currentLine = scrubUnquotedBlankChars(currentLine);
 
 					int equalsLoc = currentLine.IndexOf('=');
@@ -75,6 +75,26 @@ namespace lKHM
 						destinationList.Add(tempInfo);
 					}
 				}
+			}
+		}
+		public static void importHatsFromTXT(KirbyHatManager managerIn, string filepath)
+		{
+			List<hatCopyRequest> incomingHats = new List<hatCopyRequest>();
+			parseHatsFromTXT(filepath, incomingHats);
+
+			foreach (hatCopyRequest currHat in incomingHats)
+			{
+				if (managerIn.copyHatToSlot(currHat.sourceID, currHat.destinationID, true))
+				{
+					HatNames.setFIDName(currHat.destinationID, currHat.name, true);
+				}
+			}
+		}
+		public static void importHatsFromTXTs(KirbyHatManager managerIn, string[] filepaths)
+		{
+			foreach (string currPath in filepaths)
+			{
+				importHatsFromTXT(managerIn, currPath);
 			}
 		}
 	}

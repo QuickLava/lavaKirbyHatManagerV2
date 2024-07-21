@@ -208,7 +208,14 @@ namespace lKHM
 
 			if (allowOverwrite || !getFIDHasName(fighterIDIn))
 			{
-				fighterIDsToNames[fighterIDIn] = nameIn;
+				if (!String.IsNullOrEmpty(nameIn))
+				{
+					fighterIDsToNames[fighterIDIn] = nameIn;
+				}
+				else
+				{
+					eraseFIDName(fighterIDIn);
+				}
 			}
 
 			return result;

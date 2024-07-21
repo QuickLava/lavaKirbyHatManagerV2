@@ -17,23 +17,6 @@ namespace lKHM
 		KirbyHatManager hatManager = new KirbyHatManager();
 		BrawlLib.SSBB.ResourceNodes.RELNode kirbyModule = null;
 
-		void applyHatsFromTXT(string filepath)
-		{
-			if (System.IO.File.Exists(filepath))
-			{
-				List<TXTHatInfo> temp = new List<TXTHatInfo>();
-				KirbyHatTXTParser.parseKirbyHatsTXT(filepath, temp);
-
-				foreach (TXTHatInfo hat in temp)
-				{
-					hatManager.copyHatToSlot(hat.sourceID, hat.destinationID, true);
-					HatNames.setFIDName(hat.destinationID, hat.name, true);
-				}
-
-				populateTreeView();
-			}
-		}
-
 		bool tryLoadHatNamesFromBuildConfigFolder(string relPath)
 		{
 			bool result = false;
@@ -179,7 +162,6 @@ namespace lKHM
 		{
 			setFormExpanded(!formExpanded);
 		}
-		
 
 		public Form1()
 		{
@@ -304,16 +286,6 @@ namespace lKHM
 			invertFormExpanded();
 		}
 
-		private void importHatsFromTXTToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			OpenFileDialog ofd = new OpenFileDialog();
-			ofd.Filter = "Hat List File(*.txt)|*.txt";
-			if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-			{
-				applyHatsFromTXT(ofd.FileName);
-			}
-		}
-
 		private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			var aboutForm = new AboutForm();
@@ -342,14 +314,25 @@ namespace lKHM
 				}
 			}
 		}
-
 		private void importHatsFromXMLToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			OpenFileDialog ofd = new OpenFileDialog();
+			ofd.Multiselect = true;
 			ofd.Filter = "Hat List File(*.xml)|*.xml";
 			if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 			{
 				HatXMLParser.importHatsFromXMLs(hatManager, ofd.FileNames);
+				populateTreeView();
+			}
+		}
+		private void importHatsFromTXTToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog ofd = new OpenFileDialog();
+			ofd.Multiselect = true;
+			ofd.Filter = "Hat List File(*.txt)|*.txt";
+			if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+			{
+				HatTXTParser.importHatsFromTXTs(hatManager, ofd.FileNames);
 				populateTreeView();
 			}
 		}

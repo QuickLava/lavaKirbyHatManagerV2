@@ -1179,7 +1179,7 @@
     <Compile Include="HatNames.cs" />
     <Compile Include="HatXMLParser.cs" />
     <Compile Include="KirbyHatManager.cs" />
-    <Compile Include="KirbyHatTXTParser.cs" />
+    <Compile Include="HatTXTParser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SelectFighterIDForm.cs">

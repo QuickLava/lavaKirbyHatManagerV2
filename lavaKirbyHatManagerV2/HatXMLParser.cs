@@ -209,7 +209,8 @@ namespace lKHM
 			xmlOut.Close();
 			result = System.IO.File.Exists(filepath);
 		}
-		public static void importHatsFromXML(KirbyHatManager managerIn, string filepath)
+		public static void parseHatsFromXML(string filepath,
+			SortedDictionary<uint, HatInfoPack> destHatDict, SortedDictionary<uint, string> destNameDict)
 		{
 			if (!System.IO.File.Exists(filepath)) return;
 
@@ -248,8 +249,8 @@ namespace lKHM
 					{
 						switch (retName)
 						{
-							case table2EntryStringTag: {newPack.table2Entry = retCmd; break; }
-							case table3Entry1StringTag : {newPack.table3Entry1 = retCmd; break; }
+							case table2EntryStringTag: { newPack.table2Entry = retCmd; break; }
+							case table3Entry1StringTag: { newPack.table3Entry1 = retCmd; break; }
 							case table4Entry1StringTag: { newPack.table4Entry1 = retCmd; break; }
 							case table4Entry2StringTag: { newPack.table4Entry2 = retCmd; break; }
 							case table4Entry3StringTag: { newPack.table4Entry3 = retCmd; break; }
@@ -259,10 +260,33 @@ namespace lKHM
 					}
 				}
 
-				managerIn.eraseHat(currFID);
-				managerIn.createNewHat(currFID);
-				managerIn.fighterIDToInfoPacks[currFID].copyInfoFrom(newPack);
-				HatNames.setFIDName(currFID, currName, true);
+				if (!destHatDict.ContainsKey(currFID))
+				{
+					destHatDict.Add(currFID, new HatInfoPack());
+				}
+				destHatDict[currFID].copyInfoFrom(newPack);
+				destNameDict[currFID] = currName;
+			}
+
+			return;
+		}
+		public static void importHatsFromXML(KirbyHatManager managerIn, string filepath)
+		{
+			SortedDictionary<uint, HatInfoPack> incomingHats = new SortedDictionary<uint, HatInfoPack>();
+			SortedDictionary<uint, string> incomingNames = new SortedDictionary<uint, string>();
+			parseHatsFromXML(filepath, incomingHats, incomingNames);
+
+			foreach (var currPair in incomingHats)
+			{
+				if (!managerIn.fighterIDToInfoPacks.ContainsKey(currPair.Key))
+				{
+					managerIn.createNewHat(currPair.Key);
+				}
+				managerIn.fighterIDToInfoPacks[currPair.Key].copyInfoFrom(currPair.Value);
+			}
+			foreach (var currPair in incomingNames)
+			{
+				HatNames.setFIDName(currPair.Key, currPair.Value, true);
 			}
 		}
 		public static void importHatsFromXMLs(KirbyHatManager managerIn, string[] filepaths)
