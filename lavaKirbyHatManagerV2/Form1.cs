@@ -10,12 +10,54 @@ using System.Windows.Forms;
 
 namespace lKHM
 {
+	public class HatNode : TreeNode
+	{
+		private uint _fighterID = uint.MaxValue;
+
+		public override string ToString()
+		{
+			return "[" + _fighterID.ToString("X2") + "] " + HatName;
+		}
+		public HatNode(uint fighterIDIn)
+		{
+			_fighterID = fighterIDIn;
+		}
+
+		public uint FighterID
+		{
+			get
+			{
+				return _fighterID;
+			}
+			set
+			{
+				_fighterID = value;
+			}
+		}
+		public string HatName
+		{
+			get
+			{
+				return HatNames.getNameFromFID(_fighterID);
+			}
+			set
+			{
+				HatNames.setFIDName(_fighterID, value, true);
+			}
+		}
+	}
+
 	public partial class Form1 : Form
 	{
 		bool formExpanded = false;
 		string[] defaultKirbyRelPaths = { "./ft_kirby.rel", "../pf/module/ft_kirby.rel" };
-		KirbyHatManager hatManager = new KirbyHatManager();
+		internal KirbyHatManager hatManager = new KirbyHatManager();
 		BrawlLib.SSBB.ResourceNodes.RELNode kirbyModule = null;
+
+		HatNode getSelectedNode()
+		{
+			return treeViewKirbyHats.SelectedNode as HatNode;
+		}
 
 		bool tryLoadHatNamesFromBuildConfigFolder(string relPath)
 		{
@@ -74,12 +116,10 @@ namespace lKHM
 		{
 			bool result = false;
 
-			foreach (TreeNode x in treeViewKirbyHats.Nodes)
+			foreach (HatNode x in treeViewKirbyHats.Nodes)
 			{
-				uint currFID = (uint)x.Tag;
-
-				if (currFID < targetFID) continue;
-				if (currFID > targetFID) break;
+				if (x.FighterID < targetFID) continue;
+				if (x.FighterID > targetFID) break;
 				treeViewKirbyHats.SelectedNode = x;
 			}
 
@@ -90,15 +130,15 @@ namespace lKHM
 			uint selectedNodeFID = uint.MaxValue;
 			if (treeViewKirbyHats.SelectedNode != null)
 			{
-				selectedNodeFID = (uint)treeViewKirbyHats.SelectedNode.Tag;
+				selectedNodeFID = getSelectedNode().FighterID;
 			}
 
 			treeViewKirbyHats.BeginUpdate();
 			treeViewKirbyHats.Nodes.Clear();
 			foreach (var x in hatManager.fighterIDToInfoPacks)
 			{
-				TreeNode newNode = new TreeNode("[" + x.Key.ToString("X2") + "] " + HatNames.getNameFromFID(x.Key));
-				newNode.Tag = x.Key;
+				HatNode newNode = new HatNode(x.Key);
+				newNode.FighterID = x.Key;
 				treeViewKirbyHats.Nodes.Add(newNode);
 			}
 			treeViewKirbyHats.EndUpdate();
@@ -206,7 +246,7 @@ namespace lKHM
 			{
 				int selectedIndex = treeViewKirbyHats.SelectedNode.Index;
 
-				uint targetFID = (uint)treeViewKirbyHats.SelectedNode.Tag;
+				uint targetFID = getSelectedNode().FighterID;
 				if (hatManager.eraseHat(targetFID))
 				{
 					HatNames.eraseFIDName(targetFID);
@@ -230,7 +270,7 @@ namespace lKHM
 			IDForm.checkBoxSetName.Visible = true;
 			if (IDForm.ShowDialog() != DialogResult.OK) return;
 
-			uint sourceID = (uint)treeViewKirbyHats.SelectedNode.Tag;
+			uint sourceID = getSelectedNode().FighterID;
 			uint destinationID = (uint)IDForm.numericUpDownFID.Value;
 
 			if (hatManager.copyHatToSlot(sourceID, destinationID, true) && IDForm.checkBoxSetName.Checked)
@@ -248,7 +288,7 @@ namespace lKHM
 			IDForm.checkBoxSetName.Visible = false;
 			if (IDForm.ShowDialog() != DialogResult.OK) return;
 
-			uint sourceID = (uint)treeViewKirbyHats.SelectedNode.Tag;
+			uint sourceID = getSelectedNode().FighterID;
 			uint destinationID = (uint)IDForm.numericUpDownFID.Value;
 			if (hatManager.moveHatToSlot(sourceID, destinationID, true))
 			{
@@ -276,7 +316,7 @@ namespace lKHM
 		{
 			if (treeViewKirbyHats.SelectedNode != null)
 			{
-				propertyGridHatDetails.SelectedObject = hatManager.fighterIDToInfoPacks[(uint)treeViewKirbyHats.SelectedNode.Tag];
+				propertyGridHatDetails.SelectedObject = hatManager.fighterIDToInfoPacks[getSelectedNode().FighterID];
 				propertyGridHatDetails.ExpandAllGridItems();
 			}
 		}
@@ -302,11 +342,10 @@ namespace lKHM
 				if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 				{
 					List<uint> IDsToExport = new List<uint>();
-					foreach (TreeNode currNode in exportForm.treeViewHats.Nodes)
+					foreach (HatNode currNode in exportForm.treeViewHats.Nodes)
 					{
 						if (!currNode.Checked) continue;
-
-						IDsToExport.Add((uint)currNode.Tag);
+						IDsToExport.Add(currNode.FighterID);
 					}
 
 					HatXMLParser.exportHatsToXML(hatManager, sfd.FileName, IDsToExport.ToArray());
