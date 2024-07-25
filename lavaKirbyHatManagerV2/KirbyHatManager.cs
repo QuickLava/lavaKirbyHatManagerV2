@@ -127,6 +127,19 @@ namespace lKHM
 		}
 	}
 
+	public class HatInfoPackTypeConverter : TypeConverter
+	{
+		public override bool GetPropertiesSupported(ITypeDescriptorContext context)
+		{
+			return true;
+		}
+
+		public override PropertyDescriptorCollection GetProperties(ITypeDescriptorContext context, object value, Attribute[] attributes)
+		{
+			return TypeDescriptor.GetProperties(typeof(HatInfoPack));
+		}
+	}
+	[TypeConverter(typeof(HatInfoPackTypeConverter))]
 	public class HatInfoPack
 	{
 		// AbilityTopStatusKind
@@ -147,6 +160,10 @@ namespace lKHM
 		internal writeWordCmd table4Entry3 = new writeWordCmd();
 		internal writeWordCmd table4Entry4 = new writeWordCmd();
 
+		public override string ToString()
+		{
+			return "";
+		}
 		public void copyInfoFrom(HatInfoPack sourceHat)
 		{
 			table1Entry = sourceHat.table1Entry;

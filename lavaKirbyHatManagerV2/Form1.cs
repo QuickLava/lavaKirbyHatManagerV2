@@ -10,45 +10,89 @@ using System.Windows.Forms;
 
 namespace lKHM
 {
-	public class HatNode : TreeNode
-	{
-		private uint _fighterID = uint.MaxValue;
-
-		public override string ToString()
-		{
-			return "[" + _fighterID.ToString("X2") + "] " + HatName;
-		}
-		public HatNode(uint fighterIDIn)
-		{
-			_fighterID = fighterIDIn;
-		}
-
-		public uint FighterID
-		{
-			get
-			{
-				return _fighterID;
-			}
-			set
-			{
-				_fighterID = value;
-			}
-		}
-		public string HatName
-		{
-			get
-			{
-				return HatNames.getNameFromFID(_fighterID);
-			}
-			set
-			{
-				HatNames.setFIDName(_fighterID, value, true);
-			}
-		}
-	}
-
 	public partial class Form1 : Form
 	{
+		public class PropertyGetter
+		{
+			public Form1 parent = null; 
+
+			public string Name
+			{
+				get
+				{
+					string result = "";
+
+					if (parent != null && parent.getSelectedNode() != null)
+					{
+						result = HatNames.getNameFromFID(parent.getSelectedNode().FighterID);
+					}
+
+					return result;
+				}
+				set
+				{
+					if (parent != null && parent.getSelectedNode() != null)
+					{
+						HatNames.setFIDName(parent.getSelectedNode().FighterID, value, true);
+						parent.getSelectedNode().updateTextField();
+					}
+				}
+			}
+			public HatInfoPack Hat
+			{ 
+				get 
+				{
+					HatInfoPack result = null; 
+
+					if (parent != null && parent.getSelectedNode() != null)
+					{
+						result = parent.hatManager.fighterIDToInfoPacks[parent.getSelectedNode().FighterID];
+					}
+
+					return result;
+				}
+			}
+		}
+		PropertyGetter propGetterObj = new PropertyGetter();
+		public class HatNode : TreeNode
+		{
+			private uint _fighterID = uint.MaxValue;
+
+			public HatNode(uint fighterIDIn)
+			{
+				_fighterID = fighterIDIn;
+			}
+			public void updateTextField()
+			{
+				Text = "[" + _fighterID.ToString("X2") + "] " + HatName;
+			}
+
+			public uint FighterID
+			{
+				get
+				{
+					return _fighterID;
+				}
+				set
+				{
+					_fighterID = value;
+					updateTextField();
+				}
+			}
+			public string HatName
+			{
+				get
+				{
+					return HatNames.getNameFromFID(_fighterID);
+				}
+				set
+				{
+					HatNames.setFIDName(_fighterID, value, true);
+					updateTextField();
+				}
+			}
+		}
+
 		bool formExpanded = false;
 		string[] defaultKirbyRelPaths = { "./ft_kirby.rel", "../pf/module/ft_kirby.rel" };
 		internal KirbyHatManager hatManager = new KirbyHatManager();
@@ -172,7 +216,7 @@ namespace lKHM
 		void expandForm()
 		{
 			var tempSize = this.Size;
-			tempSize.Width = 800;
+			tempSize.Width = 840;
 			buttonExpandContract.Text = "<<";
 			propertyGridHatDetails.TabStop = true;
 			formExpanded = true;
@@ -210,11 +254,13 @@ namespace lKHM
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
+			propGetterObj.parent = this;
 			foreach (string defaultPath in defaultKirbyRelPaths)
 			{
 				if (loadModule(defaultPath)) break;
 			}
 			setFormExpanded(formExpanded);
+			propertyGridHatDetails.SelectedObject = propGetterObj;
 		}
 
 		private void openModuleToolStripMenuItem_Click(object sender, EventArgs e)
@@ -316,8 +362,9 @@ namespace lKHM
 		{
 			if (treeViewKirbyHats.SelectedNode != null)
 			{
-				propertyGridHatDetails.SelectedObject = hatManager.fighterIDToInfoPacks[getSelectedNode().FighterID];
 				propertyGridHatDetails.ExpandAllGridItems();
+				propertyGridHatDetails.Refresh();
+				treeViewKirbyHats.Focus();
 			}
 		}
 
