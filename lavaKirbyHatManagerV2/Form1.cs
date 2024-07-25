@@ -14,8 +14,10 @@ namespace lKHM
 	{
 		public class PropertyGetter
 		{
-			public Form1 parent = null; 
+			public Form1 parent = null;
 
+			const string categoryName = "Contents";
+			[Category(categoryName)]
 			public string Name
 			{
 				get
@@ -38,6 +40,7 @@ namespace lKHM
 					}
 				}
 			}
+			[Category(categoryName)]
 			public HatInfoPack Hat
 			{ 
 				get 
@@ -54,44 +57,6 @@ namespace lKHM
 			}
 		}
 		PropertyGetter propGetterObj = new PropertyGetter();
-		public class HatNode : TreeNode
-		{
-			private uint _fighterID = uint.MaxValue;
-
-			public HatNode(uint fighterIDIn)
-			{
-				_fighterID = fighterIDIn;
-			}
-			public void updateTextField()
-			{
-				Text = "[" + _fighterID.ToString("X2") + "] " + HatName;
-			}
-
-			public uint FighterID
-			{
-				get
-				{
-					return _fighterID;
-				}
-				set
-				{
-					_fighterID = value;
-					updateTextField();
-				}
-			}
-			public string HatName
-			{
-				get
-				{
-					return HatNames.getNameFromFID(_fighterID);
-				}
-				set
-				{
-					HatNames.setFIDName(_fighterID, value, true);
-					updateTextField();
-				}
-			}
-		}
 
 		bool formExpanded = false;
 		string[] defaultKirbyRelPaths = { "./ft_kirby.rel", "../pf/module/ft_kirby.rel" };
@@ -389,6 +354,7 @@ namespace lKHM
 				if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 				{
 					List<uint> IDsToExport = new List<uint>();
+
 					foreach (HatNode currNode in exportForm.treeViewHats.Nodes)
 					{
 						if (!currNode.Checked) continue;

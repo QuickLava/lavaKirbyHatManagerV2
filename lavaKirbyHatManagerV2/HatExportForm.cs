@@ -13,88 +13,15 @@ namespace lKHM
 {
 	public partial class HatExportForm : Form
 	{
-		public static string getNameNodeGroupIDHex(TreeNode nodeIn)
-		{
-			string result = "";
-
-			BrawlLib.SSBB.ResourceNodes.RSARGroupNode attachedFile = nodeIn.Tag as BrawlLib.SSBB.ResourceNodes.RSARGroupNode;
-			if (attachedFile != null)
-			{
-				result = attachedFile.StringId.ToString("X3");
-			}
-
-			return result;
-		}
-		public static string getNameNodeGroupIDDec(TreeNode nodeIn)
-		{
-			string result = "";
-
-			BrawlLib.SSBB.ResourceNodes.RSARGroupNode attachedFile = nodeIn.Tag as BrawlLib.SSBB.ResourceNodes.RSARGroupNode;
-			if (attachedFile != null)
-			{
-				result = attachedFile.StringId.ToString("D3");
-			}
-
-			return result;
-		}
-		public static string getNameNodeGroupInfoIndexHex(TreeNode nodeIn)
-		{
-			string result = "";
-
-			BrawlLib.SSBB.ResourceNodes.RSARGroupNode attachedFile = nodeIn.Tag as BrawlLib.SSBB.ResourceNodes.RSARGroupNode;
-			if (attachedFile != null)
-			{
-				result = attachedFile.InfoIndex.ToString("X3");
-			}
-
-			return result;
-		}
-		public static string getNameNodeGroupInfoIndexDec(TreeNode nodeIn)
-		{
-			string result = "";
-
-			BrawlLib.SSBB.ResourceNodes.RSARGroupNode attachedFile = nodeIn.Tag as BrawlLib.SSBB.ResourceNodes.RSARGroupNode;
-			if (attachedFile != null)
-			{
-				result = attachedFile.InfoIndex.ToString("D3");
-			}
-
-			return result;
-		}
-		public static string getNameNodeGroupNameShort(TreeNode nodeIn)
-		{
-			string result = "";
-
-			BrawlLib.SSBB.ResourceNodes.RSARGroupNode attachedFile = nodeIn.Tag as BrawlLib.SSBB.ResourceNodes.RSARGroupNode;
-			if (attachedFile != null)
-			{
-				result = attachedFile.Name;
-			}
-
-			return result;
-		}
-		public static string getNameNodeGroupNameLong(TreeNode nodeIn)
-		{
-			string result = "";
-
-			BrawlLib.SSBB.ResourceNodes.RSARGroupNode attachedFile = nodeIn.Tag as BrawlLib.SSBB.ResourceNodes.RSARGroupNode;
-			if (attachedFile != null)
-			{
-				result = attachedFile.TreePath.Replace('/', '_');
-			}
-
-			return result;
-		}
-
 		public HatExportForm(TreeView sourceTree)
 		{
 			InitializeComponent();
 
 			treeViewHats.BeginUpdate();
-			foreach (TreeNode sourceNode in sourceTree.Nodes)
+			foreach (HatNode sourceNode in sourceTree.Nodes)
 			{
-				TreeNode newNode = treeViewHats.Nodes.Add(sourceNode.Text);
-				newNode.Tag = sourceNode.Tag;
+				HatNode newNode = new HatNode(sourceNode.FighterID);
+				treeViewHats.Nodes.Add(newNode);
 			}
 			treeViewHats.EndUpdate();
 
