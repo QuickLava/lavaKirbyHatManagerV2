@@ -210,7 +210,7 @@ namespace lKHM
 			{
 				if (!String.IsNullOrEmpty(nameIn))
 				{
-					fighterIDsToNames[fighterIDIn] = nameIn;
+					fighterIDsToNames[fighterIDIn] = nameIn.ToUpper().Replace(" ", "_");
 				}
 				else
 				{
