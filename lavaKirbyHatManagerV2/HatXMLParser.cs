@@ -215,7 +215,7 @@ namespace lKHM
 			return result;
 		}
 		public static void parseHatsFromXML(string filepath,
-			SortedDictionary<uint, HatInfoPack> destHatDict, SortedDictionary<uint, string> destNameDict)
+			SortedDictionary<uint, HatInfoPack> destHatDict, SortedDictionary<uint, string> destNameDict = null)
 		{
 			if (!System.IO.File.Exists(filepath)) return;
 
@@ -270,7 +270,10 @@ namespace lKHM
 					destHatDict.Add(currFID, new HatInfoPack());
 				}
 				destHatDict[currFID].copyInfoFrom(newPack);
-				destNameDict[currFID] = currName;
+				if (destNameDict != null)
+				{
+					destNameDict[currFID] = currName;
+				}
 			}
 
 			return;
