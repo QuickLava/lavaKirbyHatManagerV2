@@ -164,25 +164,26 @@ namespace lKHM
 				treeViewKirbyHats.SelectedNode = treeViewKirbyHats.Nodes[0x0];
 			}
 		}
+		void setControlsEnabled(bool enabledIn)
+		{
+			buttonCreateHat.Enabled = enabledIn;
+			buttonCloneHat.Enabled = enabledIn;
+			buttonDeleteHat.Enabled = enabledIn;
+			buttonMoveHat.Enabled = enabledIn;
+			buttonExpandContract.Enabled = enabledIn;
+			propertyGridHatDetails.Enabled = enabledIn;
+			saveModuleToolStripMenuItem.Enabled = enabledIn;
+			exportHatsToXMLToolStripMenuItem.Enabled = enabledIn;
+			importHatsFromXMLToolStripMenuItem.Enabled = enabledIn;
+			importHatsFromTXTToolStripMenuItem.Enabled = enabledIn;
+		}
 		void enableControls()
 		{
-			buttonCreateHat.Enabled = true;
-			buttonCloneHat.Enabled = true;
-			buttonDeleteHat.Enabled = true;
-			buttonMoveHat.Enabled = true;
-			buttonExpandContract.Enabled = true;
-			propertyGridHatDetails.Enabled = true;
-			saveModuleToolStripMenuItem.Enabled = true;
+			setControlsEnabled(true);
 		}
 		void disableControls()
 		{
-			buttonCreateHat.Enabled = false;
-			buttonCloneHat.Enabled = false;
-			buttonDeleteHat.Enabled = false;
-			buttonMoveHat.Enabled = false;
-			buttonExpandContract.Enabled = false;
-			propertyGridHatDetails.Enabled = false;
-			saveModuleToolStripMenuItem.Enabled = false;
+			setControlsEnabled(false);
 		}
 		void expandForm()
 		{
