@@ -151,12 +151,17 @@ namespace lKHM
 				newNode.FighterID = x.Key;
 				treeViewKirbyHats.Nodes.Add(newNode);
 			}
+			propertyGridHatDetails.SelectedObject = propGetterObj;
 			treeViewKirbyHats.EndUpdate();
 
 			if (selectedNodeFID != uint.MaxValue)
 			{
 				selectKirbyHatFromFID(selectedNodeFID);
 				propertyGridHatDetails.Refresh();
+			}
+			else if (treeViewKirbyHats.Nodes.Count > 0x0)
+			{
+				treeViewKirbyHats.SelectedNode = treeViewKirbyHats.Nodes[0x0];
 			}
 		}
 		void enableControls()
