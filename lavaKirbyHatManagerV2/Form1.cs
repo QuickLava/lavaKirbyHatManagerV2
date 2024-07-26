@@ -413,5 +413,10 @@ namespace lKHM
 				Properties.Settings.Default.lastImportPath = System.IO.Path.GetDirectoryName(ofd.FileName);
 			}
 		}
+
+		private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			Properties.Settings.Default.Save();
+		}
 	}
 }
