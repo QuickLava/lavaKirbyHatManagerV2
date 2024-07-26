@@ -99,6 +99,7 @@ namespace lKHM
 
 				if (hatManager.loadHatEntriesFromREL(kirbyModule))
 				{
+					HatNames.populateFromInternalList();
 					tryLoadHatNamesFromBuildConfigFolder(filepath);
 					HatNames.pruneNamesWithNoAssociatedHat(hatManager);
 					populateTreeView();
