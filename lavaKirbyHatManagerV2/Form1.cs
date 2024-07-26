@@ -238,21 +238,28 @@ namespace lKHM
 		{
 			OpenFileDialog ofd = new OpenFileDialog();
 			ofd.Filter = "Module File(*.rel)|*.rel";
+			ofd.RestoreDirectory = true;
+			ofd.InitialDirectory = Properties.Settings.Default.lastImportPath;
 			if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 			{
 				loadModule(ofd.FileName);
+				Properties.Settings.Default.lastImportPath = System.IO.Path.GetDirectoryName(ofd.FileName);
 			}
 		}
 		private void saveModuleToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			SaveFileDialog sfd = new SaveFileDialog();
+			sfd.DefaultExt = ".rel";
 			sfd.Filter = "*Module File(*.rel)|*.rel";
+			sfd.RestoreDirectory = true;
+			sfd.InitialDirectory = Properties.Settings.Default.lastExportPath;
 			if (sfd.ShowDialog() == DialogResult.OK)
 			{
 				if (hatManager.writeTablesToREL(kirbyModule))
 				{
 					kirbyModule.Export(sfd.FileName);
 				}
+				Properties.Settings.Default.lastExportPath = System.IO.Path.GetDirectoryName(sfd.FileName);
 			}
 		}
 
@@ -356,7 +363,10 @@ namespace lKHM
 			if (exportForm.ShowDialog() == DialogResult.OK)
 			{
 				SaveFileDialog sfd = new SaveFileDialog();
+				sfd.DefaultExt = ".xml";
 				sfd.Filter = "Hat List File(*.xml)|*.xml";
+				sfd.RestoreDirectory = true;
+				sfd.InitialDirectory = Properties.Settings.Default.lastExportPath;
 				if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 				{
 					List<uint> IDsToExport = new List<uint>();
@@ -370,6 +380,7 @@ namespace lKHM
 					HatXMLParser.exportHatsToXML(sfd.FileName, IDsToExport.ToArray(), 
 						hatManager.fighterIDToInfoPacks, HatNames.fighterIDsToNames);
 					populateTreeView();
+					Properties.Settings.Default.lastExportPath = System.IO.Path.GetDirectoryName(sfd.FileName);
 				}
 			}
 		}
@@ -378,10 +389,13 @@ namespace lKHM
 			OpenFileDialog ofd = new OpenFileDialog();
 			ofd.Multiselect = true;
 			ofd.Filter = "Hat List File(*.xml)|*.xml";
+			ofd.RestoreDirectory = true;
+			ofd.InitialDirectory = Properties.Settings.Default.lastImportPath;
 			if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 			{
 				HatXMLParser.importHatsFromXMLs(hatManager, ofd.FileNames);
 				populateTreeView();
+				Properties.Settings.Default.lastImportPath = System.IO.Path.GetDirectoryName(ofd.FileName);
 			}
 		}
 		private void importHatsFromTXTToolStripMenuItem_Click(object sender, EventArgs e)
@@ -389,10 +403,13 @@ namespace lKHM
 			OpenFileDialog ofd = new OpenFileDialog();
 			ofd.Multiselect = true;
 			ofd.Filter = "Hat List File(*.txt)|*.txt";
+			ofd.RestoreDirectory = true;
+			ofd.InitialDirectory = Properties.Settings.Default.lastImportPath;
 			if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 			{
 				HatTXTParser.importHatsFromTXTs(hatManager, ofd.FileNames);
 				populateTreeView();
+				Properties.Settings.Default.lastImportPath = System.IO.Path.GetDirectoryName(ofd.FileName);
 			}
 		}
 	}
