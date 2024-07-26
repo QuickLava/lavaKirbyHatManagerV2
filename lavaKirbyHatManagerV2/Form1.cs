@@ -361,7 +361,8 @@ namespace lKHM
 						IDsToExport.Add(currNode.FighterID);
 					}
 
-					HatXMLParser.exportHatsToXML(hatManager, sfd.FileName, IDsToExport.ToArray());
+					HatXMLParser.exportHatsToXML(sfd.FileName, IDsToExport.ToArray(), 
+						hatManager.fighterIDToInfoPacks, HatNames.fighterIDsToNames);
 					populateTreeView();
 				}
 			}

@@ -159,7 +159,8 @@ namespace lKHM
 			return result;
 		}
 
-		public static void exportHatsToXML(KirbyHatManager managerIn, string filepath, uint[] FIDsIn)
+		public static bool exportHatsToXML(string filepath, uint[] FIDsIn,
+			SortedDictionary<uint, HatInfoPack> sourceHatDict, SortedDictionary<uint, string> sourceNameDict = null)
 		{
 			bool result = false;
 
@@ -167,47 +168,51 @@ namespace lKHM
 			hatListSettings.Indent = true;
 			hatListSettings.IndentChars = "    ";
 			XmlWriter xmlOut = XmlWriter.Create(filepath, hatListSettings);
+
 			xmlOut.WriteStartElement(rootTag);
 			xmlOut.WriteAttributeString(versionTag, Properties.Resources.Version);
-
-			foreach (uint currID in FIDsIn)
+			if (System.IO.File.Exists(filepath) && sourceHatDict != null)
 			{
-				if (managerIn.fighterIDToInfoPacks.ContainsKey(currID))
+				foreach (uint currID in FIDsIn)
 				{
-					HatInfoPack currHat = managerIn.fighterIDToInfoPacks[currID];
-
-					xmlOut.WriteStartElement(hatTag);
-					xmlOut.WriteAttributeString(fighterIDTag, "0x" + currID.ToString("X2"));
-					if (HatNames.getFIDHasName(currID))
+					if (sourceHatDict.ContainsKey(currID))
 					{
-						xmlOut.WriteAttributeString(nameTag, HatNames.getNameFromFID(currID));
+						HatInfoPack currHat = sourceHatDict[currID];
+
+						xmlOut.WriteStartElement(hatTag);
+						xmlOut.WriteAttributeString(fighterIDTag, "0x" + currID.ToString("X2"));
+						if (sourceNameDict != null && sourceNameDict.ContainsKey(currID))
+						{
+							xmlOut.WriteAttributeString(nameTag, HatNames.getNameFromFID(currID));
+						}
+
+						xmlOut.WriteComment(HatInfoPack.table1CatName);
+						writeNumberElementToXML(xmlOut, table1EntryStringTag, currHat.TopStatusKind);
+
+						xmlOut.WriteComment(HatInfoPack.table2CatName);
+						writeRELWriteCommandToXML(xmlOut, table2EntryStringTag, currHat.AbilityProcesses);
+
+						xmlOut.WriteComment(HatInfoPack.table3CatName);
+						writeRELWriteCommandToXML(xmlOut, table3Entry1StringTag, currHat.AbilityInfo1);
+						writeNumberElementToXML(xmlOut, table3Entry2StringTag, currHat.AbilityInfo2);
+						writeNumberElementToXML(xmlOut, table3Entry3StringTag, currHat.AbilityInfo3);
+						writeNumberElementToXML(xmlOut, table3Entry4StringTag, currHat.AbilityInfo4);
+
+						xmlOut.WriteComment(HatInfoPack.table4CatName);
+						writeRELWriteCommandToXML(xmlOut, table4Entry1StringTag, currHat.ConvertParams1);
+						writeRELWriteCommandToXML(xmlOut, table4Entry2StringTag, currHat.ConvertParams2);
+						writeRELWriteCommandToXML(xmlOut, table4Entry3StringTag, currHat.ConvertParams3);
+						writeRELWriteCommandToXML(xmlOut, table4Entry4StringTag, currHat.ConvertParams4);
+
+						xmlOut.WriteEndElement();
 					}
-
-					xmlOut.WriteComment(HatInfoPack.table1CatName);
-					writeNumberElementToXML  (xmlOut, table1EntryStringTag, currHat.TopStatusKind);
-
-					xmlOut.WriteComment(HatInfoPack.table2CatName);
-					writeRELWriteCommandToXML(xmlOut, table2EntryStringTag, currHat.AbilityProcesses);
-
-					xmlOut.WriteComment(HatInfoPack.table3CatName);
-					writeRELWriteCommandToXML(xmlOut, table3Entry1StringTag, currHat.AbilityInfo1);
-					writeNumberElementToXML  (xmlOut, table3Entry2StringTag, currHat.AbilityInfo2);
-					writeNumberElementToXML  (xmlOut, table3Entry3StringTag, currHat.AbilityInfo3);
-					writeNumberElementToXML  (xmlOut, table3Entry4StringTag, currHat.AbilityInfo4);
-
-					xmlOut.WriteComment(HatInfoPack.table4CatName);
-					writeRELWriteCommandToXML(xmlOut, table4Entry1StringTag, currHat.ConvertParams1);
-					writeRELWriteCommandToXML(xmlOut, table4Entry2StringTag, currHat.ConvertParams2);
-					writeRELWriteCommandToXML(xmlOut, table4Entry3StringTag, currHat.ConvertParams3);
-					writeRELWriteCommandToXML(xmlOut, table4Entry4StringTag, currHat.ConvertParams4);
-
-					xmlOut.WriteEndElement();
 				}
+				result = true;
 			}
-
 			xmlOut.WriteEndElement();
 			xmlOut.Close();
-			result = System.IO.File.Exists(filepath);
+
+			return result;
 		}
 		public static void parseHatsFromXML(string filepath,
 			SortedDictionary<uint, HatInfoPack> destHatDict, SortedDictionary<uint, string> destNameDict)

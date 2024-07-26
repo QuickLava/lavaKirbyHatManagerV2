@@ -68,7 +68,7 @@ namespace lKHM
 			EX_KRYSTAL = 0x41,
 		}
 
-		static SortedDictionary<uint, string> fighterIDsToNames = new SortedDictionary<uint, string>();
+		public static SortedDictionary<uint, string> fighterIDsToNames = new SortedDictionary<uint, string>();
 
 		public static void populateFromInternalList()
 		{
