@@ -58,7 +58,7 @@ namespace lKHM
             0});
 			this.numericUpDownFID.Name = "numericUpDownFID";
 			this.numericUpDownFID.Size = new System.Drawing.Size(58, 22);
-			this.numericUpDownFID.TabIndex = 1;
+			this.numericUpDownFID.TabIndex = 0;
 			this.numericUpDownFID.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.numericUpDownFID.ValueChanged += new System.EventHandler(this.numericUpDownFID_ValueChanged);
 			this.numericUpDownFID.KeyDown += new System.Windows.Forms.KeyEventHandler(this.numericUpDownFID_KeyDown);
@@ -99,7 +99,7 @@ namespace lKHM
 			this.checkBoxSetName.Location = new System.Drawing.Point(16, 73);
 			this.checkBoxSetName.Name = "checkBoxSetName";
 			this.checkBoxSetName.Size = new System.Drawing.Size(103, 21);
-			this.checkBoxSetName.TabIndex = 7;
+			this.checkBoxSetName.TabIndex = 1;
 			this.checkBoxSetName.Text = "Copy Name";
 			this.checkBoxSetName.UseVisualStyleBackColor = true;
 			// 

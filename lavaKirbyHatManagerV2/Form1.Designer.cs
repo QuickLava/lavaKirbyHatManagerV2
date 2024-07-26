@@ -89,7 +89,7 @@ namespace lKHM
 			this.buttonCloneHat.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonCloneHat.Name = "buttonCloneHat";
 			this.buttonCloneHat.Size = new System.Drawing.Size(134, 28);
-			this.buttonCloneHat.TabIndex = 2;
+			this.buttonCloneHat.TabIndex = 3;
 			this.buttonCloneHat.Text = "Copy Selected";
 			this.buttonCloneHat.UseVisualStyleBackColor = true;
 			this.buttonCloneHat.Click += new System.EventHandler(this.buttonCloneHat_Click);
@@ -100,7 +100,7 @@ namespace lKHM
 			this.buttonDeleteHat.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonDeleteHat.Name = "buttonDeleteHat";
 			this.buttonDeleteHat.Size = new System.Drawing.Size(134, 28);
-			this.buttonDeleteHat.TabIndex = 3;
+			this.buttonDeleteHat.TabIndex = 2;
 			this.buttonDeleteHat.Text = "Delete Selected";
 			this.buttonDeleteHat.UseVisualStyleBackColor = true;
 			this.buttonDeleteHat.Click += new System.EventHandler(this.buttonDeleteHat_Click);

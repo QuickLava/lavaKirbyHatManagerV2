@@ -59,7 +59,7 @@ namespace lKHM
 			this.buttonInvertSelection.Location = new System.Drawing.Point(330, 479);
 			this.buttonInvertSelection.Name = "buttonInvertSelection";
 			this.buttonInvertSelection.Size = new System.Drawing.Size(110, 40);
-			this.buttonInvertSelection.TabIndex = 6;
+			this.buttonInvertSelection.TabIndex = 3;
 			this.buttonInvertSelection.Text = "Invert Selection";
 			this.buttonInvertSelection.UseVisualStyleBackColor = true;
 			this.buttonInvertSelection.Click += new System.EventHandler(this.buttonInvertSelection_Click);
@@ -70,7 +70,7 @@ namespace lKHM
 			this.buttonSelectAll.Location = new System.Drawing.Point(98, 479);
 			this.buttonSelectAll.Name = "buttonSelectAll";
 			this.buttonSelectAll.Size = new System.Drawing.Size(110, 40);
-			this.buttonSelectAll.TabIndex = 4;
+			this.buttonSelectAll.TabIndex = 1;
 			this.buttonSelectAll.Text = "Select All";
 			this.buttonSelectAll.UseVisualStyleBackColor = true;
 			this.buttonSelectAll.Click += new System.EventHandler(this.buttonSelectAll_Click);
@@ -81,7 +81,7 @@ namespace lKHM
 			this.buttonDeselectAll.Location = new System.Drawing.Point(214, 479);
 			this.buttonDeselectAll.Name = "buttonDeselectAll";
 			this.buttonDeselectAll.Size = new System.Drawing.Size(110, 40);
-			this.buttonDeselectAll.TabIndex = 5;
+			this.buttonDeselectAll.TabIndex = 2;
 			this.buttonDeselectAll.Text = "Deselect All";
 			this.buttonDeselectAll.UseVisualStyleBackColor = true;
 			this.buttonDeselectAll.Click += new System.EventHandler(this.buttonDeselectAll_Click);
@@ -98,7 +98,7 @@ namespace lKHM
 			this.treeViewHats.ShowPlusMinus = false;
 			this.treeViewHats.ShowRootLines = false;
 			this.treeViewHats.Size = new System.Drawing.Size(434, 452);
-			this.treeViewHats.TabIndex = 3;
+			this.treeViewHats.TabIndex = 0;
 			this.treeViewHats.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeViewHats_AfterCheck);
 			this.treeViewHats.DoubleClick += new System.EventHandler(this.treeViewHats_DoubleClick);
 			this.treeViewHats.KeyDown += new System.Windows.Forms.KeyEventHandler(this.treeViewHats_KeyDown);
@@ -124,7 +124,7 @@ namespace lKHM
 			this.groupBox1.Location = new System.Drawing.Point(15, 9);
 			this.groupBox1.Name = "groupBox1";
 			this.groupBox1.Size = new System.Drawing.Size(446, 531);
-			this.groupBox1.TabIndex = 7;
+			this.groupBox1.TabIndex = 0;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Hats:";
 			// 
@@ -137,6 +137,9 @@ namespace lKHM
 			this.Controls.Add(this.buttonCancel);
 			this.Controls.Add(this.buttonExport);
 			this.Controls.Add(this.groupBox1);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.MaximizeBox = false;
+			this.MinimizeBox = false;
 			this.Name = "HatExportForm";
 			this.Text = "Export Hats";
 			this.groupBox1.ResumeLayout(false);
