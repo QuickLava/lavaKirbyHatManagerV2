@@ -160,6 +160,9 @@ namespace lKHM
 		internal writeWordCmd table4Entry3 = new writeWordCmd();
 		internal writeWordCmd table4Entry4 = new writeWordCmd();
 
+		// NodeConvertIndex
+		internal byte table5Entry = 0x02;
+			
 		public override string ToString()
 		{
 			return "";
@@ -176,6 +179,7 @@ namespace lKHM
 			table4Entry2.copyInfoFrom(sourceHat.table4Entry2);
 			table4Entry3.copyInfoFrom(sourceHat.table4Entry3);
 			table4Entry4.copyInfoFrom(sourceHat.table4Entry4);
+			table5Entry = sourceHat.table5Entry;
 		}
 
 		// Properties
@@ -183,6 +187,7 @@ namespace lKHM
 		public const string table2CatName = "Table 2";
 		public const string table3CatName = "Table 3";
 		public const string table4CatName = "Table 4";
+		public const string table5CatName = "Table 5";
 
 		[Category(table1CatName)]
 		public string TopStatusKind
@@ -262,6 +267,16 @@ namespace lKHM
 		{
 			get => table4Entry4;
 		}
+
+		[Category(table5CatName)]
+		public string NodeConvertIndex
+		{
+			get => Conversions.convertNumToHexString(table5Entry, 2);
+			set
+			{
+				table5Entry = (byte)Conversions.convertHexStringToNum(value, table5Entry);
+			}
+		}
 	}
 
 	public class KirbyHatManager
@@ -270,10 +285,11 @@ namespace lKHM
 		public const uint soraMeleeModuleID = 0x1B;
 
 		public const uint maxHatCount = 0x100;
-		const uint table1EntrySize = 0x4;
-		const uint table2EntrySize = 0x4;
+		const uint table1EntrySize = 0x04;
+		const uint table2EntrySize = 0x04;
 		const uint table3EntrySize = 0x10;
 		const uint table4EntrySize = 0x10;
+		const uint table5EntrySize = 0x01;
 		const uint table1StartOffset = 0x0;
 		const uint table1Length = maxHatCount * table1EntrySize;
 		const uint table2StartOffset = table1StartOffset + table1Length;
@@ -282,7 +298,9 @@ namespace lKHM
 		const uint table3Length = maxHatCount * table3EntrySize;
 		const uint table4StartOffset = table3StartOffset + table3Length;
 		const uint table4Length = maxHatCount * table4EntrySize;
-		const uint tablesEndOffset = table4StartOffset + table4Length;
+		const uint table5StartOffset = table4StartOffset + table4Length;
+		const uint table5Length = maxHatCount * table5EntrySize;
+		const uint tablesEndOffset = table5StartOffset + table5Length;
 
 		const string tableSectionName = "Section [7]";
 
@@ -335,6 +353,17 @@ namespace lKHM
 
 			return result;
 		}
+		uint getTable5EntryOffset(uint charIDIn)
+		{
+			uint result = uint.MaxValue;
+
+			if (charIDIn < maxHatCount)
+			{
+				result = (charIDIn * table5EntrySize) + table5StartOffset;
+			}
+
+			return result;
+		}
 
 		unsafe UnmanagedMemoryStream getHexStreamFromSectionNode(BrawlLib.SSBB.ResourceNodes.ModuleSectionNode sectionIn)
 		{
@@ -344,6 +373,31 @@ namespace lKHM
 			{
 				result = new UnmanagedMemoryStream((byte*)sectionIn._dataBuffer.Address,
 						sectionIn._dataBuffer.Length, sectionIn._dataBuffer.Length, FileAccess.ReadWrite);
+			}
+
+			return result;
+		}
+		byte readByteFromByteArr(UnmanagedMemoryStream hexStreamIn, uint offset)
+		{
+			byte result = byte.MaxValue;
+
+			if (offset < hexStreamIn.Length)
+			{
+				hexStreamIn.Seek(offset, SeekOrigin.Begin);
+				result = (byte)hexStreamIn.ReadByte();
+			}
+
+			return result;
+		}
+		bool writeByteToByteArr(UnmanagedMemoryStream hexStreamIn, byte valueIn, uint offset)
+		{
+			bool result = false;
+
+			if (offset < hexStreamIn.Length)
+			{
+				hexStreamIn.Seek(offset, SeekOrigin.Begin);
+				hexStreamIn.WriteByte(valueIn);
+				result = true;
 			}
 
 			return result;
@@ -378,7 +432,6 @@ namespace lKHM
 				}
 				hexStreamIn.Seek(offset, SeekOrigin.Begin);
 				hexStreamIn.Write(_convBuf, 0, 4);
-
 				result = true;
 			}
 
@@ -455,7 +508,7 @@ namespace lKHM
 		{
 			HatInfoPack result = new HatInfoPack();
 
-			if (fighterID < maxHatCount && getTable4EntryOffset(fighterID) < hexStreamIn.Length)
+			if (fighterID < maxHatCount && getTable5EntryOffset(fighterID) < hexStreamIn.Length)
 			{
 				result.table1Entry = readWordFromByteArr(hexStreamIn, getTable1EntryOffset(fighterID));
 
@@ -472,6 +525,8 @@ namespace lKHM
 				result.table4Entry2 = readRELWriteCMD(sectionIn, table4EntriesStart + 0x4);
 				result.table4Entry3 = readRELWriteCMD(sectionIn, table4EntriesStart + 0x8);
 				result.table4Entry4 = readRELWriteCMD(sectionIn, table4EntriesStart + 0xC);
+
+				result.table5Entry = readByteFromByteArr(hexStreamIn, getTable5EntryOffset(fighterID));
 			}
 
 			return result;
@@ -488,6 +543,7 @@ namespace lKHM
 			result &= sourcePack.table4Entry2.isSameAs(defaultInfoPack.table4Entry2);
 			result &= sourcePack.table4Entry3.isSameAs(defaultInfoPack.table4Entry3);
 			result &= sourcePack.table4Entry4.isSameAs(defaultInfoPack.table4Entry4);
+			result &= sourcePack.table5Entry == defaultInfoPack.table5Entry;
 
 			return result;
 		}
@@ -636,6 +692,7 @@ namespace lKHM
 				Console.WriteLine("    - Entry 2: " + currPair.Value.table4Entry2.summaryString());
 				Console.WriteLine("    - Entry 3: " + currPair.Value.table4Entry3.summaryString());
 				Console.WriteLine("    - Entry 4: " + currPair.Value.table4Entry4.summaryString());
+				Console.WriteLine("  - Table 5: " + currPair.Value.NodeConvertIndex);
 				Console.WriteLine("");
 			}
 		}
@@ -675,6 +732,8 @@ namespace lKHM
 					result &= writeRELWriteCMDAndWord(tableSectionNode, sectionHexStream, sourcePack.table4Entry2, table4EntryOffset + 0x4);
 					result &= writeRELWriteCMDAndWord(tableSectionNode, sectionHexStream, sourcePack.table4Entry3, table4EntryOffset + 0x8);
 					result &= writeRELWriteCMDAndWord(tableSectionNode, sectionHexStream, sourcePack.table4Entry4, table4EntryOffset + 0xC);
+
+					result &= writeByteToByteArr(sectionHexStream, sourcePack.table5Entry, getTable5EntryOffset(i));
 				}
 
 				BrawlLib.Internal.UnsafeBuffer newBuffer = new BrawlLib.Internal.UnsafeBuffer((int)sectionHexStream.Length);

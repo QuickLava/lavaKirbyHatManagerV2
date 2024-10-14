@@ -37,6 +37,8 @@ namespace lKHM
 		const string table4Entry3StringTag = "ConvertParams_3";
 		const string table4Entry4StringTag = "ConvertParams_4";
 
+		const string table5EntryStringTag = "NodeConvertIndex";
+
 		private static bool getNamedAttrString(XmlNode nodeIn, string attributeName, out string stringOut)
 		{
 			bool result = false;
@@ -204,6 +206,9 @@ namespace lKHM
 						writeRELWriteCommandToXML(xmlOut, table4Entry3StringTag, currHat.ConvertParams3);
 						writeRELWriteCommandToXML(xmlOut, table4Entry4StringTag, currHat.ConvertParams4);
 
+						xmlOut.WriteComment(HatInfoPack.table5CatName);
+						writeNumberElementToXML(xmlOut, table5EntryStringTag, currHat.NodeConvertIndex);
+
 						xmlOut.WriteEndElement();
 					}
 				}
@@ -248,6 +253,7 @@ namespace lKHM
 							case table3Entry2StringTag: { newPack.table3Entry2 = retVal; break; }
 							case table3Entry3StringTag: { newPack.table3Entry3 = retVal; break; }
 							case table3Entry4StringTag: { newPack.table3Entry4 = retVal; break; }
+							case table5EntryStringTag: { newPack.table5Entry = (byte)retVal; break; }
 						}
 					}
 					else if (readRELWriteCommandFromXML(hatField, out writeWordCmd retCmd))

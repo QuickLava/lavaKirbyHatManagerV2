@@ -68,7 +68,7 @@ namespace lKHM
 			this.treeViewKirbyHats.Name = "treeViewKirbyHats";
 			this.treeViewKirbyHats.ShowPlusMinus = false;
 			this.treeViewKirbyHats.ShowRootLines = false;
-			this.treeViewKirbyHats.Size = new System.Drawing.Size(270, 565);
+			this.treeViewKirbyHats.Size = new System.Drawing.Size(270, 580);
 			this.treeViewKirbyHats.TabIndex = 0;
 			this.treeViewKirbyHats.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewKirbyHats_AfterSelect);
 			// 
@@ -223,7 +223,7 @@ namespace lKHM
 			this.propertyGridHatDetails.Location = new System.Drawing.Point(432, 60);
 			this.propertyGridHatDetails.Name = "propertyGridHatDetails";
 			this.propertyGridHatDetails.PropertySort = System.Windows.Forms.PropertySort.Categorized;
-			this.propertyGridHatDetails.Size = new System.Drawing.Size(380, 565);
+			this.propertyGridHatDetails.Size = new System.Drawing.Size(380, 580);
 			this.propertyGridHatDetails.TabIndex = 6;
 			this.propertyGridHatDetails.ToolbarVisible = false;
 			// 
@@ -231,7 +231,7 @@ namespace lKHM
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(822, 638);
+			this.ClientSize = new System.Drawing.Size(822, 653);
 			this.Controls.Add(this.propertyGridHatDetails);
 			this.Controls.Add(this.labelHatSpecs);
 			this.Controls.Add(this.buttonExpandContract);
