@@ -59,14 +59,5 @@ namespace lKHM.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to v1.0.1.
-        /// </summary>
-        internal static string Version {
-            get {
-                return ResourceManager.GetString("Version", resourceCulture);
-            }
-        }
     }
 }

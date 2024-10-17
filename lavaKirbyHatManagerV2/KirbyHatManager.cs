@@ -281,6 +281,20 @@ namespace lKHM
 
 	public class KirbyHatManager
 	{
+		private const string _version = "1.1.0";
+		static public Version GetVersion()
+		{
+			return System.Version.Parse(_version);
+		}
+		static public string Version
+		{
+			get
+			{
+				Version programVer = GetVersion();
+				return "v" + programVer.Major + "." + programVer.Minor + "." + programVer.Build;
+			}
+		}
+
 		public const uint kirbyModuleID = 0x60;
 		public const uint soraMeleeModuleID = 0x1B;
 

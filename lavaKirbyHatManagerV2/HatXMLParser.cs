@@ -20,6 +20,7 @@ namespace lKHM
 		const string valueTag = "value";
 		const string writeCommandTag = "writeCMD";
 		const string partialHatTag = "partial";
+		const string forcePartialHatTag = "forcePartial";
 
 		const string targetModuleIDTag = "TargetModuleID";
 		const string targetOffsetTag = "TargetOffset";
@@ -205,7 +206,7 @@ namespace lKHM
 			XmlWriter xmlOut = XmlWriter.Create(filepath, hatListSettings);
 
 			xmlOut.WriteStartElement(rootTag);
-			xmlOut.WriteAttributeString(versionTag, Properties.Resources.Version);
+			xmlOut.WriteAttributeString(versionTag, KirbyHatManager.Version);
 			if (System.IO.File.Exists(filepath) && sourceHatDict != null)
 			{
 				foreach (uint currID in FIDsIn)
@@ -265,14 +266,13 @@ namespace lKHM
 			XmlNode rootNode = rootNodeList[0];
 
 			bool forcePartialHats = false;
+			getNamedAttrAsBool(rootNode, forcePartialHatTag, out forcePartialHats);
 			if (getNamedAttrString(rootNode, versionTag, out string versionAttr))
 			{
 				if (getVersionFromString(versionAttr, out Version xmlVer))
 				{
-					if (getVersionFromString(Properties.Resources.Version, out Version applicationVer))
-					{
-						forcePartialHats = xmlVer < applicationVer;
-					}
+					Version applicationVer = KirbyHatManager.GetVersion();
+					forcePartialHats |= (xmlVer.Major < applicationVer.Major) || (xmlVer.Minor < applicationVer.Minor);
 				}
 			}
 
@@ -292,7 +292,7 @@ namespace lKHM
 				{
 					destHatDict[currFID] = new HatInfoPack();
 				}
-				HatInfoPack newPack = destHatDict[currFID];
+				HatInfoPack targetHat = destHatDict[currFID];
 
 				foreach (XmlNode hatField in currHatNode.ChildNodes)
 				{
@@ -303,23 +303,23 @@ namespace lKHM
 					{
 						switch (retName)
 						{
-							case table1EntryStringTag: { newPack.table1Entry = retVal; break; }
-							case table3Entry2StringTag: { newPack.table3Entry2 = retVal; break; }
-							case table3Entry3StringTag: { newPack.table3Entry3 = retVal; break; }
-							case table3Entry4StringTag: { newPack.table3Entry4 = retVal; break; }
-							case table5EntryStringTag: { newPack.table5Entry = (byte)retVal; break; }
+							case table1EntryStringTag: { targetHat.table1Entry = retVal; break; }
+							case table3Entry2StringTag: { targetHat.table3Entry2 = retVal; break; }
+							case table3Entry3StringTag: { targetHat.table3Entry3 = retVal; break; }
+							case table3Entry4StringTag: { targetHat.table3Entry4 = retVal; break; }
+							case table5EntryStringTag: { targetHat.table5Entry = (byte)retVal; break; }
 						}
 					}
 					else if (readRELWriteCommandFromXML(hatField, out writeWordCmd retCmd))
 					{
 						switch (retName)
 						{
-							case table2EntryStringTag: { newPack.table2Entry = retCmd; break; }
-							case table3Entry1StringTag: { newPack.table3Entry1 = retCmd; break; }
-							case table4Entry1StringTag: { newPack.table4Entry1 = retCmd; break; }
-							case table4Entry2StringTag: { newPack.table4Entry2 = retCmd; break; }
-							case table4Entry3StringTag: { newPack.table4Entry3 = retCmd; break; }
-							case table4Entry4StringTag: { newPack.table4Entry4 = retCmd; break; }
+							case table2EntryStringTag: { targetHat.table2Entry = retCmd; break; }
+							case table3Entry1StringTag: { targetHat.table3Entry1 = retCmd; break; }
+							case table4Entry1StringTag: { targetHat.table4Entry1 = retCmd; break; }
+							case table4Entry2StringTag: { targetHat.table4Entry2 = retCmd; break; }
+							case table4Entry3StringTag: { targetHat.table4Entry3 = retCmd; break; }
+							case table4Entry4StringTag: { targetHat.table4Entry4 = retCmd; break; }
 							default: { break; }
 						}
 					}

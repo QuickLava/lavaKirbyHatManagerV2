@@ -15,7 +15,7 @@ namespace lKHM
 		public AboutForm()
 		{
 			InitializeComponent();
-			labelProgramName.Text = "lavaKirbyHatManager - " + Properties.Resources.Version;
+			labelProgramName.Text = "lavaKirbyHatManager - " + KirbyHatManager.Version;
 			TreeNode currNode = treeView1.Nodes.Add("Program Homepage: https://https://github.com/QuickLava/lavaKirbyHatManagerV2/");
 			currNode = treeView1.Nodes.Add("Created by: QuickLava");
 			currNode = treeView1.Nodes.Add("Based on Work by:");
