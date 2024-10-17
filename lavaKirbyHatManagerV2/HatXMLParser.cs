@@ -19,6 +19,7 @@ namespace lKHM
 		const string numberTag = "num";
 		const string valueTag = "value";
 		const string writeCommandTag = "writeCMD";
+		const string partialHatTag = "partial";
 
 		const string targetModuleIDTag = "TargetModuleID";
 		const string targetOffsetTag = "TargetOffset";
@@ -38,6 +39,19 @@ namespace lKHM
 		const string table4Entry4StringTag = "ConvertParams_4";
 
 		const string table5EntryStringTag = "NodeConvertIndex";
+
+		private static bool getVersionFromString(string stringIn, out Version verOut)
+		{
+			bool result = false;
+
+			result = Version.TryParse(stringIn, out verOut);
+			if (!result && stringIn.StartsWith("v", true, System.Globalization.CultureInfo.CurrentCulture))
+			{
+				result = Version.TryParse(stringIn.Substring(1), out verOut);
+			}
+
+			return result;
+		}
 
 		private static bool getNamedAttrString(XmlNode nodeIn, string attributeName, out string stringOut)
 		{
@@ -64,19 +78,38 @@ namespace lKHM
 			bool result = false;
 
 			valueOut = uint.MaxValue;
-			string attrStr = "";
-			if (getNamedAttrString(nodeIn, attributeName, out attrStr))
+			if (getNamedAttrString(nodeIn, attributeName, out string attrStr))
 			{
 				if (attrStr.StartsWith("0x"))
 				{
 					valueOut = Conversions.convertHexStringToNum(attrStr, valueOut);
+					result = true;
 				}
 				else
 				{
-					uint.TryParse(attrStr, out valueOut);
+					result = uint.TryParse(attrStr, out valueOut);
 				}
+			}
 
+			return result;
+		}
+		private static bool getNamedAttrAsBool(XmlNode nodeIn, string attributeName, out bool valueOut)
+		{
+			bool result = false;
+
+			valueOut = false;
+			if (getNamedAttrAsUint(nodeIn, attributeName, out uint numValOut))
+			{
+				valueOut = numValOut != 0;
 				result = true;
+			}
+			else if (getNamedAttrString(nodeIn, attributeName, out string strValOut))
+			{
+				if (bool.TryParse(strValOut, out bool boolValOut))
+				{
+					valueOut = boolValOut;
+					result = true;
+				}
 			}
 
 			return result;
@@ -231,15 +264,36 @@ namespace lKHM
 
 			XmlNode rootNode = rootNodeList[0];
 
-			uint currFID = uint.MaxValue;
+			bool forcePartialHats = false;
+			if (getNamedAttrString(rootNode, versionTag, out string versionAttr))
+			{
+				if (getVersionFromString(versionAttr, out Version xmlVer))
+				{
+					if (getVersionFromString(Properties.Resources.Version, out Version applicationVer))
+					{
+						forcePartialHats = xmlVer < applicationVer;
+					}
+				}
+			}
+
 			foreach (XmlNode currHatNode in rootNode.ChildNodes)
 			{
 				if (currHatNode.Name != hatTag) continue;
+				if (!getNamedAttrAsUint(currHatNode, fighterIDTag, out uint currFID)) continue;
 
 				getNamedAttrString(currHatNode, nameTag, out string currName);
-				if (!getNamedAttrAsUint(currHatNode, fighterIDTag, out currFID)) continue;
+				getNamedAttrAsBool(currHatNode, partialHatTag, out bool currHatIsPartial);
 
-				HatInfoPack newPack = new HatInfoPack();
+				if (!destHatDict.ContainsKey(currFID))
+				{
+					destHatDict.Add(currFID, new HatInfoPack());
+				}
+				else if (!forcePartialHats && !currHatIsPartial)
+				{
+					destHatDict[currFID] = new HatInfoPack();
+				}
+				HatInfoPack newPack = destHatDict[currFID];
+
 				foreach (XmlNode hatField in currHatNode.ChildNodes)
 				{
 					if (hatField.NodeType != XmlNodeType.Element) continue;
@@ -271,12 +325,7 @@ namespace lKHM
 					}
 				}
 
-				if (!destHatDict.ContainsKey(currFID))
-				{
-					destHatDict.Add(currFID, new HatInfoPack());
-				}
-				destHatDict[currFID].copyInfoFrom(newPack);
-				if (destNameDict != null)
+				if (destNameDict != null && !String.IsNullOrEmpty(currName))
 				{
 					destNameDict[currFID] = currName;
 				}
@@ -286,18 +335,9 @@ namespace lKHM
 		}
 		public static void importHatsFromXML(KirbyHatManager managerIn, string filepath)
 		{
-			SortedDictionary<uint, HatInfoPack> incomingHats = new SortedDictionary<uint, HatInfoPack>();
 			SortedDictionary<uint, string> incomingNames = new SortedDictionary<uint, string>();
-			parseHatsFromXML(filepath, incomingHats, incomingNames);
+			parseHatsFromXML(filepath, managerIn.fighterIDToInfoPacks, incomingNames);
 
-			foreach (var currPair in incomingHats)
-			{
-				if (!managerIn.fighterIDToInfoPacks.ContainsKey(currPair.Key))
-				{
-					managerIn.createNewHat(currPair.Key);
-				}
-				managerIn.fighterIDToInfoPacks[currPair.Key].copyInfoFrom(currPair.Value);
-			}
 			foreach (var currPair in incomingNames)
 			{
 				HatNames.setFIDName(currPair.Key, currPair.Value, true);
