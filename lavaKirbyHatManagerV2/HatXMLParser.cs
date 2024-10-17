@@ -130,6 +130,8 @@ namespace lKHM
 		}
 		private static bool readRELWriteCommandFromXML(XmlNode nodeIn, out writeWordCmd commandOut)
 		{
+			bool result = false;
+
 			commandOut = new writeWordCmd();
 			if (nodeIn.Name == writeCommandTag)
 			{
@@ -155,9 +157,11 @@ namespace lKHM
 						}
 					}
 				}
+
+				result = true;
 			}
 
-			return commandOut.isValid();
+			return result;
 		}
 		private static bool writeNumberElementToXML(XmlWriter writerIn, string elementName, string numStringIn)
 		{
@@ -179,15 +183,16 @@ namespace lKHM
 		{
 			bool result = false;
 
-			if (commandIn.isValid() && writerIn.WriteState != WriteState.Error)
+			if (writerIn.WriteState != WriteState.Error)
 			{
 				writerIn.WriteStartElement(writeCommandTag);
 				writerIn.WriteAttributeString(nameTag, elementName);
-
-				writeNumberElementToXML(writerIn, targetModuleIDTag, commandIn.TargetModuleID);
-				writeNumberElementToXML(writerIn, targetOffsetTag, commandIn.TargetOffset);
-				writeNumberElementToXML(writerIn, targetSectionTag, commandIn.TargetSection);
-
+				if (commandIn.isValid())
+				{
+					writeNumberElementToXML(writerIn, targetModuleIDTag, commandIn.TargetModuleID);
+					writeNumberElementToXML(writerIn, targetOffsetTag, commandIn.TargetOffset);
+					writeNumberElementToXML(writerIn, targetSectionTag, commandIn.TargetSection);
+				}
 				writerIn.WriteEndElement();
 				result = true;
 			}
