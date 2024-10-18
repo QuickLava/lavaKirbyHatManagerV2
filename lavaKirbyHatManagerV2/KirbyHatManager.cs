@@ -766,4 +766,73 @@ namespace lKHM
 			return result;
 		}
 	}
+
+	public class HatVersionPromoter
+	{
+		private enum versionPromotionFieldFlags
+		{
+			vpff_None   = 0b00000000,
+			vpff_Table1 = 0b00000001,
+			vpff_Table2 = 0b00000010,
+			vpff_Table3 = 0b00000100,
+			vpff_Table4 = 0b00001000,
+			vpff_Table5 = 0b00010000,
+		};
+		private static Dictionary<string, uint> versionPromotionFields = new Dictionary<string, uint>()
+		{
+			{"1.1.0", (uint)versionPromotionFieldFlags.vpff_Table5 }
+		};
+
+		public static uint inheritDataForPromotion(HatInfoPack destHat, Version destHatVer, HatInfoPack sourceHat, Version sourceHatVer)
+		{
+			uint fieldFlagAccumulator = (uint)versionPromotionFieldFlags.vpff_None;
+			foreach (string currVerStr in versionPromotionFields.Keys)
+			{
+				if (Version.TryParse(currVerStr, out Version currVer) && destHatVer < currVer && currVer <= sourceHatVer)
+				{
+					fieldFlagAccumulator |= versionPromotionFields[currVerStr];
+				}
+			}
+
+			if ((fieldFlagAccumulator & (uint)versionPromotionFieldFlags.vpff_Table1) != 0)
+			{
+				destHat.table1Entry = sourceHat.table1Entry;
+			}
+			if ((fieldFlagAccumulator & (uint)versionPromotionFieldFlags.vpff_Table2) != 0)
+			{
+				destHat.table2Entry = sourceHat.table2Entry;
+			}
+			if ((fieldFlagAccumulator & (uint)versionPromotionFieldFlags.vpff_Table3) != 0)
+			{
+				destHat.table3Entry1 = sourceHat.table3Entry1;
+				destHat.table3Entry2 = sourceHat.table3Entry2;
+				destHat.table3Entry3 = sourceHat.table3Entry3;
+				destHat.table3Entry4 = sourceHat.table3Entry4;
+			}
+			if ((fieldFlagAccumulator & (uint)versionPromotionFieldFlags.vpff_Table4) != 0)
+			{
+				destHat.table4Entry1 = sourceHat.table4Entry1;
+				destHat.table4Entry2 = sourceHat.table4Entry2;
+				destHat.table4Entry3 = sourceHat.table4Entry3;
+				destHat.table4Entry4 = sourceHat.table4Entry4;
+			}
+			if ((fieldFlagAccumulator & (uint)versionPromotionFieldFlags.vpff_Table5) != 0)
+			{
+				destHat.table5Entry = sourceHat.table5Entry;
+			}
+
+			return fieldFlagAccumulator;
+		}
+		public static uint inheritDataForPromotion(HatInfoPack destHat, string destHatVer, HatInfoPack sourceHat, string sourceHatVer)
+		{
+			uint result = 0x00;
+
+			if (Version.TryParse(destHatVer, out Version destHatVerConv) && Version.TryParse(sourceHatVer, out Version sourceHatVerConv))
+			{
+				result = inheritDataForPromotion(destHat, destHatVerConv, sourceHat, sourceHatVerConv);
+			}
+
+			return result;
+		}
+	}
 }

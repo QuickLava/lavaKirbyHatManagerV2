@@ -20,7 +20,6 @@ namespace lKHM
 		const string valueTag = "value";
 		const string writeCommandTag = "writeCMD";
 		const string partialHatTag = "partial";
-		const string forcePartialHatTag = "forcePartial";
 
 		const string targetModuleIDTag = "TargetModuleID";
 		const string targetOffsetTag = "TargetOffset";
@@ -270,14 +269,12 @@ namespace lKHM
 
 			XmlNode rootNode = rootNodeList[0];
 
-			bool forcePartialHats = false;
-			getNamedAttrAsBool(rootNode, forcePartialHatTag, out forcePartialHats);
+			Version xmlLibraryVersion = KirbyHatManager.GetVersion();
 			if (getNamedAttrString(rootNode, versionTag, out string versionAttr))
 			{
 				if (getVersionFromString(versionAttr, out Version xmlVer))
 				{
-					Version applicationVer = KirbyHatManager.GetVersion();
-					forcePartialHats |= (xmlVer.Major < applicationVer.Major) || (xmlVer.Minor < applicationVer.Minor);
+					xmlLibraryVersion = xmlVer;
 				}
 			}
 
@@ -289,15 +286,18 @@ namespace lKHM
 				getNamedAttrString(currHatNode, nameTag, out string currName);
 				getNamedAttrAsBool(currHatNode, partialHatTag, out bool currHatIsPartial);
 
-				if (!destHatDict.ContainsKey(currFID))
+				HatInfoPack newHat = new HatInfoPack();
+				if (destHatDict.ContainsKey(currFID))
 				{
-					destHatDict.Add(currFID, new HatInfoPack());
+					if (currHatIsPartial)
+					{
+						newHat.copyInfoFrom(destHatDict[currFID]);
+					}
+					else if (xmlLibraryVersion < KirbyHatManager.GetVersion())
+					{
+						HatVersionPromoter.inheritDataForPromotion(newHat, xmlLibraryVersion, destHatDict[currFID], Program.GetVersion());
+					}
 				}
-				else if (!forcePartialHats && !currHatIsPartial)
-				{
-					destHatDict[currFID] = new HatInfoPack();
-				}
-				HatInfoPack targetHat = destHatDict[currFID];
 
 				foreach (XmlNode hatField in currHatNode.ChildNodes)
 				{
@@ -308,27 +308,33 @@ namespace lKHM
 					{
 						switch (retName)
 						{
-							case table1EntryStringTag: { targetHat.table1Entry = retVal; break; }
-							case table3Entry2StringTag: { targetHat.table3Entry2 = retVal; break; }
-							case table3Entry3StringTag: { targetHat.table3Entry3 = retVal; break; }
-							case table3Entry4StringTag: { targetHat.table3Entry4 = retVal; break; }
-							case table5EntryStringTag: { targetHat.table5Entry = (byte)retVal; break; }
+							case table1EntryStringTag: { newHat.table1Entry = retVal; break; }
+							case table3Entry2StringTag: { newHat.table3Entry2 = retVal; break; }
+							case table3Entry3StringTag: { newHat.table3Entry3 = retVal; break; }
+							case table3Entry4StringTag: { newHat.table3Entry4 = retVal; break; }
+							case table5EntryStringTag: { newHat.table5Entry = (byte)retVal; break; }
 						}
 					}
 					else if (readRELWriteCommandFromXML(hatField, out writeWordCmd retCmd))
 					{
 						switch (retName)
 						{
-							case table2EntryStringTag: { targetHat.table2Entry = retCmd; break; }
-							case table3Entry1StringTag: { targetHat.table3Entry1 = retCmd; break; }
-							case table4Entry1StringTag: { targetHat.table4Entry1 = retCmd; break; }
-							case table4Entry2StringTag: { targetHat.table4Entry2 = retCmd; break; }
-							case table4Entry3StringTag: { targetHat.table4Entry3 = retCmd; break; }
-							case table4Entry4StringTag: { targetHat.table4Entry4 = retCmd; break; }
+							case table2EntryStringTag: { newHat.table2Entry = retCmd; break; }
+							case table3Entry1StringTag: { newHat.table3Entry1 = retCmd; break; }
+							case table4Entry1StringTag: { newHat.table4Entry1 = retCmd; break; }
+							case table4Entry2StringTag: { newHat.table4Entry2 = retCmd; break; }
+							case table4Entry3StringTag: { newHat.table4Entry3 = retCmd; break; }
+							case table4Entry4StringTag: { newHat.table4Entry4 = retCmd; break; }
 							default: { break; }
 						}
 					}
 				}
+
+				if (!destHatDict.ContainsKey(currFID))
+				{
+					destHatDict.Add(currFID, new HatInfoPack());
+				}
+				destHatDict[currFID].copyInfoFrom(newHat);
 
 				if (destNameDict != null && !String.IsNullOrEmpty(currName))
 				{
