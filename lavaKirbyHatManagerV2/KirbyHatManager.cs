@@ -295,6 +295,17 @@ namespace lKHM
 			}
 		}
 
+		public enum RELParseResult
+		{ 
+			NULL = -1,
+			OK = 0,
+			REL_NOT_FOUND,
+			REL_WRONG_TYPE,
+			REL_PRE_REVAMP,
+			REL_OUTDATED,
+			REL_EMPTY,
+		};
+
 		public const uint kirbyModuleID = 0x60;
 		public const uint soraMeleeModuleID = 0x1B;
 
@@ -562,10 +573,11 @@ namespace lKHM
 			return result;
 		}
 
-		public bool loadHatEntriesFromREL(BrawlLib.SSBB.ResourceNodes.RELNode kirbyModule)
+		public bool loadHatEntriesFromREL(BrawlLib.SSBB.ResourceNodes.RELNode kirbyModule, out RELParseResult resultOut)
 		{
 			bool result = false;
 
+			resultOut = RELParseResult.NULL;
 			if (kirbyModule.ModuleID == kirbyModuleID)
 			{
 				Console.WriteLine("Kirby Module Loaded:");
@@ -573,59 +585,71 @@ namespace lKHM
 				Console.WriteLine("Size: " + kirbyModule.UncompressedSize.ToString("X3") + " bytes\n");
 
 				var tableSectionNode = kirbyModule.FindChild(tableSectionName) as BrawlLib.SSBB.ResourceNodes.ModuleSectionNode;
-				UnmanagedMemoryStream sectionHexStream = getHexStreamFromSectionNode(tableSectionNode);
-				if (sectionHexStream != null && sectionHexStream.Length >= tablesEndOffset)
+				if (tableSectionNode != null)
 				{
-					fighterIDToInfoPacks.Clear();
-
-					// Grab default Table 2 and 3 Entries from Mario's slot, since that's what vBrawl defaults to.
-					defaultInfoPack.table2Entry = readRELWriteCMD(tableSectionNode, getTable2EntryOffset(0x00));
-					defaultInfoPack.table3Entry1 = readRELWriteCMD(tableSectionNode, getTable3EntryOffset(0x00));
-
-					for (uint i = 0x00; i < maxHatCount; i++)
+					UnmanagedMemoryStream sectionHexStream = getHexStreamFromSectionNode(tableSectionNode);
+					if (sectionHexStream != null && sectionHexStream.Length >= tablesEndOffset)
 					{
-						HatInfoPack newInfoPack = buildHatFromSection(i, tableSectionNode, sectionHexStream);
-						if (!infoPackHasDefaultData(newInfoPack))
+						fighterIDToInfoPacks.Clear();
+
+						// Grab default Table 2 and 3 Entries from Mario's slot, since that's what vBrawl defaults to.
+						defaultInfoPack.table2Entry = readRELWriteCMD(tableSectionNode, getTable2EntryOffset(0x00));
+						defaultInfoPack.table3Entry1 = readRELWriteCMD(tableSectionNode, getTable3EntryOffset(0x00));
+
+						for (uint i = 0x00; i < maxHatCount; i++)
 						{
-							fighterIDToInfoPacks[i] = newInfoPack;
+							HatInfoPack newInfoPack = buildHatFromSection(i, tableSectionNode, sectionHexStream);
+							if (!infoPackHasDefaultData(newInfoPack))
+							{
+								fighterIDToInfoPacks[i] = newInfoPack;
+							}
 						}
-					}
 
-					result = fighterIDToInfoPacks.Count > 0;
-					if (result)
+						resultOut = (fighterIDToInfoPacks.Count > 0) ? RELParseResult.OK : RELParseResult.REL_EMPTY;
+						result = true;
+					}
+					else
 					{
-						Console.WriteLine("Successfully loaded and parsed Hat Table!");
+						resultOut = RELParseResult.REL_OUTDATED;
 					}
 				}
 				else
 				{
-					Console.WriteLine("Failed to load Hat Table!");
+					resultOut = RELParseResult.REL_PRE_REVAMP;
 				}
 			}
 			else
 			{
-				Console.WriteLine("Loaded Module file is not Kirby Module!");
-				Console.WriteLine("Kirby Module must have ModuleID " + kirbyModuleID.ToString() + ", loaded Module has ID " + kirbyModule.ModuleID.ToString() + "!");
+				resultOut = RELParseResult.REL_WRONG_TYPE;
 			}
 
 			return result;
 		}
-		public bool loadHatEntriesFromREL(string filepathIn)
+		public bool loadHatEntriesFromREL(string filepathIn, out RELParseResult resultOut)
 		{
 			bool result = false;
 
+			resultOut = RELParseResult.NULL;
 			if (File.Exists(filepathIn))
 			{
 				BrawlLib.SSBB.ResourceNodes.RELNode kirbyModule = new BrawlLib.SSBB.ResourceNodes.RELNode();
 				kirbyModule.Replace(filepathIn);
-				result = loadHatEntriesFromREL(kirbyModule);
+				result = loadHatEntriesFromREL(kirbyModule, out resultOut);
 			}
 			else
 			{
-				Console.WriteLine("Failed to load Module file!");
+				resultOut = RELParseResult.REL_NOT_FOUND;
 			}
 
 			return result;
+		}
+		public bool loadHatEntriesFromREL(BrawlLib.SSBB.ResourceNodes.RELNode kirbyModule)
+		{
+			return loadHatEntriesFromREL(kirbyModule, out RELParseResult _);
+		}
+		public bool loadHatEntriesFromREL(string filepathIn)
+		{
+			return loadHatEntriesFromREL(filepathIn, out RELParseResult _);
 		}
 		
 		public bool copyHatToSlot(uint sourceFighterID, uint destinationFighterID, bool allowOverwrite)

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Media;
 
 namespace lKHM
 {
@@ -97,8 +98,13 @@ namespace lKHM
 				kirbyModule.Replace(filepath);
 				kirbyModule._origPath = filepath;
 
-				if (hatManager.loadHatEntriesFromREL(kirbyModule))
+				if (hatManager.loadHatEntriesFromREL(kirbyModule,out KirbyHatManager.RELParseResult resultOut))
 				{
+					if (resultOut == KirbyHatManager.RELParseResult.REL_EMPTY)
+					{
+						MessageBox.Show("Kirby Module loaded successfully, but no valid hats were detected!", "Warning");
+					}
+
 					HatNames.populateFromInternalList();
 					tryLoadHatNamesFromBuildConfigFolder(filepath);
 					HatNames.pruneNamesWithNoAssociatedHat(hatManager);
@@ -107,6 +113,25 @@ namespace lKHM
 				}
 				else
 				{
+					SystemSounds.Exclamation.Play();
+					switch (resultOut)
+					{
+						case KirbyHatManager.RELParseResult.REL_NOT_FOUND:
+							{ MessageBox.Show("Unable to locate specified REL!", "Error"); break; }
+						case KirbyHatManager.RELParseResult.REL_WRONG_TYPE:
+							{ MessageBox.Show("Loaded Module file is not a Kirby Module!", "Error"); break; }
+						case KirbyHatManager.RELParseResult.REL_PRE_REVAMP:
+							{ MessageBox.Show("Loaded Kirby Module uses the old EX Hat system!\n" +
+								"To migrate hats to the new system, import your EX_KirbyHats.txt on an up-to-date Module!",
+								"Error"); break; }
+						case KirbyHatManager.RELParseResult.REL_OUTDATED:
+							{ MessageBox.Show("Loaded Kirby Module layout is outdated!\n" +
+								"To migrate hats to the current layout, export any customized Hats to XML, then re-import on an up-to-date Module!", 
+								"Error"); break;
+							}
+						default:
+							{ MessageBox.Show("Unknown error!", "Error"); break; }
+					}
 					kirbyModule = null;
 				}
 			}
