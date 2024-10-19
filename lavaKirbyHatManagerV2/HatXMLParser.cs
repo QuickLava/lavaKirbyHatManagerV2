@@ -295,7 +295,7 @@ namespace lKHM
 					}
 					else if (xmlLibraryVersion < KirbyHatManager.GetVersion())
 					{
-						HatVersionPromoter.inheritDataForPromotion(newHat, xmlLibraryVersion, destHatDict[currFID], Program.GetVersion());
+						HatVersionPromoter.inheritDataForPromotion(newHat, xmlLibraryVersion, destHatDict[currFID], KirbyHatManager.GetVersion());
 					}
 				}
 
