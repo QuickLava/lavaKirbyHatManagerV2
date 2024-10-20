@@ -251,6 +251,7 @@ namespace lKHM
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
+			this.Text += " " + Program.Version;
 			propGetterObj.parent = this;
 			foreach (string defaultPath in defaultKirbyRelPaths)
 			{
