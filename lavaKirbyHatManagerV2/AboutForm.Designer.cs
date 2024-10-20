@@ -58,7 +58,7 @@ namespace lKHM
 			this.treeView1.ShowLines = false;
 			this.treeView1.ShowPlusMinus = false;
 			this.treeView1.ShowRootLines = false;
-			this.treeView1.Size = new System.Drawing.Size(600, 270);
+			this.treeView1.Size = new System.Drawing.Size(600, 250);
 			this.treeView1.TabIndex = 1;
 			this.treeView1.TabStop = false;
 			// 
@@ -66,7 +66,7 @@ namespace lKHM
 			// 
 			this.buttonClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.buttonClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.buttonClose.Location = new System.Drawing.Point(540, 320);
+			this.buttonClose.Location = new System.Drawing.Point(540, 300);
 			this.buttonClose.Name = "buttonClose";
 			this.buttonClose.Size = new System.Drawing.Size(75, 28);
 			this.buttonClose.TabIndex = 2;
@@ -89,7 +89,7 @@ namespace lKHM
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.buttonClose;
-			this.ClientSize = new System.Drawing.Size(627, 353);
+			this.ClientSize = new System.Drawing.Size(627, 333);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.buttonClose);
 			this.Controls.Add(this.treeView1);
