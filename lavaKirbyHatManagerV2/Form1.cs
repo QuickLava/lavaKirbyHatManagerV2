@@ -92,11 +92,12 @@ namespace lKHM
 			treeViewKirbyHats.Nodes.Clear();
 			propertyGridHatDetails.SelectedObject = null;
 
-			if (System.IO.File.Exists(filepath))
+			string absolutePath = System.IO.Path.GetFullPath(filepath);
+			if (System.IO.File.Exists(absolutePath))
 			{
 				kirbyModule = new BrawlLib.SSBB.ResourceNodes.RELNode();
-				kirbyModule.Replace(filepath);
-				kirbyModule._origPath = filepath;
+				kirbyModule.Replace(absolutePath);
+				kirbyModule._origPath = absolutePath;
 
 				if (hatManager.loadHatEntriesFromREL(kirbyModule,out KirbyHatManager.RELParseResult resultOut))
 				{
@@ -105,8 +106,10 @@ namespace lKHM
 						MessageBox.Show("Kirby Module loaded successfully, but no valid hats were detected!", "Warning");
 					}
 
+					Properties.Settings.Default.lastRELPath = System.IO.Path.GetDirectoryName(absolutePath);
+
 					HatNames.populateFromInternalList();
-					tryLoadHatNamesFromBuildConfigFolder(filepath);
+					tryLoadHatNamesFromBuildConfigFolder(absolutePath);
 					HatNames.pruneNamesWithNoAssociatedHat(hatManager);
 					populateTreeView();
 					result = true;
@@ -266,11 +269,10 @@ namespace lKHM
 			OpenFileDialog ofd = new OpenFileDialog();
 			ofd.Filter = "Module File(*.rel)|*.rel";
 			ofd.RestoreDirectory = true;
-			ofd.InitialDirectory = Properties.Settings.Default.lastImportPath;
+			ofd.InitialDirectory = Properties.Settings.Default.lastRELPath;
 			if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 			{
 				loadModule(ofd.FileName);
-				Properties.Settings.Default.lastImportPath = System.IO.Path.GetDirectoryName(ofd.FileName);
 			}
 		}
 		private void saveModuleToolStripMenuItem_Click(object sender, EventArgs e)
@@ -279,14 +281,14 @@ namespace lKHM
 			sfd.DefaultExt = ".rel";
 			sfd.Filter = "*Module File(*.rel)|*.rel";
 			sfd.RestoreDirectory = true;
-			sfd.InitialDirectory = Properties.Settings.Default.lastExportPath;
+			sfd.InitialDirectory = Properties.Settings.Default.lastRELPath;
 			if (sfd.ShowDialog() == DialogResult.OK)
 			{
 				if (hatManager.writeTablesToREL(kirbyModule))
 				{
 					kirbyModule.Export(sfd.FileName);
+					Properties.Settings.Default.lastRELPath = System.IO.Path.GetDirectoryName(sfd.FileName);
 				}
-				Properties.Settings.Default.lastExportPath = System.IO.Path.GetDirectoryName(sfd.FileName);
 			}
 		}
 

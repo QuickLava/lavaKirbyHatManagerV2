@@ -46,5 +46,17 @@ namespace lKHM.Properties {
                 this["lastImportPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string lastRELPath {
+            get {
+                return ((string)(this["lastRELPath"]));
+            }
+            set {
+                this["lastRELPath"] = value;
+            }
+        }
     }
 }
